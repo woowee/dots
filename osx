@@ -205,21 +205,21 @@ if ask '数字，記号はシングルバイトで入力する．' Y; then
     defaults write com.apple.inputmethod.Kotoeri 'zhsy' -dict-add '"\U00a5"' -bool FALSE
 fi
 
-## Shell (Zsh)
-path_etcshells="/etc/shells"
-if [ $# -ge 1 ]; then
-  path_zsh="$1/bin/zsh"
-else
-  path_zsh=$(which zsh)
-fi
-
-if ask "add a line 'path/to/zsh' in /etc/shells." Y; then
-  echo ${path_zsh} | sudo tee -a ${path_etcshells}
-fi
-
-if ask "change the login shell to zsh." Y; then
-  chsh -s ${path_zsh}
-fi
+### Shell (Zsh)
+#path_etcshells="/etc/shells"
+#if [ $# -ge 1 ]; then
+#  path_zsh="$1/bin/zsh"
+#else
+#  path_zsh=$(which zsh)
+#fi
+#
+#if ask "add a line 'path/to/zsh' in /etc/shells." Y; then
+#  echo ${path_zsh} | sudo tee -a ${path_etcshells}
+#fi
+#
+#if ask "change the login shell to zsh." Y; then
+#  chsh -s ${path_zsh}
+#fi
 
 ### Fin
 if ask "Kill affected applications" Y; then
