@@ -206,7 +206,6 @@ if ask '数字，記号はシングルバイトで入力する．' Y; then
 fi
 
 ### Shell (Zsh)
-#
 # -> manifest file @ boxen
 
 ### Fin
