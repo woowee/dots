@@ -47,6 +47,7 @@ call neobundle#rc(expand('~/.vim/bundle/'))
     NeoBundle 'mattn/favstar-vim'
 
     NeoBundle 'rhysd/clever-f.vim'
+    NeoBundle 'kannokanno/previm'
 filetype plugin indent on     " Required!
 
 " Installation check.
