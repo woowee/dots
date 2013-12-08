@@ -1,62 +1,8 @@
 set nocompatible
 filetype off
 
-if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
-call neobundle#rc(expand('~/.vim/bundle/'))
-
-    NeoBundle 'Shougo/vimproc'
-
-    NeoBundle 'The-NERD-Commenter'
-    NeoBundle 'surround.vim'
-
-    NeoBundle 'neocomplcache'
-    NeoBundle 'Shougo/neosnippet.vim'
-
-    NeoBundle 'Align'
-    " NeoBundle 'YankRing.vim'    " comment {2012.09.05} マクロ実行の '@' が効かなくなるので．
-
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle 'molokai'
-    NeoBundle 'Lokaltog/vim-powerline'
-
-    NeoBundle 'thinca/vim-quickrun'
-
-    NeoBundle 'glidenote/memolist.vim'
-
-    NeoBundle 'renamer.vim'
-    NeoBundle 'mattn/webapi-vim'
-    NeoBundle 'mattn/mkdpreview-vim'
-    NeoBundle 'metarw'
-    NeoBundle 'Shougo/vimshell'
-
-    NeoBundle 'ujihisa/blogger.vim'
-
-    " tweetvim
-    NeoBundle 'basyura/TweetVim'
-    NeoBundle 'mattn/webapi-vim'
-    NeoBundle 'basyura/twibill.vim'
-    NeoBundle 'tyru/open-browser.vim'
-    NeoBundle 'h1mesuke/unite-outline'
-    NeoBundle 'basyura/bitly.vim'
-    NeoBundle 'Shougo/unite.vim'
-    NeoBundle 'Shougo/vimfiler.vim'
-
-    NeoBundle 'mattn/favstar-vim'
-
-    NeoBundle 'rhysd/clever-f.vim'
-    NeoBundle 'kannokanno/previm'
-filetype plugin indent on     " Required!
-
-" Installation check.
-if neobundle#exists_not_installed_bundles()
-    echomsg 'Not installed bundles : ' .
-     \ string(neobundle#get_not_installed_bundle_names())
-    echomsg 'Please execute ":NeoBundleInstall" command.'
-"finish
-endif
+"-------------------------------------------------- .neobundlw
+source ~/dots/.vimrc.bundle
 
 "-------------------------------------------------- .common
 " $PATH
