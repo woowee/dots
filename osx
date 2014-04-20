@@ -92,11 +92,90 @@ if ask 'ファイルの拡張子を表示する．' Y; then
     # [Finder の環境設定 > 詳細 > すべてのファイル名拡張子を表示] => "ON"
 fi
 
+if ask 'スクリーンショットでついてくるウィンドウの影を抑制．' Y; then
+    defaults write com.apple.screencapture disable-shadow -bool true
+    # (none)
+fi
+
+if ask 'スクリーンショットの保存先．'
+    dir_screenshoots="~/Pictures/screenshoots"
+    [ ! -e "${dir_screenshoots}" ] && mkdir "${dir_screenshoots}"
+    defaults write com.apple.screencapture location -string "${dir_screenshoots}"
+    # (none)
+fi
+
+
 ## Dock
+if ask 'グリッド表示時の Dock のスタック上のマウスオーバー時、ハイライトする．' Y; then
+    defaults write com.apple.dock mouse-over-hilite-stack -bool true
+    # (none)
+fi
+
+if ask 'Dock の大きさをセットする。(36)'
+    defaults write com.apple.dock tilesize -int 36
+    # [システム環境設定 > Dock > 大きさ] = sld[サイズ] 1/8 くらい
+fi
+
+if 'Dock への drag & drop で起動/開く機能 (スプリングフォルダの dock 版) を利用する．' Y; then
+    defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+    # (none)
+fi
+
+if 'Dock の起動しているアプリケーションにインジケータ・ランプを表示する' Y; then
+    defaults write com.apple.dock show-process-indicators -bool true
+    # [システム環境設定 > Dock > 起動済みのアプリケーションにインジケータ・ランプを表示] => "オン"
+fi
+
+if ask 'Dock のコンテンツを真っ新にする．' Y; then
+    defaults write com.apple.dock persistent-apps -array ""
+    # (none)
+fi
+
+if ask '起動中、またはステータスが変わった Dock のアプリケーションをアニメーションさせない．' Y; then
+    defaults write com.apple.dock launchanim -bool false
+    # [システム環境設定 > Dock > 起動中のアプリケーションをアニメーションで表示] => "OFF"
+fi
+
+if ask 'mission control への移行アニメーション速度 を 0.1 秒にする．'
+    defaults write com.apple.dock expose-animation-duration -float 0.1
+    # (none)
+fi
+
+if ask 'dashboard を無効にする' Y; then
+    defaults write com.apple.dashboard mcx-disabled -bool true
+    # (none)
+fi
+
+if 'Dashboard を操作スペースとして表示しない．' Y; then
+    defaults write com.apple.dock dashboard-in-overlay -bool true
+    # [システム環境設定 > Mission Control > Dashboard を操作スペースとして表示] => "ON"
+fi
+
+if 'Mission Control の操作スペースを自動的に並べ替えない．' Y; then
+    defaults write com.apple.dock mru-spaces -bool false
+    # [システム環境設定 > Mission Control > 最新の使用状況に基づいて操作スペースを自動的に並び替える] => "OFF"
+fi
+
+if 'Dock の表示/表示速度を 0 秒にする．' Y; then
+    defaults write com.apple.dock autohide-delay -float 0
+    # (none)
+fi
+
+if 'Dock の表示/非表示のアニメーション速度を 0 秒にする．' Y; then
+    defaults write com.apple.dock autohide-time-modifier -float 0
+    # (none)
+fi
+
 if ask 'Dock を隠す．' Y; then
     defaults write com.apple.dock autohide -bool true
     # [システム環境設定 > Dock > Dock を自動的に隠す/表示] => "ON"
 fi
+
+if ask 'launchpad をリセット' Y; then
+    find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
+    # (none)
+fi
+
 
 ## Keyboard
 keyboardid=$(ioreg -n IOHIDKeyboard -r | grep -E 'VendorID"|ProductID' | awk '{ print $4 }' | paste -s -d'-\n' -)'-0'
@@ -156,7 +235,7 @@ if ask 'デスクトップの表示を [F10] にマップする．' Y; then
 fi
 
 if ask '[F2] でメニューを操作する．' Y; then
-    defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 7 "<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>120</integer><integer>0</integer></array><key>type</key><string>standard</string></dict></dict>"
+e   defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 7 "<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>120</integer><integer>0</integer></array><key>type</key><string>standard</string></dict></dict>"
     # [システム環境設定 > キーボード > キーボードと文字入力 > メニューバーを操作対象にする] = "ON"，[F2]
 fi
 
@@ -204,6 +283,8 @@ if ask '数字，記号はシングルバイトで入力する．' Y; then
     defaults write com.apple.inputmethod.Kotoeri 'zhsy' -dict-add '"~"' -bool FALSE
     defaults write com.apple.inputmethod.Kotoeri 'zhsy' -dict-add '"\U00a5"' -bool FALSE
 fi
+
+## sc
 
 ### Shell (Zsh)
 # -> manifest file @ boxen

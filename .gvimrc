@@ -21,8 +21,8 @@ colorscheme molokai
 " set background=dark
 " let g:solarized_termcolors=256
 " colorscheme solarized
-if has('multi_byte_ime')
-    highlight Cursor guifg=NONE guibg=White
+if has('xim')
+    " highlight Cursor guifg=NONE guibg=White
     highlight CursorIM guifg=NONE guibg=Red
 endif
 
