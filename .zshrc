@@ -1,12 +1,8 @@
 # /etc/profile
-# $PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin
 typeset -U PATH
 PATH=/usr/local/bin:/usr/local/sbin:$HOME/.cabal/bin/:$PATH
 
 export PYTHONPATH=/usr/local/share/python:/usr/local/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages/PyQt4:/usr/local/lib/python2.7:/usr/local/lib/python3.2
-
-## boxen
-[ -f /opt/boxen/env.sh ] && source /opt/boxen/env.sh
 
 # General Settings
 # ------------------------------
