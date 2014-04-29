@@ -427,11 +427,12 @@ nmap    <Leader>f [unite]
 
 " unite.vim keymap
 " https://github.com/alwei/dotfiles/blob/3760650625663f3b08f24bc75762ec843ca7e112/.vimrc
-noremap [Unite]u :<C-u>Unite file<CR>
-noremap [Unite]m :<C-u>Unite file_mru<CR>
-noremap [Unite]b :<C-u>Unite buffer<CR>
-noremap [Unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-noremap [Unite]k :<C-u>Unite<Space>bookmark<CR>
+nnoremap <silent> [unite]f :<C-u>Unite<Space>file<CR>
+nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
+nnoremap <silent> [unite]k :<C-u>Unite<Space>bookmark<CR>
+nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
+nnoremap <silent> [unite]c :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+nnoremap <silent> ,vr :UniteResume<CR>
 
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
