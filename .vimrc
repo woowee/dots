@@ -275,6 +275,11 @@ if filereadable(expand('~/.pwd.blogger'))
 endif
 " ref. http://vim-users.jp/2009/12/hack108/
 
+
+" ********** previm
+map <Leader>pv ;PrevimOpen<cr>
+
+
 " ********** quickrun
 " for python/vimproc
 let g:quickrun_config = {}
@@ -285,6 +290,7 @@ let g:quickrun_config['markdown'] = {
       \ 'type': 'markdown/pandoc',
       \ 'cmdopt': '-s'
       \ }
+
 
 " ********* memolist
 map <Leader>mn ;MemoNew<cr>
