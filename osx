@@ -110,6 +110,11 @@ if ask '保存ダイアログの拡張．' Y; then
     # (none)
 fi
 
+if ask '.DS_Store を作らない．' Y; then
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+    # (none)
+fi
+
 
 ## Dock
 if ask 'グリッド表示時の Dock のスタック上のマウスオーバー時、ハイライトする．' Y; then
