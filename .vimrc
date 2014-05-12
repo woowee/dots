@@ -38,6 +38,8 @@ call neobundle#rc(expand('~/.vim/bundle/'))
     NeoBundle 'Lokaltog/vim-powerline'
 
     NeoBundle 'thinca/vim-quickrun'
+    NeoBundle 'sukima/xmledit'
+    NeoBundle 'mattn/emmet-vim'
 
     " NeoBundle 'glidenote/memolist.vim'
     NeoBundle 'woowee/memolist.vim'
