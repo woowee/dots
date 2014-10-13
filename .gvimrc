@@ -17,10 +17,11 @@ endif
 
 "-------------------------------------------------- .appearance
 " カラースキーマ
-colorscheme molokai
-" set background=dark
-" let g:solarized_termcolors=256
-" colorscheme solarized
+" colorscheme molokai
+" colorscheme hybrid
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
 if has('xim')
     " highlight Cursor guifg=NONE guibg=White
     highlight CursorIM guifg=NONE guibg=Red
@@ -30,6 +31,7 @@ endif
 " gui
 if has('mac')
   set transparency=10
+  " set transparency=2
 elseif has('win32') || has('win64')
   set transparency=200
 endif

@@ -1,13 +1,18 @@
-set nocompatible
-filetype off
-
-"-------------------------------------------------- .neobundlw
 if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+   set nocompatible               " Be iMproved
+
+   " Required:
+   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
-call neobundle#rc(expand('~/.vim/bundle/'))
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
 
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" My Bundles here:
     NeoBundle 'Shougo/vimproc', {
     \ 'build' : {
     \     'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
@@ -31,15 +36,17 @@ call neobundle#rc(expand('~/.vim/bundle/'))
     NeoBundle 'surround.vim'
     NeoBundle 'Align'
     NeoBundle 'rhysd/clever-f.vim'
-    " NeoBundle 'YankRing.vim'    " comment {2012.09.05} マクロ実行の '@' が効かなくなるので．
 
     NeoBundle 'altercation/vim-colors-solarized'
     NeoBundle 'molokai'
-    NeoBundle 'Lokaltog/vim-powerline'
+    NeoBundle 'w0ng/vim-hybrid'
+    NeoBundle 'itchyny/lightline.vim'
 
     NeoBundle 'thinca/vim-quickrun'
     NeoBundle 'sukima/xmledit'
     NeoBundle 'mattn/emmet-vim'
+    NeoBundle 'plasticscafe/vim-less-autocompile'
+    NeoBundle 'groenewege/vim-less'
 
     " NeoBundle 'glidenote/memolist.vim'
     NeoBundle 'woowee/memolist.vim'
@@ -49,19 +56,21 @@ call neobundle#rc(expand('~/.vim/bundle/'))
     NeoBundle 'kannokanno/previm'
     NeoBundle 'tyru/open-browser.vim'
 
-filetype plugin indent on     " Required!
+    NeoBundle 'yuratomo/w3m.vim'
+    NeoBundle 'mrtazz/simplenote.vim'
 
-" Installation check.
-if neobundle#exists_not_installed_bundles()
-    echomsg 'Not installed bundles : ' .
-     \ string(neobundle#get_not_installed_bundle_names())
-    echomsg 'Please execute ":NeoBundleInstall" command.'
-"finish
-endif
+call neobundle#end()
 
-"-------------------------------------------------- .common
-" $PATH
-let $PATH="/usr/local/bin:/Users/koo/.cabal/bin:".$PATH
+" Required:
+filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
+
+
+
+"--------------------------------------------------------------------------- >common
 " バックアップファイル - off
 set nobackup
 " スワップファイル - off
@@ -74,18 +83,112 @@ set vb t_vb=
 set hidden
 " 検索置換
 set smartcase
-" クリップボード.os の クリップボードを
+" クリップボード.os の クリップボードを
 set clipboard+=unnamed
 " クリップボード.vim の ヤンクを
 set clipboard=unnamed
 
 
-"-------------------------------------------------- .appearance
-" 行番号
+
+"--------------------------------------------------------------------------- >seach
+" 検索の挙動に関する設定:
+"
+" 検索時に大文字小文字を無視 (noignorecase:無視しない)
+set ignorecase
+" 大文字小文字の両方が含まれている場合は大文字小文字を区別
+set smartcase
+" 検索時にファイルの最後まで行ったら最初に戻る (nowrapscan:戻らない)
+set wrapscan
+
+" 検索ハイライト on
+set hlsearch
+
+
+
+"--------------------------------------------------------------------------- >edit
+" 編集に関する設定:
+"
+"" タブの画面上での幅
+"set tabstop=8
+" タブをスペースに展開しない (expandtab:展開する)
+set noexpandtab
+" 自動的にインデントする (noautoindent:インデントしない)
+set autoindent
+" バックスペースでインデントや改行を削除できるようにする
+set backspace=indent,eol,start
+" 括弧入力時に対応する括弧を表示 (noshowmatch:表示しない)
+set showmatch
+"" コマンドライン補完するときに強化されたものを使う(参照 :help wildmenu)
+"set wildmenu
+
+" 自動形成について(特に、自動改行) (:h formatoptions, :h fo-table)
+augroup noautowrap
+  autocmd!
+  autocmd FileType * setlocal tw=0
+  " 自動改行を抑制
+  autocmd FileType * setlocal fo-=t
+  autocmd FileType * setlocal fo-=c
+  " コメントスタイルの自動挿入を抑制
+  autocmd FileType * setlocal fo-=r
+  autocmd FileType * setlocal fo-=o
+augroup END
+
+" インサートモード時imeオフ
+set noimdisable
+set iminsert=0 imsearch=0
+set noimcmdline
+" 折り返し移動 - <backspace> <enter> h, l,<-, ->
+set whichwrap=b,s,h,l,<,>,[,]
+"" バックスペース
+"set backspace=indent,eol,start
+
+" 保存時の空白削除
+" autocmd BufWritePre * if &ft != 'markdown' | :%s/\s\+$//ge  | endif
+augroup Markdown
+  autocmd!
+  autocmd BufWritePre * if &filetype == 'markdown' | call s:FormMarkdownEOL() | else | :%s/\s\+$//ge | endif
+augroup END
+
+"バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
+augroup BinaryXXD
+  autocmd!
+  autocmd BufReadPre *.bin let &binary =1
+  autocmd BufReadPost * if &binary | silent %!xxd -g 1
+  autocmd BufReadPost * set ft=xxd | endif
+  autocmd BufWritePre * if &binary | %!xxd -r | endif
+  autocmd BufWritePost * if &binary | silent %!xxd -g 1
+  autocmd BufWritePost * set nomod | endif
+augroup END
+
+"--------------------------------------------------------------------------- >complete
+" コマンドライン補完するときに強化されたものを使う(参照 :help wildmenu)
+set wildmenu
+
+set wildchar=<tab>
+set wildmode=list:full
+set history=1000
+set complete+=k
+
+
+
+"--------------------------------------------------------------------------- >appearance
+" GUI固有ではない画面表示の設定:
+"
+" 行番号を表示
 set number
-" 不可視文字 - 表示
+" ルーラーを表示 (noruler:非表示)
+set ruler
+" 不可視文字
 set list
 set listchars=tab:>-,trail:_
+" 常にステータス行を表示 (詳細は:he laststatus)
+set laststatus=2
+" コマンドラインの高さ (Windows用gvim使用時はgvimrcを編集すること)
+set cmdheight=2
+" コマンドをステータス行に表示
+set showcmd
+" タイトルを表示
+set title
 " カーソル行
 set cursorline
 " カーソル行. カレントウィンドウのみ
@@ -94,54 +197,11 @@ augroup cch
   autocmd WinLeave * set nocursorline
   autocmd WinEnter,BufRead * set cursorline
 augroup END
-" 全角スペースの可視化 >> ricty 導入にともない
 
 
-"-------------------------------------------------- .edit
-" インサートモード時imeオフ
-set noimdisable
-set iminsert=0 imsearch=0
-set noimcmdline
-" inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
-" 折り返し移動 - <backspace> <enter> h, l,<-, ->
-set whichwrap=b,s,h,l,<,>,[,]
-" バックスペース
-set backspace=indent,eol,start
 
-" タブ
-" タブ. 画面上表示するタブ幅
-set tabstop=4
-" タブ. <tab>押下によるタブ幅(tabstopと同じにした）
-set softtabstop=4
-" タブ.
-set shiftwidth=4
-
-" 保存時の空白削除
-" autocmd BufWritePre * :%s/\s\+$//ge
-autocmd BufWritePre * if &ft != 'markdown' | :%s/\s\+$//ge  | endif
-autocmd BufWritePre * :%s/\t/    /ge
-autocmd BufWritePre * :%s/　\+$//ge
-
-" 折り返し
-set textwidth=0
-set formatoptions=q
-
-autocmd FileType text setlocal wrap
-
-
-"-------------------------------------------------- .complete
-set wildmenu
-set wildchar=<tab>
-set wildmode=list:full
-set history=1000
-set complete+=k
-
-
-"-------------------------------------------------- .key mapping
-" 検索ハイライト off
-set hlsearch
-" nmap <ESC><ESC> :nohlsearch<CR><ESC>
-nmap <ESC><ESC> ;noh<CR><ESC>
+"--------------------------------------------------------------------------- >key >map >keymap
+nmap <ESC><ESC> ;nohlsearch<CR><ESC>
 " ヘルプ
 nnoremap <C-i> :<C-u>help<Space>
 nnoremap <C-i><C-i> :<C-u>help<Space><C-r><C-w><Enter>
@@ -152,11 +212,21 @@ nnoremap k gk
 nnoremap l <right>
 nnoremap <Down> gj
 nnoremap <Up> gk
-" ウィンドウ移動
+" カーソル移動.インサートモード
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
+" ペースト.インサートモード
+imap <C-p> <ESC>"*pa
+" バッファ.移動
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
+" バッファ.分割方向
+nnoremap <C-w>j <C-w>K
+nnoremap <C-w>h <C-w>H
 " 行頭、行末移動
 noremap =0 $
 " カーソルの位置から行頭、行末まで選択
@@ -164,125 +234,59 @@ vnoremap v $h
 " 対応する括弧移動
 noremap [ %
 noremap ] %
-" カーソル位置の単語yank
-nnoremap vy vawy
-"  about text object mapping ★
-
 " タイムスタンプ
 inoremap ,dd <C-r>=strftime('%Y.%m.%d')<Return>
+inoremap ,ddd <C-r>=strftime('%Y%m%d')<Return>
 "ウィンドウサイズ
 map + <C-w>+
 map - <C-w>-
-
 " 。/、セットを．/，にする
 nnoremap <leader>. :%s/。/．/g<CR>:%s/、/，/g<CR>
-
-"copy all
+" バッファ内すべてのコンテンツをクリップボードへ
 noremap ya :%y<CR>
 
 
-"-------------------------------------------------- .encording
-set ffs=unix,dos,mac  " 改行文字
-set encoding=utf-8    " デフォルトエンコーディング
 
-" 文字コード関連
-" from ずんWiki http://www.kawaz.jp/pukiwiki/?vim#content_1_7
-" 文字コードの自動認識
-if &encoding !=# 'utf-8'
-  set encoding=japan
-  set fileencoding=japan
-endif
-if has('iconv')
-  let s:enc_euc = 'euc-jp'
-  let s:enc_jis = 'iso-2022-jp'
-  " iconvがeucJP-msに対応しているかをチェック
-  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-    let s:enc_euc = 'eucjp-ms'
-    let s:enc_jis = 'iso-2022-jp-3'
-  " iconvがJISX0213に対応しているかをチェック
-  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-    let s:enc_euc = 'euc-jisx0213'
-    let s:enc_jis = 'iso-2022-jp-3'
-  endif
-  " fileencodingsを構築
-  if &encoding ==# 'utf-8'
-    let s:fileencodings_default = &fileencodings
-    let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-    let &fileencodings = &fileencodings .','. s:fileencodings_default
-    unlet s:fileencodings_default
-  else
-    let &fileencodings = &fileencodings .','. s:enc_jis
-    set fileencodings+=utf-8,ucs-2le,ucs-2
-    if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-      set fileencodings+=cp932
-      set fileencodings-=euc-jp
-      set fileencodings-=euc-jisx0213
-      set fileencodings-=eucjp-ms
-      let &encoding = s:enc_euc
-      let &fileencoding = s:enc_euc
-    else
-      let &fileencodings = &fileencodings .','. s:enc_euc
-    endif
-  endif
-  " 定数を処分
-  unlet s:enc_euc
-  unlet s:enc_jis
-endif
-" 日本語を含まない場合は fileencoding に encoding を使うようにする
-if has('autocmd')
-  function! AU_ReCheck_FENC()
-    if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
-      let &fileencoding=&encoding
-    endif
-  endfunction
-  autocmd BufReadPost * call AU_ReCheck_FENC()
-endif
-" 改行コードの自動認識
-set fileformats=unix,dos,mac
-" □とか○の文字があってもカーソル位置がずれないようにする
-if exists('&ambiwidth')
-  set ambiwidth=double
-endif
+"--------------------------------------------------------------------------- >plugins
 
-" cvsの時は文字コードをeuc-jpに設定
-autocmd FileType cvs :set fileencoding=euc-jp
-" 以下のファイルの時は文字コードをutf-8に設定
-autocmd FileType svn :set fileencoding=utf-8
-autocmd FileType js :set fileencoding=utf-8
-autocmd FileType css :set fileencoding=utf-8
-autocmd FileType html :set fileencoding=utf-8
-autocmd FileType xml :set fileencoding=utf-8
-autocmd FileType java :set fileencoding=utf-8
-autocmd FileType scala :set fileencoding=utf-8
+"
+" >w3m
+"
+let g:w3m#command = '/usr/local/bin/w3m'
 
-" ワイルドカードで表示するときに優先度を低くする拡張子
-set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.to
-
-" 指定文字コードで強制的にファイルを開く
-command! Cp932 edit ++enc=cp932
-command! Eucjp edit ++enc=euc-jp
-command! Iso2022jp edit ++enc=iso-2022-jp
-command! Utf8 edit ++enc=utf-8
-command! Jis Iso2022jp
-command! Sjis Cp932
-
-" my commands . blogger.vim
-command! -nargs=0 List :e blogger:list
-command! -nargs=0 Post :w blogger:create
-
-"-------------------------------------------------- .plugins
-" ********** (source)
-if filereadable(expand('~/.pwd.blogger'))
-    source ~/.pwd.blogger
-endif
-" ref. http://vim-users.jp/2009/12/hack108/
+" デフォルトの検索エンジンを google にする
+let g:w3m#search_engine = 'http://www.google.com/search?hl=ja&ie=' . &encoding . '&q=%s'
+nnoremap <leader>w :W3mTab google<space>
+" どうしても、な時のための外部ブラウザは chrome
+let g:w3m#external_browser = 'goole-chrome'
+nnoremap <leader>we :W3mShowExtenalBrowser
 
 
-" ********** previm
+"
+" >vim-less-autocompile
+"
+autocmd BufRead,BufNewFile *.less set filetype=less
+"自動で変換
+let g:less_autocompile=1
+"圧縮しない
+let g:less_compress=0
+
+
+"
+" >vim-less
+"
+autocmd BufNewFile,BufRead *.less set filetype=css
+
+
+"
+" >previm
+"
 map <Leader>pv ;PrevimOpen<cr>
 
 
-" ********** quickrun
+"
+" >quickrun
+"
 " for python/vimproc
 let g:quickrun_config = {}
 let g:quickrun_config['*'] = {'runner': 'vimproc'}
@@ -294,161 +298,149 @@ let g:quickrun_config['markdown'] = {
       \ }
 
 
-" ********* memolist
+"
+" >memolist
+"
 map <Leader>mn ;MemoNew<cr>
 " map <Leader>ml ;MemoList<CR>
-map <Leader>ml ;Unite file:<C-r>=g:memolist_path<CR><CR>
+map <Leader>ml Unite file:<C-r>=g:memolist_path<CR><CR>
 map <Leader>mg ;MemoGrep<CR>
 
 let g:memolist_path = '~/Dropbox/memo'
 
-let g:memolist_prompt_tags = 0
+let g:memolist_prompt_tags = 1
 let g:memolist_prompt_categories = 1
 let g:memolist_qfixgrep = 1
 let g:memolist_vimfiler = 0
 
 let g:memolist_filename_prefix_none = 1
-" ********** vimplenote
-if filereadable(expand('~/.vimrc.local'))
-  source ~/.vimplenoterc
-endif
 
 
-" ********** the nerd commenter
+"
+" >the nerd commenter
+"
 let NERDSpaceDelims=1
 let NREDShutUp=1
 map <leader>x <leader>c<space>
 
 
-" ********** neocompletechash
-"" Disable AutoComplPop.
-"let g:acp_enableAtStartup = 0
-"" Use neocomplete.
-"let g:neocomplete#enable_at_startup = 1
-"" Use smartcase.
-"let g:neocomplete#enable_smart_case = 1
-"" Set minimum syntax keyword length.
-"let g:neocomplete#sources#syntax#min_keyword_length = 3
-"let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 "
-"" Define dictionary.
-"let g:neocomplete#sources#dictionary#dictionaries = {
-"    \ 'default' : '',
-"    \ 'vimshell' : $HOME.'/.vimshell_hist',
-"    \ 'scheme' : $HOME.'/.gosh_completions'
-"        \ }
+" >neocomplete.vim
 "
-"" Define keyword.
-"if !exists('g:neocomplete#keyword_patterns')
-"    let g:neocomplete#keyword_patterns = {}
-"endif
-"let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-"
-"" Plugin key-mappings.
-"inoremap <expr><C-g>     neocomplete#undo_completion()
-"inoremap <expr><C-l>     neocomplete#complete_common_string()
-"
-"" Recommended key-mappings.
-"" <CR>: close popup and save indent.
-"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-"function! s:my_cr_function()
-"  return neocomplete#close_popup() . "\<CR>"
-"  " For no inserting <CR> key.
-"  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-"endfunction
-"" <TAB>: completion.
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"" <C-h>, <BS>: close popup and delete backword char.
-"inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><C-y>  neocomplete#close_popup()
-"inoremap <expr><C-e>  neocomplete#cancel_popup()
-"" Close popup by <Space>.
-""inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-"
-"" For cursor moving in insert mode(Not recommended)
-""inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-""inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-""inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-""inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-"" Or set this.
-""let g:neocomplete#enable_cursor_hold_i = 1
-"" Or set this.
-""let g:neocomplete#enable_insert_char_pre = 1
-"
-"" AutoComplPop like behavior.
-""let g:neocomplete#enable_auto_select = 1
-"
-"" Shell like behavior(not recommended).
-""set completeopt+=longest
-""let g:neocomplete#enable_auto_select = 1
-""let g:neocomplete#disable_auto_complete = 1
-""inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-"
-"" Enable omni completion.
-"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"
-"" Enable heavy omni completion.
-"if !exists('g:neocomplete#sources#omni#input_patterns')
-"  let g:neocomplete#sources#omni#input_patterns = {}
-"endif
-""let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-""let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-""let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-"
-"" For perlomni.vim setting.
-"" https://github.com/c9s/perlomni.vim
-"let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-"" ********** neosnippet
-"" Plugin key-mappings.
-"imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-"smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-"xmap <C-k>     <Plug>(neosnippet_expand_target)
-"
-"" SuperTab like snippets behavior.
-"imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: pumvisible() ? "\<C-n>" : "\<TAB>"
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: "\<TAB>"
-"
-"" For snippet_complete marker.
-"if has('conceal')
-"  set conceallevel=2 concealcursor=i
-"endif
+" AutoComplPop オフ
+let g:acp_enableAtStartup = 0
+" 起動時 neocomplete を有効化
+let g:neocomplete#enable_at_startup = 1
+" 大文字を入力するまで、大/小文字を無視して補完
+let g:neocomplete#enable_smart_case = 1
+" 3 文字以上の単語を補完候補としてキャッシュ
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+" neocompleteを自動的にロックするバッファ名のパターン
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+" 日本語入力時、無効化
+let g:neocomplete#lock_iminsert = 1
+" 補完開始文字数
+let g:neocomplete#auto_completion_start_length=3
+
+" 辞書
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'vim' : $HOME.'/.vim/dict/vim.dict'
+        \ }
+
+" キーワードと見なす正規表現を設定
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+" \h: [A-Za-z_] \w: [0-9A-Za-z_] refs help regexp
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g> neocomplete#undo_completion()
+" inoremap <expr><C-l> neocomplete#complete_common_string()     # `inoremap <C-l><Right>` を使いたいので
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+endfunction
+" TAB で補完できるようにする
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+" <C-h>, <BS>: ポップアップを閉じ、文字列を削除
+" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>" # `inoremap <C-h><Left>`を使いたいので
+" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"  # `inoremap <C-h><Left>`を使いたいので
+
+" FileType毎のOmni補完を設定
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
 
 
-" ********** align.vim
+"
+" >neosnippet
+"
+" Plugin key-mappings.
+imap <C-Space>     <Plug>(neosnippet_expand_or_jump)
+smap <C-Space>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-Space>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+
+"
+" >align.vim
+"
 " 日本語など幅広文字に対応するためのおまじない。(ref. http://vim-users.jp/2009/09/hack77/)
 let g:Align_xstrlen=3
 
 
-" ********** unite
-" The prefix key.
-nnoremap    [unite]   <Nop>
-nmap    <Leader>f [unite]
+"
+" >unite
+"
+let g:unite_source_history_yank_enable = 1
+let g:unite_enable_start_insert = 1
+let g:unite_enable_ignore_case = 1
+let g:unite_enable_smart_case = 1
 
-" unite.vim keymap
-" https://github.com/alwei/dotfiles/blob/3760650625663f3b08f24bc75762ec843ca7e112/.vimrc
-nnoremap <silent> [unite]h :<C-u>Unite<Space>file<CR>
-nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
-nnoremap <silent> [unite]k :<C-u>Unite<Space>bookmark<CR>
-nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
-nnoremap <silent> ,vr :UniteResume<CR>
+" path
+" let g:neomru#file_mru_path=expand('~/.cache/neomru/file')
+" let g:neomru#directory_mru_path=expand('~/.cache/neomru/directory')
+" let g:unite_source_bookmark_directory=expand('~/.cache/unite/bookmark/default')
 
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()
-    nmap <buffer> <esc><esc>    <Plug>(unite_exit)
-    imap <buffer> jj    <Plug>(unite_insert_leave)
-endfunction
-
-nnoremap <Space>y :Unite history/yanks<CR>
+" unite mapping
+" unite mapping.the prefix key
+noremap [Unite] <Nop>
+nmap <Leader>f [Unite]
+" unite mapping.mappins
+noremap  [Unite]r :<C-u>Unite file_mru<CR>
+noremap  [Unite]b :<C-u>Unite buffer<CR>
+noremap  [Unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+noremap  [Unite]m :<C-u>Unite bookmark<CR>
+noremap  [Unite]g :<C-u>Unite -buffer-name=register register<CR>
+nnoremap [Unite]p :<C-u>Unite mapping<CR>
+nnoremap [Unite]i :<C-u>Unite output:message<CR>
+nnoremap [Unite]y :<C-u>Unite history/yank<CR>
 
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
@@ -457,14 +449,15 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split
 au FileType unite nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
 au FileType unite inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
 
-let g:unite_enable_start_insert = 1
-
-let g:unite_enable_ignore_case = 1
-let g:unite_enable_smart_case = 1
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()
+    nmap <buffer> <esc><esc> <Plug>(unite_exit)
+    imap <buffer> jj <Plug>(unite_insert_leave)
+endfunction
 
 " unite : grep > ag(silver searcher)
 nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
-nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
+nnoremap <silent> ,gg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
 nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
@@ -472,441 +465,127 @@ if executable('ag')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
-" ********** surround.vim
+
+"
+" >vimshell
+"
+let g:vimshell_split_command="vsplit"
+nnoremap <silent> <Leader>vsh :<C-u>VimShellBufferDir -split<CR>
+nnoremap <silent> <Leader>sh :<C-u>VimShell<CR>
+
+
+"
+" >vimfiler
+"
+" デフォルトはvimfiler (netrw ではない)
+let g:vimfiler_as_default_explorer = 1
+" セーフモードをオフ (ref. http://blog.livedoor.jp/okashi1/archives/51808590.html)
+let g:vimfiler_safe_mode_by_default = 0
+
+" 開く (開いているファイルがあるディレクトリ)
+nnoremap <silent> <Leader>fc :<C-u>VimFilerBufferDir -quit<CR>
+" ide 風 (開いているファイルがあるディレクトリ)
+nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+
+let g:vimfiler_tree_leaf_icon     = ' '   " default: '|'
+let g:vimfiler_tree_opened_icon   = '▾'   " default: '-'
+let g:vimfiler_tree_closed_icon   = '▸'   " default: '+'
+let g:vimfiler_readonly_file_icon = '!'   " deafult: 'X'
+" let g:vimfiler_file_icon        = '-'   " default: '-' why?
+let g:vimfiler_marked_file_icon   = '*'   " default: '*'
+
+nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+augroup vimfiler
+    autocmd!
+    " unite の bookmark を vimfiler で展開
+    autocmd FileType vimfiler call unite#custom_default_action('directory', 'lcd')
+    " tree での制御は、<Space>
+    autocmd FileType vimfiler map <silent><buffer> <Space> <NOP>
+    autocmd FileType vimfiler nmap <silent><buffer> <Space> <Plug>(vimfiler_expand_tree)
+    autocmd FileType vimfiler nmap <silent><buffer> <S-Space> <Plug>(vimfiler_expand_tree_recursive)
+    " オープンは、<CR>(enter キー)
+    autocmd FileType vimfiler nmap <buffer><expr> <CR> vimfiler#smart_cursor_map(
+                                                            \ "\<Plug>(vimfiler_cd_file)",
+                                                            \ "\<Plug>(vimfiler_edit_file)")
+    " マークは、<C-Space>(control-space)
+    autocmd FileType vimfiler nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
+    autocmd FileType vimfiler vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
+augroup END
+
+
+"
+" >surround.vim
+"
 let g:surround_{char2nr('c')} = "``` \1language\1 \r ```"
 
 
 
-"-------------------------------------------------- .myscript
 
-" ********** anchor
-function! s:MakeAnchor() range
-    let l:cnt = 0
-    for l:rec in range (a:firstline, a:lastline)
-        let s:out = substitute(getline(l:rec), '\[\(.\{-}\)\](\(.\{-}\))', '<a href="\2">\1<\/a>', '')
-        call setline(l:rec, s:out)
-        let l:cnt += 1
-    endfor
+"--------------------------------------------------------------------------- .myscripts
+
+"
+" :<line>,<line>Form
+"
+" => 日本語コンテンツ内で使う半角英数字の前後に半角スペースを入れたいと思って。
+
+function! s:FormSpace() range
+    let l:current=line('.')
+    " シングルバイト英字、前後にスペース
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/[^\x01-\x7E、。「]\zs\(\w\)/ \1/ge'
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/\(\w\)\ze[^\x01-\x7E、。」]/\1 /ge'
+    " シングルバイト括弧/数値 前後にスペース
+    " 括弧の前 forward
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/[^\x01-\x7E 、。「]\zs\(`[^` ]\{-}`\|''[^'' ]\{-}''\|"[^" ]\{-}"\|<.\{-}>\|(.\{-})\|\[.\{-}\]\|{.\{-}}\)/ \1/ge'
+    " 括弧の後 behind
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/\(`[^` ]\{-}`\|''[^'' ]\{-}''\|"[^" ]\{-}"\|<.\{-}>\|(.\{-})\|\[.\{-}\]\|{.\{-}}\)\ze[^\x01-\x7E 、。」]/\1 /ge'
+    exe l:current
 endfunction
-command! -nargs=0 -range Anchor <line1>, <line2> call <SID>MakeAnchor()
+command! -nargs=0 -range Form <line1>, <line2> call s:FormSpace()
+" :h command-range
 
-" ********** google maps，my maps の description 用 html を生成
-function! s:MakeGoogleMapsDescription() range
-    let l:ref = 0    "flag
-
-    let l:cnt = 0
-    for l:rec in range (a:firstline, a:lastline)
-        if l:ref == 1
-            let s:out = s:MakeAnchor(getline(l:rec))
-            call setline(l:rec, s:out )
-        else
-            let s:out = s:CharacterReference(getline(l:rec))
-
-            if match(getline(l:rec), "* acc") >= 0
-                let s:out = substitute(s:out, '[', '<strong>', 'g')
-                let s:out = substitute(s:out, ']', '<\/strong>', 'g')
-            endif
-
-            call setline(l:rec, s:out)
-        endif
-        " ### ref ?
-        if match(getline(l:rec), '### ref') >= 0
-            let l:ref = 1
-        endif
-        " increment
-        let l:cnt += 1
-    endfor
-
-    exe 'silent'.'''<,''>s/\n/<br>/g'
-
-    call setline(a:firstline, '<div dir="ltr">'.getline(a:firstline).'</div>')
+"
+" :<line>,<line>Rcp
+"
+" => レシピメモ用に :p
+function! s:AlignRecipe() range
+    execute 'silent! ' . a:firstline . ',' . a:lastline . 's/\(\D[^-(]\)\([1-9]\|適\|大さじ\|小さじ\|お好\|少々\)/\1\.\.\2/g'
+    execute a:firstline . ',' . a:lastline . 'Form'
+    execute a:firstline . ',' . a:lastline . 'Align \.\.'
 endfunction
-function! s:CharacterReference(str)
-    let l:str = a:str
-
-    let l:str = substitute(l:str, '&', '\&amp;', "g")
-    let l:str = substitute(l:str, '<', '\&lt;', "g")
-    let l:str = substitute(l:str, '>', '\&gt;', "g")
-    return l:str
-endfunction
-function! s:MakeAnchor(str)
-    let l:tmp = matchstr(a:str, '^\d.\{-}\ze[')
-
-    let l:title = matchstr(a:str, '\[\zs.\{-}\ze\]')
-    let l:title = s:CharacterReference(l:title)
-
-    let l:url = matchstr(a:str, '\](\zs.\{-}\ze)')
-
-    if l:tmp == '' && l:url == '' && l:title == ''
-        let s:out = a:str
-    else
-        let s:out = l:tmp . '[<a href="' . l:url . '" target="_blank">' . l:title . '</a>]'
-    endif
-
-    return s:out
-endfunction
-command! -nargs=0 -range Maps <line1>, <line2> call <SID>MakeGoogleMapsDescription()
-
-
-" ********** googlemaps, mymaps の kml を生成
-function! s:MakeGooglemapsKML()
-    let l:mymapinfo = 1       " flag
-    let l:mymapName = ''
-    let l:mymapDescription = []
-
-    let l:line = 1
-
-    "===== MYMAP INFORMATION
-    while l:mymapinfo == 1
-        let l:lineStr = getline(l:line)
-
-        " <name>
-        if match(l:lineStr, 'name;') >= 0
-            let l:mymapName = substitute(l:lineStr, 'name;\s\(.*\)', '\1', 'g')
-        elseif match(getline(l:line), '\(-\)\{5,}') >= 0
-        " <description>
-        elseif match(l:lineStr, 'description;') >= 0
-        elseif match(getline(l:line), '\(-\s\)\{3,}') >= 0
-            let l:mymapinfo = 0
-        else
-            call add(l:mymapDescription, l:lineStr)
-        endif
-
-        if match(getline(l:line), 'pin;') >= 0
-            let l:pin = getline(l:line + 1)
-        endif
-
-        let l:line += 1
-    endwhile
-
-    " delete the information rows
-    while getline(l:line) == ""
-        let l:line += 1
-    endwhile
-    exe 'silent 1,'.(l:line - 1).' del'
-
-    "===== EACH PLACES
-    let l:description = 0     " flag
-    let l:description_ref = 0 " flag
-
-    let l:line = 1
-    let l:id = 1
-
-    while l:line <= line('$')
-        let l:lineStr = getline(l:line)
-
-        if l:description >= 1
-            if l:lineStr == ""
-                call setline(l:line, '</div>]]></description>')
-                let l:description = 0
-
-                " <Point>
-                call append(l:line, ["    <styleUrl>#style".l:id."</styleUrl>", "    <Point>","      <coordinates>".l:coordinates_longitude.','.l:coordinates_latitude.','.l:coordinates_altitude."</coordinates>","    </Point>","  </Placemark>"])
-                let l:line += 4
-
-                let l:description_ref = 0
-            else
-                if l:description_ref == 1
-                    " ### ref
-                    let l:tmp = s:MakeAnchor(getline(l:line))."<br>"
-                    call setline(l:line, l:tmp)
-                else
-                    " <coordinates>
-                    if match(getline(l:line), '* coordinates') >= 0
-                        let l:tmp = substitute(getline(l:line), '* coordinates \(.*\)', '\1', 'g')
-                        let l:coordinates_longitude = split(l:tmp, ',')[0]
-                        let l:coordinates_latitude = split(l:tmp, ',')[1]
-                        let l:coordinates_altitude = split(l:tmp, ',')[2]
-
-                        exe 'silent '.l:line.' del'
-
-                        let l:line -= 2
-                    else
-                    " normal line
-                        let l:lineStr = substitute(l:lineStr, '<', '\&lt;', 'g')
-                        let l:lineStr = substitute(l:lineStr, '>', '\&gt;', 'g')
-                        if getline(l:line + 1) != ""
-                            call setline(l:line, l:lineStr . "<br>")
-                        endif
-                    endif
-                endif
-
-                let l:description += 1
-            endif
-        endif
-
-        if l:lineStr == '=='
-            " point No
-            let l:id += 1
-            " coordinates
-            let l:coordinates_longitude = ""
-            let l:coordinates_latitude = ""
-            let l:coordinates_altitude = ""
-
-            " <Placemark>
-            call append(l:line - 2, '  <Placemark>')
-
-            let l:line += 1
-
-            " <name>
-            let l:tmp = getline(l:line - 1)
-            call setline(l:line - 1, '    <name>' . l:tmp . '</name>')
-
-            " <description>
-            call setline(l:line, '    <description><![CDATA[<div dir="ltr"><font face="arial" size="2">')
-            let l:description = 1
-        elseif match(getline(l:line), '### ref') >= 0
-            let l:description_ref = 1
-        endif
-
-        let l:line += 1
-    endwhile
-
-    call append(0, '<?xml version="1.0" encoding="UTF-8"?>')
-    call append(1, '<kml xmlns="http://earth.google.com/kml/2.2">')
-    call append(2, '<Document>')
-    call append(3, '  <name>'. l:mymapName .'</name>')
-    call append(4, '  <description><![CDATA['. l:mymapDescription[0])
-    if len(l:mymapDescription) > 1
-        call append(5, l:mymapDescription[1:])
-    endif
-    call append(5 + (len(l:mymapDescription) - 2), ']]></description>')
-
-    let l:line = 5 + (len(l:mymapDescription) - 2)
-    let l:cnt = 1
-
-    let l:iconsUrl = '<href>http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png</href>'
-    while l:cnt <= l:id
-        call append(l:line + 1,'  <Style id="style'.l:cnt.'">')
-        call append(l:line + 2,'    <IconStyle>')
-        call append(l:line + 3,'      <Icon>')
-        call append(l:line + 4,'        <href>'.l:pin.'</href>')
-        call append(l:line + 5,'      </Icon>')
-        call append(l:line + 6,'    </IconStyle>')
-        call append(l:line + 7,'  </Style>')
-        let l:line += 7
-        let l:cnt += 1
-    endwhile
-
-    call append(line('$'), '</Document>')
-    call append(line('$'), '</kml>')
-
-    exe 'silent %s/<br>\n/<br>/g'
-    exe 'silent %s/<font face="arial" size="2">\n/<font face="arial" size="1">/g'
-    exe 'silent %s/<\/Placemark>\n\n/<\/Placemark>/g'
-
-endfunction
-command! -nargs=0 Mapskml call <SID>MakeGooglemapsKML()
-
-
-" ********** googlemaps, kml から mymaps 用メモを生成
-function! s:MakeGooglemapsMemo()
-    exe 'silent 1,2 del'
-    exe 'silent %s/<Document>\n//g'
-    exe 'silent %s/<\/Document>\n//g'
-    for l:line in range(1, line('$'))
-        " name
-        if match(getline(l:line),'<name>') >= 0
-            exe 'silent '.l:line.' s/^.\{-}<name>\(.\{-}\)<\/name>/name; \1----------description;/g'
-            let line += 2
-        endif
-
-        if match(getline(l:line),'<description>') >= 0
-            exe 'silent '.l:line.' s/^.\{-}<description><!\[CDATA\[//g'
-        endif
-
-        if match(getline(l:line),'<\/description>') >= 0
-            call setline(l:line, '- - - - - - - - - -')
-            call append(l:line, ['',''])
-            call append(l:line - 1, '')
-            let l:line +=3
-
-            let l:beg = l:line + 1
-        endif
-
-        if match(getline(l:line),'<Placemark>') >= 0
-            let l:end = l:line - 1
-            break
-        endif
-    endfor
-    exe 'silent '.l:beg.','.l:end.' del'
-
-    call s:ExistenceCheckAndSubstitute('^.\{-}<Snippet>.\{-}\n', '')
-
-    exe 'silent %s/<styleUrl>.\{-}<\/styleUrl>\n//g'
-    exe 'silent %s/<Point>\n//g'
-    exe 'silent %s/<\/Point>\n//g'
-    exe 'silent %s/<Placemark>\n//g'
-    exe 'silent %s/<\/Placemark>\n//g'
-
-    exe 'silent %s/^.\{-}<name>\(.\{-}\)<\/name>/\1==/g'
-    exe 'silent %s/^.\{-}<description><!\[CDATA\[//g'
-    exe 'silent %s/\]\]><\/description>\n//g'
-
-    " 不要なタグを削除
-    call s:ExistenceCheckAndSubstitute('<span.\{-}>', '')
-    call s:ExistenceCheckAndSubstitute('<\/span>', '')
-    call s:ExistenceCheckAndSubstitute('<font.\{-}>', '')
-    call s:ExistenceCheckAndSubstitute('<\/font>', '')
-
-    call s:ExistenceCheckAndSubstitute('&lt;br&gt;', '')
-
-    call s:ExistenceCheckAndSubstitute('<div.\{-}>', '')
-    call s:ExistenceCheckAndSubstitute('<\/div>', '')
-
-    call s:ExistenceCheckAndSubstitute('&amp;', '\&')
-    call s:ExistenceCheckAndSubstitute('&nbsp;', ' ')
-    call s:ExistenceCheckAndSubstitute('&lt;', '<')
-    call s:ExistenceCheckAndSubstitute('&gt;', '>')
-    call s:ExistenceCheckAndSubstitute('<br>', '')
-
-    exe 'silent %s/<\/kml>//g'
-
-    exe 'silent %s/\(^\d.\{-}\)\[<a href="\(.\{-}\)".\{-}>\(.\{-}\)<\/a>\]/\1\[\3\](\2)/g'
-
-    let l:line = 1
-    while l:line <= line('$')
-        if match(getline(l:line),'* acc') >= 0
-            let l:line_coordinates = l:line
-        endif
-        if match(getline(l:line),'<coordinates>') >= 0
-            call append(l:line_coordinates, '* coordinates '.matchstr(getline(l:line),'<coordinates>\zs.\{-}\ze<\/coordinates>'))
-            let l:line += 1
-
-            " delete the line ; '<coordinates>000.000000,00.000000,0.000000</coordinates>'
-            call setline(l:line,'')
-        endif
-        let l:line += 1
-    endwhile
-
-    "clean the format
-    exe 'silent %s/^\s//g'
-    let l:line = 1
-    while l:line <= line('$')
-        let l:lineStr = getline(l:line)
-
-        if l:lineStr == '=='
-            let l:lineTo = l:line
-            while getline(l:lineTo) != ""
-                if getline(l:lineTo) == ""
-                    break
-                endif
-                let l:lineTo -= 1
-            endwhile
-            let l:lineFrom = l:lineTo
-            while getline(l:lineFrom) == ""
-                if getline(l:lineFrom) != ""
-                    break
-                endif
-                let l:lineFrom -= 1
-            endwhile
-
-            exe 'silent '.(l:lineFrom + 1).','.l:lineTo.' del'
-
-            call append(l:lineFrom, ['',''])
-
-        endif
-
-        let l:line += 1
-    endwhile
-
-endfunction
-function! s:ExistenceCheckAndSubstitute(pat, sub)
-    if search(a:pat) > 0
-        exe 'silent %s/'.a:pat.'/'.a:sub.'/g'
-    endif
-endfunction
-command! -nargs=0 Mapsmemo call <SID>MakeGooglemapsMemo()
-
-
-" ********** googlemaps engine lite 用の csv を生成する
-function! s:MakeMapToCSV()
-    let l:flg = 1
-    let l:line = 1
-    while l:flg == 1
-        if match(getline(l:line), '==') >= 0
-            let l:flg = 0
-            break
-        endif
-        let l:line += 1
-    endwhile
-    exe 'silent 1,'.(l:line - 2).' del'
-
-    let l:line = 1
-    while l:line <= line('$')
-        if match(getline(l:line), '* coordinates ') >= 0
-            let l:tmp = substitute(getline(l:line), '* coordinates ', '', 'g')
-            let l:array = split(l:tmp, ',')
-            call setline(l:line, '* coordinates "'.l:array[0].'","'.l:array[1].'"')
-            " call setline(l:line, '* coordinates '.l:tmp)
-        endif
-        let l:line += 1
-    endwhile
-
-    " call append(0, '"flg","category","name","summary","station","address","open-close","access","coordinates","checkitems","misc","ref"')
-    call append(0, '"flg","category","name","summary","station","address","open-close","access","longitude","latitude","checkitems","misc","ref"')
-
-    "-- title >> "flag","category","name"
-    exe 'silent'.'%s/^\(包\|豆漿\|食\|飯\|夜市\|粽\|餅\|餃\|飯\|麺\|湯\)\.\(.*$\)/"","\1","\2",/g'
-    exe 'silent'.'%s/^★\(包\|豆漿\|食\|飯\|夜市\|粽\|餅\|餃\|飯\|麺\|湯\)\.\(.*$\)/"★","\1","\2",/g'
-    exe 'silent'.'%s/^☆\(包\|豆漿\|食\|飯\|夜市\|粽\|餅\|餃\|飯\|麺\|湯\)\.\(.*$\)/"☆","\1","\2",/g'
-
-    "-- data >> "eye-catch"
-    exe 'silent'.'%s/^\(*.\{-}\*\)\n/"\1",/g'
-    "-- data >> "sta","add","opn","acc"
-    exe 'silent'.'%s/\(\* \(sta\|add\|opn\|acc\) \)\(.*\)\n/"\3",/g'
-    " exe 'silent'.'%s/\(\* \(coordinates\) \)\(.*\)/"\3",/g'
-    exe 'silent'.'%s/\(\* \(coordinates\) \)\(.*\)/\3,/g'
-    "-- data >> "url <a></a>"
-    exe 'silent'.'%s/\[\(.\{-}\)\](\(.\{-}\))\(.*\)/<a href=''\2'' target=''_blank''>\1<\/a>\3/g'
-
-    exe 'silent'.'%s/\n^==\n//g'
-
-    "-- note >> "" 囲みの開き " をセット，行末の改行削除
-    " \(### \(items\|misc\|ref\)\)\n/",\1"/g
-    exe 'silent'.'%s/\(### items\)\n/\1"/g'
-    exe 'silent'.'%s/\(### \(misc\|ref\)\)\n/",\1"/g'
-    "-- note >> "" 囲みの閉じ " をセット，前行の改行削除
-    " \n^\(",### \(items\|misc\|ref\)\)/\1/g
-    exe 'silent'.'%s/\n^\(### items\)/\1/g'
-    exe 'silent'.'%s/\n^\(",### \(misc\|ref\)\)/\1/g'
-    "-note >> タイトル削除
-    exe 'silent'.'%s/\(### \(items\|misc\|ref\)\)//g'
-
-    "コメント行削除
-    call s:ExistenceCheckAndSubstitute('<!--.\{-}-->\n','')
-
-    "最後の 閉じ " セット
-    " exe 'silent'.'%s/\n\{3}/"改行改行改行/g'
-    exe 'silent'.'%s/\n\{2,3}/"/g'
-endfunction
-command! -nargs=0 Csv call <SID>MakeMapToCSV()
-
-
-" ********** Single
-function! s:ChangeToSingleByte()
+command! -nargs=0 -range Rcp <line1>, <line2> call s:AlignRecipe()
+
+"
+" :<line>,<line>Single
+"
+" 全角の英数字を半角にする。(自分の win 環境では hz_ja.vim が上手く動いてくれないみたいなので orz)
+function! s:ChangeToSingleByte() range
+    " テーブル生成
     let l:dic = {}
     call extend(l:dic, {'０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9'})
     call extend(l:dic, {'①':'1','②':'2','③':'3','④':'4','⑤':'5','⑥':'6','⑦':'7','⑧':'8','⑨':'9'})
     call extend(l:dic, {'Ａ':'A','Ｂ':'B','Ｃ':'C','Ｄ':'D','Ｅ':'E','Ｆ':'F','Ｇ':'G','Ｈ':'H','Ｉ':'I','Ｊ':'J','Ｋ':'K','Ｌ':'L','Ｍ':'M','Ｎ':'N','Ｏ':'O','Ｐ':'P','Ｑ':'Q','Ｒ':'R','Ｓ':'S','Ｔ':'T','Ｕ':'U','Ｖ':'V','Ｗ':'W','Ｘ':'X', 'Ｙ':'Y','Ｚ':'Z'})
     call extend(l:dic, {'ａ':'a','ｂ':'b','ｃ':'c','ｄ':'d','ｅ':'e','ｆ':'f','ｇ':'g','ｈ':'h','ｉ':'i','ｊ':'j','ｋ':'k','ｌ':'l','ｍ':'m','ｎ':'n','ｏ':'o','ｐ':'p','ｑ':'q','ｒ':'r','ｓ':'s','ｔ':'t','ｕ':'u','ｖ':'v','ｗ':'w','ｘ':'x','ｙ':'y','ｚ':'z'})
     call extend(l:dic, {'（':'(', '）':')', '［':'[', '］':']', '｛':'{', '｝':'}', '＜':'<', '＞':'>', '”':'"', "’":"'", "‘":"'", '“':'"'})
-    call extend(l:dic, {'￥':'\\','＆':'\&','／':'\/','：':':', '；':';', '＊':'*', '％':'%', '？':'?', '　':' ', '！':'!', '～':'-', '〜':'-', '―':'-', '＝':'=', '＋':'+'})
-    "# do substitute
+    call extend(l:dic, {'￥':'\\','＆':'\&','／':'\/','：':':', '；':';', '＊':'*', '％':'%', '？':'?', '　':' ', '！':'!', '～':'-', '〜':'-', '―':'-', '＝':'='})    " 句点の "．" は対象外
+
+    " 置換処理
     for l:key in keys(l:dic)
-        exe 'silent %s/'.l:key.'/'.l:dic[l:key].'/ge'
+        exe 'silent! ' . a:firstline . ',' . a:lastline . 's/' . l:key . '/' .l:dic[l:key] . '/ge'
     endfor
-    " exe 'silent %s/\d\zs．\ze\d[^$]/./ge'
-    exe 'silent %s/\d\zs．d/./ge'
+    " 置換処理. 数値の小数点(それ以外は、句点とする)
+    exe 'silent! ' . a:firstline . ',' . a:lastline . 's/\d\zs．\ze\d/./ge'
 endfunction
-command! -nargs=0 Single call <SID>ChangeToSingleByte()
+command! -nargs=0 -range Single <line1>, <line2> call s:ChangeToSingleByte()
 
 
-" ********** Numb
-" ref. http://kikaibunsho.web.fc2.com/monologo/memoro/08_11.html
-" ref. http://vimdoc.sourceforge.net/htmldoc/eval.html#printf%28%29
+"
+" :<line>,<line>Num {startNum}[format]
+"
+" 連番を先頭に挿し込む。
+" 引数は1つのみ、必須。開始値を指定する。(無い場合は1から)
+
 function! s:InsertNumbering(cnt) range
-    echo "'" . a:cnt . "'"
+    " echo "'" . a:cnt . "'"
     let l:cntr = split(substitute(a:cnt, '\(^.\{-}\)\(\d\+\)\(.\{-}$\)', '\1,\2,\3', ''),',',1)
 
     let l:cnt = str2nr(l:cntr[1])
@@ -921,529 +600,66 @@ function! s:InsertNumbering(cnt) range
         let l:cnt += 1
     endfor
 endfunction
-
 command! -nargs=+ -range Num <line1>, <line2> call <SID>InsertNumbering(<f-args>)
-
-" ********** for google blogger
-" html
-command! Poff call <SID>htmlPTag(0)
-command! Pon call <SID>htmlPTag(1)
+" ref. http://kikaibunsho.web.fc2.com/monologo/memoro/08_11.html
+" ref. http://vimdoc.sourceforge.net/htmldoc/eval.html#printf%28%29
 
 
-command! Draft call <SID>markdownToHtml(0)
-command! Release call <SID>markdownToHtml(1)
-function! s:markdownToHtml(edition)
-    if &filetype != 'markdown'
-        echo 'the type of this file is not markdown ...'
-        return
+"
+" s:FormMarkdownEOL()
+"
+" markdown 形式における各行末のフォーマット調整。(ただし不完全 :P)
+" とりわけ <br> の行末スペースx2を確認し、必要に応じ追加、書き換える。
+"
+" !note の箇所は、導入時、要注意。
+"   置換先の文字列は、いずれも "半角スペース2つに改行"。
+"   改行コードは `<C-v><CR>`。
+"   ```
+"   :s/\(\/$\)\n\(\/g\)/\1  \^M\2/g
+"   ```
+"   上述置換処理の `^M` は `<C-v><CR>` で改行コード。
+function! s:FormMarkdownEOL()
+  let l:cur = line('.')
+  " 行末空白が x3 以上の場合  !note
+  exe 'silent %s/^[^$].*\S\zs\s\{3,}$\n\ze[^$]/  /ge'
+  " 行末空白が x1 の場合      !note
+  exe 'silent %s/^[^$].*\S\zs\s\{1}$\n\ze[^$]/  /ge'
+  " 行末空白が x0 の場合      !note
+  exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]/  /ge'
+
+  let l:iscode = 0  "off
+  for l:line in range(1, line('$'))
+    let l:lineStr = getline(l:line)
+  " -- code
+    if match(l:lineStr, '^```') >= 0
+      if l:iscode == 0
+        let l:iscode = 1  "on
+      else
+        let l:iscode = 0  "off
+      endif
     endif
-
-    "# quickrun ; markdown > html
-    exe "QuickRun -runner system"
-
-    exe "normal \<c-w>w"
-    exe "%y"
-    exe "tabnew"
-    exe 0."put"
-    exe "set ft=html"
-    exe 0
-
-    "# <p> tag
-    call s:htmlPTag(a:edition)
-
-    " # footnotes
-    " call s:Footnotes()
-    " # cleaning
-    call s:htmlClean()
-
-    "# done!!
-    exe 0
-endfunction
-" via http://d.hatena.ne.jp/mFumi/20110920/1316525906
-" via http://archiva.jp/web/tool/vim_basic.html
-
-" markdown
-command! Down call <SID>htmlToMarkdown()
-let s:dicTag = {'<ul>':'</ul>', '<ol>':'</ol>'}
-let s:tagisUl = 'ul'
-let s:tagisOl = 'ol'
-function! s:htmlToMarkdown()
-    exe '%y'
-    exe 'tabnew'
-    exe 0.'put'
-    exe 'set ft=markdown'
-    exe 0
-
-    call s:htmlPTag(1)
-    call s:htmlClean()
-    call s:markdown()
-
-    exe 1
-endfunction
-
-function! s:htmlPTag(flg)
-    if a:flg == 0    "off <!--p--><--/p-->
-        let l:tagStart = ['<p>','<!--p-->']
-        let l:tagEnd = ['<\/p>','<!--\/p--><br \/>']
-    else    "on <p></p>
-        let l:tagStart = ['<!--p-->','<p>']
-        let l:tagEnd = ['<!--\/p--><br \/>','<\/p>']
-    endif
-    exe 'silent'.'%s/'.l:tagStart[0].'\(.\_.\{-}\)'.l:tagEnd[0].'/'.l:tagStart[1].'\1'.l:tagEnd[1].'/ge'
-
-    "clean
-    if a:flg == 0
+    if l:iscode == 1
+      exe 'silent ' . l:line . 's/\s\+$//ge'
     else
-        exe 'silent'.'%s/$\n<br \/>\ze$\n//ge'
-        exe 'silent'.'%s/$\n<br \/><!--\/p-->\ze$\n//ge'
+  " -- list
+      if match(l:lineStr, '^\s*\(-\s\|*\s\|\d\{-}\.\s\)') >= 0 &&
+       \ match (getline(l:line + 1), '^\s*\($\|-\s\|*\s\|\d\{-}\.\s\)') >= 0
+        exe 'silent ' . l:line . 's/\s\{-1,}$//ge'
+      endif
+  " -- header
+      if match(l:lineStr, '^\(#\|```\)') >= 0 ||
+      \ match(getline(l:line + 1), '^\(-[^ ]\+$\|=[^ ]\+$\|-$\|=$\)') >= 0
+        exe 'silent ' . l:line . 's/\s\{-1,}$//ge'
+      endif
     endif
+  endfor
 
+  exe l:cur
 endfunction
 
-command! Clean call <SID>htmlClean()
-function! s:htmlClean()
-    "# list as the contents
-    "## url
-    exe 'silent'.'%s/\(<li><a \).\{-}\(href="\).\{-}\(#.\{-}<\/a>\)/\1\2\3/ge'
-    "## mark «
-    exe 'silent'.'%s/\(<li.\{-}><a href="#.\{-}\)\(\|\( \)*«\|\(&nbsp;\)*«\)\(<\/a>\)/\1 «\5/g'
 
 
-    "# headings
-    call s:htmlCleanHeadings()
-
-    "# anchor
-    call s:htmlCleanAnchor()
-
-    "# <div></div>
-    exe 'silent'.'%s/<div>\_s\{-}<\/div>//ge'
-endfunction
-
-function! s:Footnotes()
-    let s:flg = 0
-
-    let s:id = 0
-    let s:footnotes = {}
-
-    for s:line in range(1, line('$'))
-        let s:lineStr = getline(s:line)
-
-        " set any anchors of the footnotes & store them as a dictionary
-        if match(s:lineStr, '((') >= 0
-            let s:tmp = matchstr(s:lineStr, '((.\{-}))')
-            if s:tmp == ""
-                let s:tmp = substitute(matchstr(s:lineStr, '((.*'), '  $', '<br>', 'g')
-                let s:flg = 1
-            else
-                let s:footnotes[s:id] = s:tmp
-                let s:flg = 0
-                let s:id += 1
-            endif
-            let s:dropaline = s:FootnoteStr(0, s:id, s:tmp).substitute(matchstr(s:lineStr,'((.*'),'&quot;', '"', 'g') "why '&quot;' ?
-            call setline(s:line, substitute(s:lineStr, '((.*', s:dropaline, 'g'))
-        elseif s:flg == 1
-            if match(s:lineStr, '))') >= 0
-                let s:footnotes[s:id] = s:tmp . matchstr(s:lineStr, '^.\{-}))')
-                let s:flg = 0
-                let s:id += 1
-            else
-                let s:tmp = s:tmp . substitute(s:lineStr, '  $', '<br>', 'g')
-            endif
-        endif
-    endfor
-
-    call append(line('$'), ['','',''])
-
-    " write the footlines
-    call append(line('$'), '<div class="footnote">')
-    for s:id in keys(s:footnotes)
-        " echo s:id .': '. s:footnotes[s:id]
-        call append(line('$'), s:FootnoteStr(1, s:id, s:footnotes[s:id]))
-    endfor
-    call append(line('$'), '</div>')
-
-    exe 'silent'.'%s/((.\_.\{-}))//g'
-
-endfunction
-function! s:FootnoteStr(switch, id, str)
-    if a:switch == 0
-        let s:temp = substitute(a:str, '\(((\|))\|  $\)', '', 'g')
-        let s:temp = substitute(s:temp, '\(<a.\{-}>\|<\/a>\)', '', 'g')
-        " let s:return = '<a href="#f'.a:id.'" name="fn'.a:id.'" title="'.s:temp.'" class="footnote-num">*'.a:id.'</a>'
-        let s:return = '<a href="#f'.a:id.'" name="fn'.a:id.'" class="footnote-num">*'.a:id.'</a>'
-    else
-        let s:temp = matchstr(a:str, '((\zs.\{-}\ze))')
-        let s:return = '<p class="footnote"><a href="#fn'.a:id.'" name="f'.a:id.'" class="footnote-num">*'.a:id.'</a>: <span class="footnote-txt">'.s:temp.'</span></p>'
-    endif
-    return s:return
-endfunction
-command! Footnotes call <SID>Footnotes()
-" function! s:Footnotes()
-    " let s:flg = 0
-
-    " let s:id = 0
-    " let s:footnotes = {}
-
-    " for s:line in range(1, line('$'))
-        " let s:lineStr = getline(s:line)
-        " "
-        " " set any anchors of the footnotes & store them as a dictionary
-        " if match(s:lineStr, '((') >= 0
-            " let s:tmp = matchstr(s:lineStr, '((.\{-}))')
-            " if s:tmp == ""
-                " let s:tmp = substitute(matchstr(s:lineStr, '((.*'), '  $', '<br>', 'g')
-                " let s:flg = 1
-            " else
-                " let s:footnotes[s:id] = s:tmp
-                " let s:flg = 0
-                " let s:id += 1
-            " endif
-            " call setline(s:line, substitute(s:lineStr, '((.*', s:FootnoteStr(0, s:id, s:tmp).matchstr(s:lineStr,'((.*'), 'g'))
-        " elseif s:flg == 1
-            " if match(s:lineStr, '))') >= 0
-                " let s:footnotes[s:id] = s:tmp . matchstr(s:lineStr, '^.\{-}))')
-                " let s:flg = 0
-                " let s:id += 1
-            " else
-                " let s:tmp = s:tmp . substitute(s:lineStr, '  $', '<br>', 'g')
-            " endif
-        " endif
-    " endfor
-
-    " call append(line('$'), ['','',''])
-
-    " " write the footnotes
-    " call append(line('$'), '<div class="footnote">')
-    " for s:id in keys(s:footnotes)
-        " " echo s:id .': '. s:footnotes[s:id]
-        " call append(line('$'), s:FootnoteStr(1, s:id, s:footnotes[s:id]))
-    " endfor
-    " call append(line('$'), '</div>')
-
-    " exe 'silent'.'%s/((.\_.\{-}))//g'
-
-" endfunction
-" function! s:FootnoteStr(switch, id, str)
-    " if a:switch == 0
-        " let s:temp = substitute(a:str, '\(((\|))\|  $\)', '', 'g')
-        " let s:return = '<a href="#f'.a:id.'" name="fn'.a:id.'" title="'.s:temp.'">*'.a:id.'</a>'
-    " else
-        " let s:temp = matchstr(a:str, '((\zs.\{-}\ze))')
-        " let s:return = '<p class="footnote"><a href="#fn'.a:id.'" name="f'.a:id.'" class="footnote-num">*'.a:id.'</a>: <span class="footnote-txt">'.s:temp.'</span>'
-    " endif
-    " return s:return
-" endfunction
-" command! Footnotes call <SID>Footnotes()
-
-function! s:htmlCleanHeadings()
-    "# write in a line
-    exe 'silent'.'%s/\(<h\d.\{-}>\)\n\(.\+\)\n\(<\/h\d>\)/\1\2\3/ge'
-    "# set the id into the headings
-    let l:dicId = {}
-    "## get id and title
-    for l:line in range(1, line('$'))
-        if match(getline(l:line),'<li><a href="#') >= 0
-            let l:lineIs = getline(l:line)
-
-            let l:tmpID = matchstr(l:lineIs, '<li><a href="#\zs.\{-}\ze"')
-            let l:tmpTitle = matchstr(l:lineIs, '<li><a.\{-}>\zs.\{-}\ze\s«')
-
-            let l:dicId[l:tmpID] = l:tmpTitle
-
-        endif
-    endfor
-
-    "## delete anchor in the headings
-    exe '%s/\(<h\d.\{-}>\)<a.\{-}>\(.\{-}\)<\/a>\(<\/h\d>\)/\1\2\3/ge'
-
-    "## set id into the heading
-    let l:line = 1
-    while l:line <= line('$')
-        let l:lineIs = getline(l:line)
-
-        "### search for the headings
-        if matchstr(l:lineIs,'<h\d') != ""
-            "#### get the level of the headings
-            let l:tagIs = 'h'.matchstr(l:lineIs, '<h\zs\d\+\ze.\{-}>')
-
-            "#### get title
-            let l:myTitle = matchstr(l:lineIs, '<h\d.\{-}">\zs.\{-}\ze<\/h\d>')
-
-            let l:myLineIs = ''
-            "#### check id
-            if matchstr(l:myTitle, '{\zs.\+\ze}$') != ""
-                "#### defined id in the headings (eg.#### title{#id} -> <h4 id="id">title</h4>)
-                let l:myLineIs = '<'.l:tagIs.' id="'.matchstr(l:myTitle, '{#\zs.\{-}\ze}$').'">'.matchstr(l:myTitle, '^.\{-}\ze{').'</'.l:tagIs.'>'
-            else
-                "#### check wheter or not the target header
-                let l:myId = ''
-                for [l:tmpId, l:tmpTitle] in items(l:dicId)
-                    if l:tmpTitle == l:myTitle
-                        let l:myId = l:tmpId
-                        break
-                    endif
-                endfor
-                let l:myLineIs = '<'.l:tagIs.' id="'.l:myId.'">'.l:myTitle.'</'.l:tagIs.'>'
-            endif
-
-            "### set
-            call setline(l:line, l:myLineIs)
-        endif
-
-        let l:line += 1
-    endwhile
-endfunction
-
-function! s:htmlCleanAnchor()
-    let l:line = 1
-    while l:line <= line('$')
-        let l:lineIs = getline(l:line)
-        "# anchor 'target="_blank"'
-        if stridx(l:lineIs, '<a href=') >= 0 && stridx(l:lineIs, '<li>') < 0
-            let l:tmp = split(matchstr(l:lineIs, '<a href="\zs.\{-}\ze"'),'/')[-1]
-
-            if match(tolower(l:tmp), '\.jpg$') >= 0 || match(tolower(l:tmp), '\.png$') >= 0 || match(tolower(l:tmp), '\.gif$') >= 0
-            elseif match(tolower(l:tmp), '#') >= 0
-            else
-                if stridx(l:lineIs, 'target="_blank">') >= 0
-                else
-                    call setline(l:line, substitute(l:lineIs, '\(<a .\{-}\)>', '\1 target="_blank">', 'g'))
-                endif
-            endif
-        endif
-
-        let l:line += 1
-    endwhile
-endfunction
-function! s:markdown()
-    "# headings
-    exe 'silent'.'%s/<h\(\d\) id="\(.*\)">\(.\+\)\{-}<\/h\d>/\=repeat("#", submatch(1))." ".submatch(3)/ge'
-    exe 'silent'.'%s/\(# \[.\{-}\)\(\]()\)/\1]/g'
-
-    "# headings.if ...
-    exe 'silent'.'%s/<h\(\d\)>\(.\+\)\{-}<\/h\d>/\=repeat("#", submatch(1))." ".submatch(2)/ge'
-    exe 'silent'.'%s/#\s\[\(.\{-}\)\]$/# \1/ge'
-
-    "# paragraphs
-    exe 'silent'.'%s/<p>\(.\_.\{-}\)<\/p>/\1/ge'
-
-    "# line breaks
-    " exe 'silent'.'%s/<br \/>$/  /ge'
-    exe 'silent'.'%s/\(br>\)\@<!<br>$/  /ge'
-    exe 'silent'.'%s/\(br \/>\)\@<!<br \/>$/  /ge'
-    " exe 'silent'.'%s/<br \/>//ge'
-    exe 'silent'.'%s/\(br>\|^\)\@<!<br>//ge'
-    exe 'silent'.'%s/\(br \/>\|^\)\@<!<br \/>//ge'
-
-    "# list
-    call s:markdownList()
-
-    "# to clipboard
-    exe '%y'
-
-    "# set new buffer
-    exe 'tabnew'
-    exe 0.'put'
-    exe 'set ft=markdown'
-    exe 1
-endfunction
-
-function! s:markdownList()
-    let l:rec = 1
-    while l:rec <= line('$')
-        let l:line = getline(l:rec)
-
-        let l:cntTag_start = 0 " level by list
-        let l:cntTag_end   = 0 " level by list
-
-        if stridx(l:line, '<ul>') >= 0 || match(l:line, '<ol.\{-}>') >= 0
-            "; which tag <ul> or <ol>
-            let l:tagis = s:whichList(l:line)
-
-            let l:recBeg = l:rec    "from
-
-            let l:recList = l:recBeg
-            while l:recList <= line('$')
-                "; start-tag
-                if stridx(getline(l:recList), '<ul>') >= 0 || match(getline(l:recList), '<ol.\{-}>') >= 0
-                    let l:cntTag_start += 1
-                "; end-tag
-                elseif stridx(getline(l:recList), '</ul>') >= 0 || match(getline(l:recList), '</ol>') >= 0
-                    let l:cntTag_end += 1
-
-                    "; is the end of <ul>or<ol> section ?
-                    if l:cntTag_start == l:cntTag_end
-                        "; --- WRITE ---
-                        let l:rec =  s:rewriteList(l:recBeg, l:recList, l:tagis)
-                        break
-                    endif
-                endif
-
-                "; to next record
-                let l:recList += 1
-            endwhile
-        endif
-
-        "; to next record
-        let l:rec += 1
-    endwhile
-endfunction
-
-function! s:rewriteList(beg, end, tagis)
-    "; init
-    let l:levelIs = 0
-
-    let l:recBeg = a:beg " 処理中に更新したい為
-    let l:recEnd = a:end " 処理中に更新したい為
-
-    "; tag identification
-    let l:tagId = []
-    let l:dictmp = {}
-    let l:dictmp[a:tagis] = 0
-    call add(l:tagId, l:dictmp)
-
-    let l:rec = l:recBeg
-    while l:rec <= l:recEnd
-        "; init , off the flag whatever delete the brank line
-        let l:lineDel = 0
-
-        "; read
-        let l:lineTarget = getline(l:rec)
-
-        if l:rec == l:recBeg
-            let l:line = substitute(l:lineTarget, '<'.a:tagis.'.\{-}>', '', '')
-            let l:lineDel = s:doThislineDel(l:line)
-            "; init
-            let l:recBeg = -1
-        elseif l:rec == l:recEnd
-            let l:line = substitute(l:lineTarget, '</'.a:tagis.'>', '', 'g')
-            "; write
-            call setline(l:rec, l:line)
-            "; end of the section <ul>/<ol>
-            return l:rec
-        else
-            if stridx(l:lineTarget, '<li>') >= 0
-
-                "tag identification
-                call map(l:tagId[l:levelIs],"v:val + 1")    "count up
-
-                if get(l:tagId[l:levelIs], s:tagisUl) > 0
-                    let l:markIs = "\* "
-                elseif get(l:tagId[l:levelIs], s:tagisOl) > 0
-                    let l:markIs = get(l:tagId[l:levelIs], s:tagisOl)."\. "
-                endif
-
-                let l:line = repeat("\t", l:levelIs) . substitute(l:lineTarget, '<li>', l:markIs,'')
-                let l:line = substitute(l:line, '</li>', '','')
-
-                "have id?
-                if match(l:lineTarget, '<a href="#.\{-}"') >= 0
-                    let l:idIs = matchstr(l:lineTarget, '<a href="#\zs.\{-}\ze"')
-                    let l:line = matchstr(l:lineTarget, '<a .\{-}>\zs.\{-}\ze<')
-
-                    let l:line = l:markIs . '['.l:line.']' . '(#'.l:idIs.')'
-                endif
-
-            elseif stridx(l:lineTarget, '<ul>') >= 0 || match(l:lineTarget, '<ol.\{-}>') >= 0
-                let l:levelIs += 1
-                "tag identification
-                let l:tagis = s:whichList(l:lineTarget)
-                let l:dictmp = {}
-                let l:dictmp[l:tagis] = 0
-                call add(l:tagId, l:dictmp)
-                "get contents ; delete tag <ul>
-                let l:line = substitute(l:lineTarget, '<'.l:tagis.'.\{-}>', '', '')
-                " let l:line = substitute(l:lineTarget, '<ul>', '', '')
-                let l:lineDel = s:doThislineDel(l:line)
-            elseif stridx(l:lineTarget, '</ul>') >= 0 || stridx(l:lineTarget, '</ol>') >= 0
-                if has_key(l:tagId[l:levelIs], s:tagisUl)
-                    let l:tagEndis = s:tagisUl
-                elseif has_key(l:tagId[l:levelIs], s:tagisOl)
-                    let l:tagEndis =  s:tagisOl
-                else
-                endif
-
-                if l:levelIs <= 0
-                    let l:levelIs = 0
-                else
-                    let l:levelIs -= 1
-                endif
-                "get contents ; delete tag </ul>
-                let l:line = substitute(l:lineTarget, '</'.l:tagEndis.'>', '', '')
-
-                " let l:line = substitute(l:lineTarget, '</ul>', '', '')
-                let l:lineDel = s:doThislineDel(l:line)
-            else
-                let l:line = substitute(l:lineTarget, '</li>', '', 'g')
-                let l:lineDel = s:doThislineDel(l:line)
-            endif
-        endif
-
-        if l:lineDel == 1
-            "delete this record
-            exe l:rec . 'd'
-            let l:recEnd -= 1
-        else
-            "write
-            call setline(l:rec, l:line)
-            "next record
-            let l:rec += 1
-        endif
-
-    endwhile
-endfunction
-
-function! s:doThislineDel(line)
-    if a:line == '' || a:line == '</li>'
-        return 1
-    endif
-    return 0
-endfunction
-
-function! s:whichList(str)
-    if stridx(a:str, '<ul>') >= 0
-        let l:yourtagis = 'ul'
-    elseif match(a:str, '<ol.\{-}>') >= 0
-        let l:yourtagis = 'ol'
-    else
-    endif
-    return l:yourtagis
-endfunction
-
-" 引用符, 括弧の設定 (ref. http://ymkjp.blogspot.jp/2012/04/vim.html)
-inoremap {} {}<Left>
-inoremap [] []<Left>
-inoremap () ()<Left>
-inoremap """ ""<Left>
-inoremap ''' ''<Left>
-inoremap <> <><Left>
-
-" augroup ExitBracket
-    " autocmd!
-    " autocmd InsertLeave * call ExitBracket()
-" augroup END
-" function! ExitBracket()
-    " exe "set iminsert=0"
-    " if mode() ==# 'n'
-        " let matchend_idx = matchend(getline('.'), '.',  col('.') - 1)
-        " let check_str = strpart(getline('.'), matchend_idx, 1)
-
-        " let str_bracket = ')]}>"'''
-        " if check_str != '' && stridx(str_bracket, check_str) != -1
-            " if col('$') == matchend_idx + 2
-                " startinsert!
-            " else
-                " call cursor(line('.'), matchend_idx + 2)
-                " startinsert
-            " endif
-        " endif
-    " endif
-" endfunction
-
-"-------------------------------------------------- .
+"--------------------------------------------------------------------------- .misc
 
 noremap ; :
 noremap : ;
-
-" 何か set nocompatible あるとハイライト? がおかしくなるんですよ... 気持ち悪いので，強引スマートじゃないのは分かっているけど無理矢理．
-source ~/.gvimrc

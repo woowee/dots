@@ -1,8 +1,10 @@
 # /etc/profile
 typeset -U PATH
-PATH=/usr/local/bin:/usr/local/sbin:$HOME/.cabal/bin/:$PATH
+PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-export PYTHONPATH=/usr/local/share/python:/usr/local/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages/PyQt4:/usr/local/lib/python2.7:/usr/local/lib/python3.2
+# npm
+export PATH="$PATH:/usr/local/share/npm/bin"
+
 
 # General Settings
 # ------------------------------
@@ -36,6 +38,20 @@ esac
 #
 # set prompt
 #
+
+function parse-git-branch()
+{
+    local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    if [ -n "${branch}" ]; then
+        [ "${branch}" = "HEAD" ] && local branch=$(git rev-parse --short HEAD 2>/dev/null)
+        local statusis="$(git status --porcelain 2>/dev/null)"
+        echo -n " on %F{6}${branch}%f"
+        [ -n "${statusis}" ] && echo -n "%F{3}*%f"
+    fi
+}
+
+setopt prompt_subst
+
 autoload colors
 colors
 case ${UID} in
@@ -45,13 +61,69 @@ case ${UID} in
     SPROMPT="%B%{${fg[red]}%}%r is correct? [n,y,a,e]:%{${reset_color}%}%b "
     ;;
 *)
-    PROMPT="%{${fg[red]}%}%/%%%{${reset_color}%} "
+    # PROMPT="%{${fg[red]}%}%/%%%{${reset_color}%} "
+    PROMPT='%F{6}%n%f at %F{6}%m%f in %F{6}%c%f$(parse-git-branch)
+%# '
     PROMPT2="%{${fg[red]}%}%_%%%{${reset_color}%} "
     SPROMPT="%{${fg[red]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
     [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
         PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
     ;;
 esac
+#
+## ----- PROMPT -----
+### PROMPT
+## PROMPT=$'[%*] → '
+#PROMPT='%F{6}%n%f at %F{6}%m%f in %F{6}%c%f $(parse-git-branch)
+#%# '
+#
+### RPROMPT
+#RPROMPT=$'`branch-status-check` %~' # %~はpwd
+#setopt prompt_subst #表示毎にPROMPTで設定されている文字列を評価する
+#
+## {{{ methods for RPROMPT
+## fg[color]表記と$reset_colorを使いたい
+## @see https://wiki.archlinux.org/index.php/zsh
+#autoload -U colors; colors
+#function branch-status-check {
+#    local prefix branchname suffix
+#        # .gitの中だから除外
+#        if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
+#            return
+#        fi
+#        branchname=`get-branch-name`
+#        # ブランチ名が無いので除外
+#        if [[ -z $branchname ]]; then
+#            return
+#        fi
+#        prefix=`get-branch-status` #色だけ返ってくる
+#        suffix='%{'${reset_color}'%}'
+#        echo ${prefix}${branchname}${suffix}
+#}
+#function get-branch-name {
+#    # gitディレクトリじゃない場合のエラーは捨てます
+#    echo `git rev-parse --abbrev-ref HEAD 2> /dev/null`
+#}
+#function get-branch-status {
+#    local res color
+#        output=`git status --short 2> /dev/null`
+#        if [ -z "$output" ]; then
+#            res=':' # status Clean
+#            color='%{'${fg[green]}'%}'
+#        elif [[ $output =~ "[\n]?\?\? " ]]; then
+#            res='?:' # Untracked
+#            color='%{'${fg[yellow]}'%}'
+#        elif [[ $output =~ "[\n]? M " ]]; then
+#            res='M:' # Modified
+#            color='%{'${fg[red]}'%}'
+#        else
+#            res='A:' # Added to commit
+#            color='%{'${fg[cyan]}'%}'
+#        fi
+#        # echo ${color}${res}'%{'${reset_color}'%}'
+#        echo ${color} # 色だけ返す
+#}
+## }}}
 
 # auto change directory
 #
