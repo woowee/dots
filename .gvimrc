@@ -22,10 +22,6 @@ endif
 set background=dark
 let g:solarized_termcolors=256
 colorscheme solarized
-if has('xim')
-    " highlight Cursor guifg=NONE guibg=White
-    highlight CursorIM guifg=NONE guibg=Red
-endif
 
 " 透過
 " gui
@@ -54,3 +50,17 @@ elseif has('xfontset')
   " UNIX用 (xfontsetを使用)
   set guifontset=a14,r14,k14
 endif
+
+"-------------------------------------------------- .appearance
+" インサートモード時imeオフ
+set noimdisable
+set iminsert=0 imsearch=0
+set noimcmdline
+set noimdisableactivate
+
+" im 状態でカーソル色変更(ひらがな入力モード時、赤)
+if has('xim')
+    " highlight Cursor guifg=NONE guibg=White
+    highlight CursorIM guifg=NONE guibg=Red
+endif
+

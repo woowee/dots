@@ -133,10 +133,6 @@ augroup noautowrap
   autocmd FileType * setlocal fo-=o
 augroup END
 
-" インサートモード時imeオフ
-set noimdisable
-set iminsert=0 imsearch=0
-set noimcmdline
 " 折り返し移動 - <backspace> <enter> h, l,<-, ->
 set whichwrap=b,s,h,l,<,>,[,]
 "" バックスペース
