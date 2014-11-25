@@ -43,20 +43,20 @@ if has('win32')
     set ambiwidth=auto
   endif
 elseif has('gui_macvim')
-  set guifont=Ricty:h16
+  set guifont=Ricty:h18
 elseif has('mac')
-  set guifont=Ricty:h16
+  set guifont=Ricty:h18
 elseif has('xfontset')
   " UNIX用 (xfontsetを使用)
   set guifontset=a14,r14,k14
 endif
 
-"-------------------------------------------------- .appearance
+"-------------------------------------------------- .IM
 " インサートモード時imeオフ
 set noimdisable
 set iminsert=0 imsearch=0
 set noimcmdline
-set noimdisableactivate
+" set noimdisableactivate
 
 " im 状態でカーソル色変更(ひらがな入力モード時、赤)
 if has('xim')
