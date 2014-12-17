@@ -1,3 +1,8 @@
+" Encoding
+set encoding=utf-8
+scriptencoding utf-8
+
+
 if has('vim_starting')
    set nocompatible               " Be iMproved
 
@@ -40,6 +45,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'altercation/vim-colors-solarized'
     NeoBundle 'molokai'
     NeoBundle 'w0ng/vim-hybrid'
+    " NeoBundle 'twerth/ir_black'        can't install with using neobundle ?
     NeoBundle 'itchyny/lightline.vim'
 
     NeoBundle 'thinca/vim-quickrun'
@@ -176,7 +182,7 @@ set number
 set ruler
 " 不可視文字
 set list
-set listchars=tab:>-,trail:_
+set listchars=eol:¬,tab:▸-,trail:_
 " 常にステータス行を表示 (詳細は:he laststatus)
 set laststatus=2
 " コマンドラインの高さ (Windows用gvim使用時はgvimrcを編集すること)

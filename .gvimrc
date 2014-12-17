@@ -19,9 +19,10 @@ endif
 " カラースキーマ
 " colorscheme molokai
 " colorscheme hybrid
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
+" set background=dark
+" let g:solarized_termcolors=256
+" colorscheme solarized
+colorscheme ir_black
 
 " 透過
 " gui
@@ -52,10 +53,10 @@ elseif has('xfontset')
 endif
 
 "-------------------------------------------------- .IM
-" インサートモード時imeオフ
-set noimdisable
-set iminsert=0 imsearch=0
-set noimcmdline
+"" インサートモード時imeオフ
+"set noimdisable
+"set iminsert=0 imsearch=0
+"set noimcmdline
 " set noimdisableactivate
 
 " im 状態でカーソル色変更(ひらがな入力モード時、赤)
