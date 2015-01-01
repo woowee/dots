@@ -55,6 +55,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'mattn/emmet-vim'
     NeoBundle 'plasticscafe/vim-less-autocompile'
     NeoBundle 'groenewege/vim-less'
+    NeoBundle 'toyamarinyon/vim-swift'
 
     " NeoBundle 'glidenote/memolist.vim'
     NeoBundle 'woowee/memolist.vim'
@@ -295,11 +296,18 @@ map <Leader>pv ;PrevimOpen<cr>
 let g:quickrun_config = {}
 let g:quickrun_config['*'] = {'runner': 'vimproc'}
 " let g:quickrun_config['*'] = {'runmode': "async:remote:vimproc", 'split': 'below'}
-
+" markdown
 let g:quickrun_config['markdown'] = {
       \ 'type': 'markdown/pandoc',
       \ 'cmdopt': '-s'
       \ }
+" swift
+autocmd BufRead,BufNewFile *.swift set filetype=swift
+let g:quickrun_config['swift'] = {
+      \ 'command': 'xcrun',
+      \ 'cmdopt': 'swift',
+      \ 'exec': '%c %o %s',
+      \}
 
 
 "
@@ -449,11 +457,11 @@ nnoremap [Unite]i :<C-u>Unite output:message<CR>
 nnoremap [Unite]y :<C-u>Unite history/yank<CR>
 
 " ウィンドウを分割して開く
-au FileType unite nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
-au FileType unite inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
+autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
+autocmd FileType unite inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
 " ウィンドウを縦に分割して開く
-au FileType unite nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
-au FileType unite inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
+autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
+autocmd FileType unite inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
 
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
