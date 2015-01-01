@@ -230,6 +230,11 @@ alias df="df -h"
 
 alias su="su -l"
 
+## Alias configuration
+#
+# mine
+#
+alias def="defaults read >before; echo 'set and then enter...'; read; defaults read >after; diff before after"
 
 ## terminal configuration
 #
@@ -277,6 +282,8 @@ xterm|xterm-color|kterm|kterm-color)
     ;;
 esac
 
+
+alias su="su -l"
 
 ## load user .zshrc configuration file
 #
