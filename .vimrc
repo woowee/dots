@@ -222,6 +222,14 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
+" カーソル移動.括弧
+inoremap {} {}<Left>
+inoremap [] []<Left>
+inoremap () ()<Left>
+inoremap <> <><Left>
+inoremap "" ""<Left>
+inoremap '' ''<Left>
+inoremap `` ``<Left>
 " ペースト.インサートモード
 imap <C-p> <ESC>"*pa
 " バッファ.移動
@@ -296,7 +304,7 @@ map <Leader>pv ;PrevimOpen<cr>
 let g:quickrun_config = {}
 let g:quickrun_config['*'] = {'runner': 'vimproc'}
 " let g:quickrun_config['*'] = {'runmode': "async:remote:vimproc", 'split': 'below'}
-" markdown
+
 let g:quickrun_config['markdown'] = {
       \ 'type': 'markdown/pandoc',
       \ 'cmdopt': '-s'
