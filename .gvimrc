@@ -63,5 +63,13 @@ set noimcmdline
 if has('xim')
     " highlight Cursor guifg=NONE guibg=White
     highlight CursorIM guifg=NONE guibg=Red
+
+"    inoremap {} {}<Left>
+"    inoremap [] []<Left>
+"    inoremap () ()<Left>
+"    inoremap <> <><Left>
+"    inoremap "" ""<Left>
+"    inoremap '' ''<Left>
+"    inoremap `` ``<Left>
 endif
 

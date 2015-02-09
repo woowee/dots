@@ -3,7 +3,6 @@ set encoding=utf-8
 scriptencoding utf-8
 
 
-
 if has('vim_starting')
    set nocompatible               " Be iMproved
 
@@ -148,11 +147,7 @@ set whichwrap=b,s,h,l,<,>,[,]
 "set backspace=indent,eol,start
 
 " 保存時の空白削除
-" autocmd BufWritePre * if &ft != 'markdown' | :%s/\s\+$//ge  | endif
-augroup Markdown
-  autocmd!
-  autocmd BufWritePre * if &filetype == 'markdown' | call s:FormMarkdownEOL() | else | :%s/\s\+$//ge | endif
-augroup END
+autocmd BufWritePre * :%s/\s\+$//ge
 
 "バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
 augroup BinaryXXD
@@ -223,13 +218,15 @@ inoremap <C-k> <Up>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
 " カーソル移動.括弧
-inoremap {} {}<Left>
-inoremap [] []<Left>
-inoremap () ()<Left>
-inoremap <> <><Left>
-inoremap "" ""<Left>
-inoremap '' ''<Left>
-inoremap `` ``<Left>
+"if has('xim')
+"  inoremap {} {}<Left>
+"  inoremap [] []<Left>
+"  inoremap () ()<Left>
+"  inoremap <> <><Left>
+"  inoremap "" ""<Left>
+"  inoremap '' ''<Left>
+"  inoremap `` ``<Left>
+"endif
 " ペースト.インサートモード
 imap <C-p> <ESC>"*pa
 " バッファ.移動
@@ -685,7 +682,7 @@ function! s:FormMarkdownEOL()
   exe l:cur
 endfunction
 
-
+command! Md call s:FormMarkdownEOL()
 
 "--------------------------------------------------------------------------- .misc
 
