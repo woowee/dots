@@ -45,6 +45,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'altercation/vim-colors-solarized'
     NeoBundle 'molokai'
+
     NeoBundle 'w0ng/vim-hybrid'
     " NeoBundle 'twerth/ir_black'        can't install with using neobundle ?
     NeoBundle 'itchyny/lightline.vim'
@@ -83,8 +84,6 @@ NeoBundleCheck
 set nobackup
 " スワップファイル - off
 set noswapfile
-" ファイルタイプ識別 - on
-filetype plugin on
 " ビープ
 set vb t_vb=
 " 保存していない状態でも他のファイルを開く
