@@ -47,7 +47,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'molokai'
 
     NeoBundle 'w0ng/vim-hybrid'
-    " NeoBundle 'twerth/ir_black'        can't install with using neobundle ?
+    NeoBundle 'twerth/ir_black'
     NeoBundle 'itchyny/lightline.vim'
 
     NeoBundle 'thinca/vim-quickrun'

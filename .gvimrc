@@ -22,7 +22,7 @@ endif
 " set background=dark
 " let g:solarized_termcolors=256
 " colorscheme solarized
-colorscheme ir_black
+ colorscheme ir_black
 
 " 透過
 " gui
