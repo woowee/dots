@@ -146,7 +146,10 @@ set whichwrap=b,s,h,l,<,>,[,]
 "set backspace=indent,eol,start
 
 " 保存時の空白削除
-autocmd BufWritePre * :%s/\s\+$//ge
+augroup Markdown
+  autocmd!
+  autocmd BufWritePre * if &filetype == 'markdown' | call s:FormMarkdownEOL() | else | :%s/\s\+$//ge | endif
+augroup END
 
 "バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
 augroup BinaryXXD
@@ -572,11 +575,18 @@ command! -nargs=0 -range Form <line1>, <line2> call s:FormSpace()
 "
 " => レシピメモ用に :p
 function! s:AlignRecipe() range
-    execute 'silent! ' . a:firstline . ',' . a:lastline . 's/\(\D[^-(]\)\([1-9]\|適\|大さじ\|小さじ\|お好\|少々\)/\1\.\.\2/g'
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/\(\d\|適\|大匙\|大さじ\|中\|小匙\|小さじ\|お好み\|各\)/\.\.\1/e'
     execute a:firstline . ',' . a:lastline . 'Form'
     execute a:firstline . ',' . a:lastline . 'Align \.\.'
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/^/* /e'
 endfunction
 command! -nargs=0 -range Rcp <line1>, <line2> call s:AlignRecipe()
+
+function! s:AlignRecipeProcess() range
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/^写真.\s\+\n//ge'
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/^\(\d\+\)\n/\1\. /ge'
+endfunction
+command! -nargs=0 -range Rcpp <line1>, <line2> call s:AlignRecipeProcess()
 
 "
 " :<line>,<line>Single
@@ -651,6 +661,25 @@ function! s:FormMarkdownEOL()
   " 行末空白が x0 の場合      !note
   exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]/  /ge'
 
+  " -- header
+  exe 'silent g/^\(=\|-\)\{3,}\s*$/s/\s\+$//ge'
+  exe 'silent g/^\(=\|-\)\{3,}\s*$/-1s/\s\+$//ge'
+
+  exe 'silent g/^#\+[^#]/s/\s\+$//ge'
+  exe 'silent g/^#\+[^#]/-1s/\s\+$//ge'
+
+  " -- horizontal rules
+  exe 'silent g/^\(-\|*\|_\|-\s\|*\s\|_\s\)\{3,}/s/\s\+$//ge'
+
+  " -- code
+  " exe 'silent g/\(^```\)\_[^`]*\(^```\)/s/\s\+$//ge'
+
+  " -- lists
+  " exe 'silent g/^\(\s\|\t\)*\(\*\|-\|\d*\.\)\s\/s/\s\+$//ge'
+
+  " --- html tag
+  exe 'silent g/^\(\s\|\t\|.\)*<.*>\s*$/s/\s\+$//ge'
+
   let l:iscode = 0  "off
   for l:line in range(1, line('$'))
     let l:lineStr = getline(l:line)
@@ -660,19 +689,16 @@ function! s:FormMarkdownEOL()
         let l:iscode = 1  "on
       else
         let l:iscode = 0  "off
+        exe 'silent ' . l:line . 's/\s\+$//ge'
       endif
     endif
+
     if l:iscode == 1
       exe 'silent ' . l:line . 's/\s\+$//ge'
     else
   " -- list
       if match(l:lineStr, '^\s*\(-\s\|*\s\|\d\{-}\.\s\)') >= 0 &&
        \ match (getline(l:line + 1), '^\s*\($\|-\s\|*\s\|\d\{-}\.\s\)') >= 0
-        exe 'silent ' . l:line . 's/\s\{-1,}$//ge'
-      endif
-  " -- header
-      if match(l:lineStr, '^\(#\|```\)') >= 0 ||
-      \ match(getline(l:line + 1), '^\(-[^ ]\+$\|=[^ ]\+$\|-$\|=$\)') >= 0
         exe 'silent ' . l:line . 's/\s\{-1,}$//ge'
       endif
     endif
