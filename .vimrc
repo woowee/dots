@@ -684,7 +684,7 @@ function! s:FormMarkdownEOL()
   for l:line in range(1, line('$'))
     let l:lineStr = getline(l:line)
   " -- code
-    if match(l:lineStr, '^```') >= 0
+    if match(l:lineStr, '^\(\s\|\t\)*```') >= 0
       if l:iscode == 0
         let l:iscode = 1  "on
       else
