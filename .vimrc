@@ -68,6 +68,8 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'yuratomo/w3m.vim'
     NeoBundle 'mrtazz/simplenote.vim'
 
+    NeoBundle 'itchyny/calendar.vim'
+
 call neobundle#end()
 
 " Required:
@@ -260,6 +262,12 @@ noremap ya :%y<CR>
 
 
 "--------------------------------------------------------------------------- >plugins
+
+"
+" >calendar.vim
+"
+map <Leader>cal ;Calendar -view=year -split=vertical -width=24<CR>
+
 
 "
 " >w3m
