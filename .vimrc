@@ -583,12 +583,19 @@ command! -nargs=0 -range Form <line1>, <line2> call s:FormSpace()
 "
 " => レシピメモ用に :p
 function! s:AlignRecipe() range
-    execute 'silent ' . a:firstline . ',' . a:lastline . 's/\(\d\|適\|大匙\|大さじ\|中\|小匙\|小さじ\|お好み\|各\)/\.\.\1/e'
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/.\zs\(\d\|適\|大匙\|大さじ\|中[^華国]\|小匙\|小さじ\|少\|小\|お好み\|各\|数\|あれば\)/\.\.\1/e'
     execute a:firstline . ',' . a:lastline . 'Form'
+
     execute a:firstline . ',' . a:lastline . 'Align \.\.'
     execute 'silent ' . a:firstline . ',' . a:lastline . 's/^/* /e'
 endfunction
 command! -nargs=0 -range Rcp <line1>, <line2> call s:AlignRecipe()
+
+function! s:AlignRecipeProcess() range
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/^写真\s*\n//ge'
+    execute 'silent ' . a:firstline . ',' . a:lastline . 's/^\(\d\+\)\n/\1\. /ge'
+endfunction
+command! -nargs=0 -range Rcpp <line1>, <line2> call s:AlignRecipeProcess()
 
 function! s:AlignRecipeProcess() range
     execute 'silent ' . a:firstline . ',' . a:lastline . 's/^写真.\s\+\n//ge'
