@@ -40,7 +40,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'The-NERD-Commenter'
     NeoBundle 'surround.vim'
-    NeoBundle 'Align'
+    NeoBundle 'vim-easy-align'
     NeoBundle 'rhysd/clever-f.vim'
 
     NeoBundle 'altercation/vim-colors-solarized'
@@ -262,6 +262,11 @@ noremap ya :%y<CR>
 
 
 "--------------------------------------------------------------------------- >plugins
+"
+" vim-easy-align
+"
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 "
 " >calendar.vim
