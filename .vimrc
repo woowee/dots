@@ -268,6 +268,7 @@ noremap ya :%y<CR>
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
+command! -nargs=* -range Align <line1>,<line2>call easy_align#align('<bang>' == '!', 0, '', <q-args>)
 "
 " >calendar.vim
 "
