@@ -38,8 +38,10 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'Shougo/vimfiler.vim'
     NeoBundle 'renamer.vim'
 
+    NeoBundle 'kana/vim-operator-user'
+
     NeoBundle 'The-NERD-Commenter'
-    NeoBundle 'surround.vim'
+    NeoBundle 'rhysd/vim-operator-surround'
     NeoBundle 'vim-easy-align'
     NeoBundle 'rhysd/clever-f.vim'
 
@@ -555,10 +557,17 @@ augroup END
 
 
 "
-" >surround.vim
+" >vim-operator-surround
 "
-let g:surround_{char2nr('c')} = "``` \1language\1 \r ```"
+nmap ys <Plug>(operator-surround-append)
+nmap ds <Plug>(operator-surround-delete)
+nmap cs <Plug>(operator-surround-replace)
 
+" markdown code block ```...``` !!
+let g:operator#surround#blocks = {
+\ 'markdown' : [
+\       { 'block' : ["```\n", "\n```"], 'motionwise' : ['line'], 'keys' : ['`'] },
+\ ] }
 
 
 
