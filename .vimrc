@@ -630,14 +630,14 @@ command! -nargs=0 -range Form <line1>, <line2> call s:FormSpace()
 " :h command-range
 
 "
-" :<line>,<line>Rcp
+" ><line>,<line>Rcp
 "
 " => レシピメモ用に :p
 function! s:AlignRecipe() range
     execute 'silent ' . a:firstline . ',' . a:lastline . 's/.\zs\(\d\|適\|大匙\|大さじ\|中[^華国]\|小匙\|小さじ\|少\|小\|お好み\|各\|数\|あれば\)/\.\.\1/e'
     execute a:firstline . ',' . a:lastline . 'Form'
 
-    execute a:firstline . ',' . a:lastline . 'Align \.\.'
+    execute a:firstline . ',' . a:lastline . 'EasyAlign .'
     execute 'silent ' . a:firstline . ',' . a:lastline . 's/^/* /e'
 endfunction
 command! -nargs=0 -range Rcp <line1>, <line2> call s:AlignRecipe()
