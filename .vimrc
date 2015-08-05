@@ -569,6 +569,15 @@ augroup vimfiler
     autocmd FileType vimfiler nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
     autocmd FileType vimfiler vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
 augroup END
+"デフォルトのキーマッピングを変更
+augroup vimrc
+  autocmd FileType vimfiler call s:vimfiler_my_settings()
+augroup END
+function! s:vimfiler_my_settings()
+  nmap <buffer> <c-l> <plug>(vimfiler_switch_to_other_window)
+  nmap <buffer> <Esc><Esc> <Plug>(vimfiler_exit)
+endfunction
+" ref. http://www.karakaram.com/vimfiler#vimrc
 
 
 "
