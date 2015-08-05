@@ -36,7 +36,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'Shougo/vimshell'
     NeoBundle 'Shougo/vimfiler.vim'
-    NeoBundle 'renamer.vim'
 
     NeoBundle 'kana/vim-operator-user'
 
