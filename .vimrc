@@ -47,6 +47,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'altercation/vim-colors-solarized'
     NeoBundle 'molokai'
+    NeoBundle 'Wutzara/vim-materialtheme'
 
     NeoBundle 'w0ng/vim-hybrid'
     NeoBundle 'twerth/ir_black'
