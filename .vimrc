@@ -276,6 +276,16 @@ vmap <Leader>x <Plug>(caw:I:toggle)
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
+let g:easy_align_ignore_groups = []
+let g:easy_align_delimiters = {
+\ '.': { 'pattern': '\.\{2}\|\.\{3}' },
+\ '"': { 'pattern': '"', 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
+\ "'": { 'pattern': "'", 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
+\ }
+" ref. https://github.com/ervandew/supertab/issues/74#issuecomment-65552406
+" ref. https://github.com/junegunn/vim-easy-align/blob/master/EXAMPLES.md#aligning-in-line-comments
+" h: easy-align-ignoring-delimiters-in-comments-or-strings
+
 command! -nargs=* -range Align <line1>,<line2>call easy_align#align('<bang>' == '!', 0, '', <q-args>)
 
 
