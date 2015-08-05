@@ -40,7 +40,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'kana/vim-operator-user'
 
-    NeoBundle 'The-NERD-Commenter'
+    NeoBundle 'tyru/caw.vim'
     NeoBundle 'rhysd/vim-operator-surround'
     NeoBundle 'vim-easy-align'
     NeoBundle 'rhysd/clever-f.vim'
@@ -265,12 +265,21 @@ noremap ya :%y<CR>
 
 "--------------------------------------------------------------------------- >plugins
 "
-" vim-easy-align
+" >caw.vim
+"
+nmap <Leader>x <Plug>(caw:I:toggle)
+vmap <Leader>x <Plug>(caw:I:toggle)
+
+
+"
+" >vim-easy-align
 "
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 command! -nargs=* -range Align <line1>,<line2>call easy_align#align('<bang>' == '!', 0, '', <q-args>)
+
+
 "
 " >calendar.vim
 "
@@ -685,11 +694,11 @@ command! -nargs=+ -range Num <line1>, <line2> call <SID>InsertNumbering(<f-args>
 function! s:FormMarkdownEOL()
   let l:cur = line('.')
   " 行末空白が x3 以上の場合  !note
-  exe 'silent %s/^[^$].*\S\zs\s\{3,}$\n\ze[^$]/  /ge'
+  exe 'silent %s/^[^$].*\S\zs\s\{3,}$\n\ze[^$]//ge'
   " 行末空白が x1 の場合      !note
-  exe 'silent %s/^[^$].*\S\zs\s\{1}$\n\ze[^$]/  /ge'
+  exe 'silent %s/^[^$].*\S\zs\s\{1}$\n\ze[^$]//ge'
   " 行末空白が x0 の場合      !note
-  exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]/  /ge'
+  exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]//ge'
 
   " -- header
   exe 'silent g/^\(=\|-\)\{3,}\s*$/s/\s\+$//ge'
