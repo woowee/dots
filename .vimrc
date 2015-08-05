@@ -59,8 +59,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'groenewege/vim-less'
     NeoBundle 'toyamarinyon/vim-swift'
 
-    " NeoBundle 'glidenote/memolist.vim'
-    NeoBundle 'woowee/memolist.vim'
+    NeoBundle 'glidenote/memolist.vim'
 
     NeoBundle 'mattn/webapi-vim'
     NeoBundle 'ujihisa/blogger.vim'
@@ -346,19 +345,24 @@ let g:quickrun_config['swift'] = {
 "
 " >memolist
 "
-map <Leader>mn ;MemoNew<cr>
-" map <Leader>ml ;MemoList<CR>
-map <Leader>ml Unite file:<C-r>=g:memolist_path<CR><CR>
-map <Leader>mg ;MemoGrep<CR>
-
-let g:memolist_path = '~/Dropbox/memo'
-
+map <Leader>mn :MemoNew<cr>
+map <Leader>ml :MemoList<CR>
+map <Leader>mg :MemoGrep<CR>
+" my memo dir
+let g:memolist_path = '~/memo'
+" tag, categories, grep
 let g:memolist_prompt_tags = 1
 let g:memolist_prompt_categories = 1
 let g:memolist_qfixgrep = 1
-let g:memolist_vimfiler = 0
-
+" using unite
+let g:memolist_unite = 1
+let g:memolist_unite_source = 'file'  " file_rec は上手く作動しない?
+let g:memolist_unite_option = '-auto-preview -start-insert'
+let g:memolist_vimfiler = 0           " no vimfiler
+" no need filename prefix
 let g:memolist_filename_prefix_none = 1
+"ctrlp ?
+let g:memolist_ex_cmd = 'CtrlP'
 
 
 "
