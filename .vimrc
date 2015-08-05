@@ -284,6 +284,7 @@ command! -nargs=* -range Align <line1>,<line2>call easy_align#align('<bang>' == 
 " >calendar.vim
 "
 map <Leader>cal ;Calendar -view=year -split=vertical -width=24<CR>
+map <Leader>yr ;Calendar -view=year<CR>
 
 
 "
