@@ -474,7 +474,7 @@ let g:unite_enable_smart_case = 1
 " path
 " let g:neomru#file_mru_path=expand('~/.cache/neomru/file')
 " let g:neomru#directory_mru_path=expand('~/.cache/neomru/directory')
-" let g:unite_source_bookmark_directory=expand('~/.cache/unite/bookmark/default')
+let g:unite_source_bookmark_directory='~/.vim/unitebookmark'
 
 " unite mapping
 " unite mapping.the prefix key
