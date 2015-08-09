@@ -251,7 +251,11 @@ map - <C-w>-
 nnoremap <leader>. :%s/。/．/g<CR>:%s/、/，/g<CR>
 " バッファ内すべてのコンテンツをクリップボードへ
 noremap ya :%y<CR>
-
+" 折りたたみ
+nnoremap zoo zR
+nnoremap zcc zM
+nnoremap <space> zA
+" ref. http://dougblack.io/words/a-good-vimrc.html#fold
 
 
 "--------------------------------------------------------------------------- >plugins
