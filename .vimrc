@@ -37,6 +37,10 @@ NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'Shougo/vimshell'
     NeoBundle 'Shougo/vimfiler.vim'
 
+    NeoBundle 'ctrlpvim/ctrlp.vim'
+    NeoBundle 'vim-scripts/ctrlp-funky'
+    NeoBundle 'mattn/ctrlp-filer'
+
     NeoBundle 'kana/vim-operator-user'
 
     NeoBundle 'tyru/caw.vim'
@@ -251,6 +255,31 @@ noremap ya :%y<CR>
 
 
 "--------------------------------------------------------------------------- >plugins
+
+"
+" >ctrlP
+"
+" デフォルト起動時にカレントディレクトリベースに検索をするように
+let g:ctrlp_cmd = 'CtrlPCurWD'
+" ファイル名で検索をデフォルトに(<C-D>で切り替えできる）
+let g:ctrlp_by_filename = 1
+" CtrlPコマンドの引数省略時の挙動
+let g:ctrlp_working_path_mode = 'ra'
+" 対象ファイル最大数(default:10000)
+let g:ctrlp_max_files  = 100000
+" vim終了時にキャッシュクリアする(default:1)
+let g:ctrlp_clear_cache_on_exit = 0
+" dotfileなども対象にする
+let g:ctrlp_show_hidden = 1
+" CtrlPFunky
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+" CtrlPFiler
+nnoremap <Leader>cd :CtrlPFiler<Cr>
+
+
+
 "
 " >caw.vim
 "
@@ -321,6 +350,7 @@ autocmd BufNewFile,BufRead *.less set filetype=css
 map <Leader>pv ;PrevimOpen<cr>
 
 
+
 "
 " >quickrun
 "
@@ -365,12 +395,14 @@ let g:memolist_filename_prefix_none = 1
 let g:memolist_ex_cmd = 'CtrlP'
 
 
+
 "
 " >the nerd commenter
 "
 let NERDSpaceDelims=1
 let NREDShutUp=1
 map <leader>x <leader>c<space>
+
 
 
 "
@@ -437,6 +469,7 @@ if !exists('g:neocomplete#sources#omni#input_patterns')
 endif
 
 
+
 "
 " >neosnippet
 "
@@ -460,11 +493,13 @@ if has('conceal')
 endif
 
 
+
 "
 " >align.vim
 "
 " 日本語など幅広文字に対応するためのおまじない。(ref. http://vim-users.jp/2009/09/hack77/)
 let g:Align_xstrlen=3
+
 
 
 "
@@ -517,11 +552,14 @@ if executable('ag')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
+
+
 "
 " >unite-outline
 "
 let g:unite_winwidth = 40
 nnoremap <silent> <Leader>o :<C-u>Unite -vertical -no-quit outline<CR>
+
 
 
 "
@@ -530,6 +568,7 @@ nnoremap <silent> <Leader>o :<C-u>Unite -vertical -no-quit outline<CR>
 let g:vimshell_split_command="vsplit"
 nnoremap <silent> <Leader>vsh :<C-u>VimShellBufferDir -split<CR>
 nnoremap <silent> <Leader>sh :<C-u>VimShell<CR>
+
 
 
 "
@@ -580,6 +619,7 @@ endfunction
 " ref. http://www.karakaram.com/vimfiler#vimrc
 
 
+
 "
 " >vim-operator-surround
 "
@@ -598,7 +638,7 @@ let g:operator#surround#blocks = {
 "--------------------------------------------------------------------------- .myscripts
 
 "
-" :<line>,<line>Form
+" ><line>,<line>Form
 "
 " => 日本語コンテンツ内で使う半角英数字の前後に半角スペースを入れたいと思って。
 
@@ -616,6 +656,8 @@ function! s:FormSpace() range
 endfunction
 command! -nargs=0 -range Form <line1>, <line2> call s:FormSpace()
 " :h command-range
+
+
 
 "
 " ><line>,<line>Rcp
@@ -642,6 +684,8 @@ function! s:AlignRecipeProcess() range
 endfunction
 command! -nargs=0 -range Rcpp <line1>, <line2> call s:AlignRecipeProcess()
 
+
+
 "
 " :<line>,<line>Single
 "
@@ -664,6 +708,7 @@ function! s:ChangeToSingleByte() range
     exe 'silent! ' . a:firstline . ',' . a:lastline . 's/\d\zs．\ze\d/./ge'
 endfunction
 command! -nargs=0 -range Single <line1>, <line2> call s:ChangeToSingleByte()
+
 
 
 "
@@ -691,6 +736,7 @@ endfunction
 command! -nargs=+ -range Num <line1>, <line2> call <SID>InsertNumbering(<f-args>)
 " ref. http://kikaibunsho.web.fc2.com/monologo/memoro/08_11.html
 " ref. http://vimdoc.sourceforge.net/htmldoc/eval.html#printf%28%29
+
 
 
 "
