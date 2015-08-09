@@ -357,9 +357,9 @@ let g:quickrun_config['swift'] = {
 "
 " >memolist
 "
-map <Leader>mn :MemoNew<cr>
-map <Leader>ml :MemoList<CR>
-map <Leader>mg :MemoGrep<CR>
+map <Leader>mn ;MemoNew<cr>
+map <Leader>ml ;MemoList<CR>
+map <Leader>mg ;MemoGrep<CR>
 " my memo dir
 let g:memolist_path = '~/memo'
 " tag, categories, grep
