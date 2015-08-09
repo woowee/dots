@@ -141,9 +141,9 @@ set whichwrap=b,s,h,l,<,>,[,]
 "set backspace=indent,eol,start
 
 " 保存時の空白削除
-augroup Markdown
+augroup bufferWritePrevious
   autocmd!
-  autocmd BufWritePre * if &filetype == 'markdown' | call s:FormMarkdownEOL() | else | :%s/\s\+$//ge | endif
+  autocmd BufWritePre * if &filetype != 'markdown' | :%s/\s\+$//ge | endif
 augroup END
 
 "バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
