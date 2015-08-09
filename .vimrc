@@ -627,9 +627,9 @@ endfunction
 "
 " >vim-operator-surround
 "
-nmap ys <Plug>(operator-surround-append)
-nmap ds <Plug>(operator-surround-delete)
-nmap cs <Plug>(operator-surround-replace)
+map sa <Plug>(operator-surround-append)
+map ds <Plug>(operator-surround-delete)
+map cs <Plug>(operator-surround-replace)
 
 " markdown code block ```...``` !!
 let g:operator#surround#blocks = {
