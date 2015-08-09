@@ -633,7 +633,11 @@ map cs <Plug>(operator-surround-replace)
 
 " markdown code block ```...``` !!
 let g:operator#surround#blocks = {
+\ '-' : [
+\       { 'block' : ['[ ', ' ]'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' ]', ' ['] },
+\ ],
 \ 'markdown' : [
+\       { 'block' : ["**", "**"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['**'] },
 \       { 'block' : ["```\n", "\n```"], 'motionwise' : ['line'], 'keys' : ['`'] },
 \ ] }
 
