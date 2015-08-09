@@ -131,18 +131,6 @@ set showmatch
 "" コマンドライン補完するときに強化されたものを使う(参照 :help wildmenu)
 "set wildmenu
 
-" 自動形成について(特に、自動改行) (:h formatoptions, :h fo-table)
-augroup noautowrap
-  autocmd!
-  autocmd FileType * setlocal tw=0
-  " 自動改行を抑制
-  autocmd FileType * setlocal fo-=t
-  autocmd FileType * setlocal fo-=c
-  " コメントスタイルの自動挿入を抑制
-  autocmd FileType * setlocal fo-=r
-  autocmd FileType * setlocal fo-=o
-augroup END
-
 " 折り返し移動 - <backspace> <enter> h, l,<-, ->
 set whichwrap=b,s,h,l,<,>,[,]
 "" バックスペース
@@ -361,7 +349,7 @@ map <Leader>mn ;MemoNew<cr>
 map <Leader>ml ;MemoList<CR>
 map <Leader>mg ;MemoGrep<CR>
 " my memo dir
-let g:memolist_path = '~/memo'
+let g:memolist_path = '~/Dropbox/memo/'
 " tag, categories, grep
 let g:memolist_prompt_tags = 1
 let g:memolist_prompt_categories = 1
