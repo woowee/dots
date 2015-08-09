@@ -287,12 +287,12 @@ nnoremap <Leader>cd :CtrlPFiler<Cr>
 "
 " >caw.vim
 "
-nmap <leader>x <plug>(caw:i:toggle)
-vmap <leader>x <plug>(caw:i:toggle)
-nmap <leader>x0 <plug>(caw:I:toggle)
-vmap <leader>x0 <plug>(caw:I:toggle)
-nmap <leader>xa <plug>(caw:a:toggle)
-vmap <leader>xa <plug>(caw:a:toggle)
+nmap <Leader>x <Plug>(caw:i:toggle)
+vmap <Leader>x <Plug>(caw:i:toggle)
+nmap <Leader>x0 <Plug>(caw:I:toggle)
+vmap <Leader>x0 <Plug>(caw:I:toggle)
+nmap <Leader>xa <Plug>(caw:a:toggle)
+vmap <Leader>xa <Plug>(caw:a:toggle)
 
 
 "
@@ -401,15 +401,6 @@ let g:memolist_vimfiler = 0           " no vimfiler
 let g:memolist_filename_prefix_none = 1
 "ctrlp ?
 let g:memolist_ex_cmd = 'CtrlP'
-
-
-
-"
-" >the nerd commenter
-"
-let NERDSpaceDelims=1
-let NREDShutUp=1
-map <leader>x <leader>c<space>
 
 
 
