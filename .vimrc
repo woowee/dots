@@ -287,8 +287,12 @@ nnoremap <Leader>cd :CtrlPFiler<Cr>
 "
 " >caw.vim
 "
-nmap <Leader>x <Plug>(caw:I:toggle)
-vmap <Leader>x <Plug>(caw:I:toggle)
+nmap <leader>x <plug>(caw:i:toggle)
+vmap <leader>x <plug>(caw:i:toggle)
+nmap <leader>x0 <plug>(caw:I:toggle)
+vmap <leader>x0 <plug>(caw:I:toggle)
+nmap <leader>xa <plug>(caw:a:toggle)
+vmap <leader>xa <plug>(caw:a:toggle)
 
 
 "
