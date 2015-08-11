@@ -472,6 +472,7 @@ endif
 "
 " >neosnippet
 "
+" my defined snippet files.
 let g:neosnippet#snippets_directory='~/.vim/snippets/'
 " Plugin key-mappings.
 imap <C-Space>     <Plug>(neosnippet_expand_or_jump)
@@ -484,11 +485,6 @@ smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : 
 " For snippet_complete marker.
 if has('conceal')
 set conceallevel=2 concealcursor=niv
-endif
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
 endif
 
 
