@@ -234,7 +234,9 @@ alias su="su -l"
 #
 # mine
 #
-alias def="defaults read >before; echo 'set and then enter...'; read; defaults read >after; diff before after"
+alias defchek="defaults read >before; echo 'set and then enter...'; read; defaults read >after; diff before after"
+
+alias brewups="brew update && brew upgrade brew-cask && brew cleanup && brew cask cleanup"
 
 ## terminal configuration
 #

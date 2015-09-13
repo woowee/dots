@@ -508,7 +508,7 @@ let g:unite_enable_smart_case = 1
 " path
 " let g:neomru#file_mru_path=expand('~/.cache/neomru/file')
 " let g:neomru#directory_mru_path=expand('~/.cache/neomru/directory')
-let g:unite_source_bookmark_directory='~/.vim/unitebookmark'
+let g:unite_source_bookmark_directory=$HOME . '/.vim/unite/bookmarks'
 
 " unite mapping
 " unite mapping.the prefix key
@@ -523,6 +523,8 @@ noremap  [Unite]g :<C-u>Unite -buffer-name=register register<CR>
 nnoremap [Unite]p :<C-u>Unite mapping<CR>
 nnoremap [Unite]i :<C-u>Unite output:message<CR>
 nnoremap [Unite]y :<C-u>Unite history/yank<CR>
+
+nnoremap [unite]a :<C-u>UniteBookmarkAdd<CR>
 
 " ウィンドウを分割して開く
 autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
@@ -747,12 +749,12 @@ command! -nargs=+ -range Num <line1>, <line2> call <SID>InsertNumbering(<f-args>
 "   上述置換処理の `^M` は `<C-v><CR>` で改行コード。
 function! s:FormMarkdownEOL()
   let l:cur = line('.')
-  " 行末空白が x3 以上の場合  !note
-  exe 'silent %s/^[^$].*\S\zs\s\{3,}$\n\ze[^$]//ge'
-  " 行末空白が x1 の場合      !note
-  exe 'silent %s/^[^$].*\S\zs\s\{1}$\n\ze[^$]//ge'
-  " 行末空白が x0 の場合      !note
-  exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]//ge'
+  " 行末空白がx3以上の場合
+  exe 'silent %s/^[^$].*\S\zs\s\{3,}$\n\ze[^$]/  /ge'
+  " 行末空白がx1の場合
+  exe 'silent %s/^[^$].*\S\zs\s\{1}$\n\ze[^$]/  /ge'
+  " 行末空白がx0の場合
+  exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]/  /ge'
 
   " -- header
   exe 'silent g/^\(=\|-\)\{3,}\s*$/s/\s\+$//ge'
@@ -765,28 +767,36 @@ function! s:FormMarkdownEOL()
   exe 'silent g/^\(-\|*\|_\|-\s\|*\s\|_\s\)\{3,}/s/\s\+$//ge'
 
   " -- code
-  " exe 'silent g/\(^```\)\_[^`]*\(^```\)/s/\s\+$//ge'
+  " exe 'silent g/\(^```\s*\a\+\)\_[^`]*\(^```\)/s/\s\+$//gc'
 
   " -- lists
   " exe 'silent g/^\(\s\|\t\)*\(\*\|-\|\d*\.\)\s\/s/\s\+$//ge'
 
+  " -- table
+  exe 'silent g/^\(\s\|\t\)*|.*|\s\+$/s/\s\+$//ge'
+
   " --- html tag
   exe 'silent g/^\(\s\|\t\|.\)*<.*>\s*$/s/\s\+$//ge'
 
-  let l:iscode = 0  "off
+  " -- Reference-style links
+  exe 'silent %s/^\[\d\+\]:.*\zs\s\{2}$//ge'
+
+
+  let l:iscode = 0  "not erase
   for l:line in range(1, line('$'))
     let l:lineStr = getline(l:line)
   " -- code
-    if match(l:lineStr, '^\(\s\|\t\)*```') >= 0
+    if match(l:lineStr, '^\s*```') >= 0
       if l:iscode == 0
-        let l:iscode = 1  "on
+        let l:iscode = 1  "switch mode = 'erase'
       else
-        let l:iscode = 0  "off
         exe 'silent ' . l:line . 's/\s\+$//ge'
+        let l:iscode = 0  "switch mode = 'not erase'
       endif
     endif
 
     if l:iscode == 1
+      "erase the blanks on EOL
       exe 'silent ' . l:line . 's/\s\+$//ge'
     else
   " -- list
@@ -799,8 +809,7 @@ function! s:FormMarkdownEOL()
 
   exe l:cur
 endfunction
-
-command! Md call s:FormMarkdownEOL()
+command! Mdown call s:FormMarkdownEOL()
 
 "--------------------------------------------------------------------------- .misc
 
