@@ -256,6 +256,9 @@ nnoremap zoo zR
 nnoremap zcc zM
 nnoremap <space> zA
 " ref. http://dougblack.io/words/a-good-vimrc.html#fold
+vnoremap <c-a> <c-a>gv
+vnoremap <c-x> <c-x>gv
+" ref. http://vim-jp.org/blog/2015/06/30/visual-ctrl-a-ctrl-x.html
 
 
 "--------------------------------------------------------------------------- >plugins
