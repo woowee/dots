@@ -45,6 +45,10 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'tyru/caw.vim'
     NeoBundle 'rhysd/vim-operator-surround'
+    NeoBundle 'kana/vim-textobj-user'
+    NeoBundle 'kana/vim-textobj-jabraces'
+    NeoBundle 'osyo-manga/vim-textobj-multiblock'
+    NeoBundle 'osyo-manga/vim-textobj-multitextobj'
     NeoBundle 'vim-easy-align'
     NeoBundle 'rhysd/clever-f.vim'
 
@@ -636,6 +640,44 @@ let g:operator#surround#blocks = {
 \       { 'block' : ["**", "**"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['**'] },
 \       { 'block' : ["```\n", "\n```"], 'motionwise' : ['line'], 'keys' : ['`'] },
 \ ] }
+
+
+
+"
+" >vim-textobj-jabraces
+"
+let g:textobj_multitextobj_textobjects_i = [
+    \ "\<Plug>(textobj-jabraces-parens-i)",
+    \ "\<Plug>(textobj-jabraces-braces-i)",
+    \ "\<Plug>(textobj-jabraces-brackets-i)",
+    \ "\<Plug>(textobj-jabraces-angles-i)",
+    \ "\<Plug>(textobj-jabraces-double-angles-i)",
+    \ "\<Plug>(textobj-jabraces-kakko-i)",
+    \ "\<Plug>(textobj-jabraces-double-kakko-i)",
+    \ "\<Plug>(textobj-jabraces-yama-kakko-i)",
+    \ "\<Plug>(textobj-jabraces-double-yama-kakko-i)",
+    \ "\<Plug>(textobj-jabraces-kikkou-kakko-i)",
+    \ "\<Plug>(textobj-jabraces-sumi-kakko-i)",
+\]
+let g:textobj_multitextobj_textobjects_a = [
+    \ "\<Plug>(textobj-jabraces-parens-a)",
+    \ "\<Plug>(textobj-jabraces-braces-a)",
+    \ "\<Plug>(textobj-jabraces-brackets-a)",
+    \ "\<Plug>(textobj-jabraces-angles-a)",
+    \ "\<Plug>(textobj-jabraces-double-angles-a)",
+    \ "\<Plug>(textobj-jabraces-kakko-a)",
+    \ "\<Plug>(textobj-jabraces-double-kakko-a)",
+    \ "\<Plug>(textobj-jabraces-yama-kakko-a)",
+    \ "\<Plug>(textobj-jabraces-double-yama-kakko-a)",
+    \ "\<Plug>(textobj-jabraces-kikkou-kakko-a)",
+    \ "\<Plug>(textobj-jabraces-sumi-kakko-a)",
+\]
+omap ab <Plug>(textobj-multitextobj-a)
+omap ib <Plug>(textobj-multitextobj-i)
+vmap ab <Plug>(textobj-multitextobj-a)
+vmap ib <Plug>(textobj-multitextobj-i)
+" ref. http://kainokikaede.hatenablog.com/entry/2014/11/09/124636
+
 
 
 
