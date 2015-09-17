@@ -79,6 +79,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
     NeoBundle 'itchyny/calendar.vim'
 
+    NeoBundle 'joker1007/vim-markdown-quote-syntax'
 call neobundle#end()
 
 " Required:
@@ -677,6 +678,13 @@ omap ib <Plug>(textobj-multitextobj-i)
 vmap ab <Plug>(textobj-multitextobj-a)
 vmap ib <Plug>(textobj-multitextobj-i)
 " ref. http://kainokikaede.hatenablog.com/entry/2014/11/09/124636
+
+
+
+"
+" >vim-markdown-quote-syntax
+"
+" ref. http://qiita.com/joker1007/items/19632542492f6d6395d6
 
 
 
