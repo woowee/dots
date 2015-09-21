@@ -341,7 +341,8 @@ let g:w3m#search_engine = 'http://www.google.com/search?hl=ja&ie=' . &encoding .
 nnoremap <leader>w :W3mTab google<space>
 " どうしても、な時のための外部ブラウザは chrome
 let g:w3m#external_browser = 'goole-chrome'
-nnoremap <leader>we :W3mShowExtenalBrowser
+nnoremap <leader>w :W3mTab google
+" ref. https://sites.google.com/site/hymd3a/vim/w3m-vim#TOC--3
 
 
 "
