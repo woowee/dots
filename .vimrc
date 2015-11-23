@@ -314,6 +314,7 @@ let g:easy_align_delimiters = {
 \ '.': { 'pattern': '\.\{2}\|\.\{3}' },
 \ '"': { 'pattern': '"', 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
 \ "'": { 'pattern': "'", 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
+\ '#': { 'pattern': ' #' },
 \ }
 "
 " ref. https://github.com/junegunn/vim-easy-align/blob/master/EXAMPLES.md#aligning-in-line-comments
@@ -482,7 +483,7 @@ endif
 " >neosnippet
 "
 " my defined snippet files.
-let g:neosnippet#snippets_directory='~/.vim/snippets/'
+let g:neosnippet#snippets_directory='~/.vim/snippets'
 " Plugin key-mappings.
 imap <C-Space>     <Plug>(neosnippet_expand_or_jump)
 smap <C-Space>     <Plug>(neosnippet_expand_or_jump)
