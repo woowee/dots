@@ -591,42 +591,52 @@ let g:vimfiler_safe_mode_by_default = 0
 " 開く (開いているファイルがあるディレクトリ)
 nnoremap <silent> <Leader>fc :<C-u>VimFilerBufferDir -quit<CR>
 " ide 風 (開いているファイルがあるディレクトリ)
-nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -toggle -no-quit<CR>
 
-let g:vimfiler_tree_leaf_icon     = ' '   " default: '|'
-let g:vimfiler_tree_opened_icon   = '▾'   " default: '-'
-let g:vimfiler_tree_closed_icon   = '▸'   " default: '+'
-let g:vimfiler_readonly_file_icon = '!'   " deafult: 'X'
-" let g:vimfiler_file_icon        = '-'   " default: '-' why?
-let g:vimfiler_marked_file_icon   = '*'   " default: '*'
+  let g:vimfiler_tree_leaf_icon     = " " " default: '|'
+  let g:vimfiler_tree_opened_icon   = "-" " default: '-'
+  let g:vimfiler_tree_opened_icon   = "▾"
+  let g:vimfiler_tree_closed_icon   = "+" " default: '+'
+  let g:vimfiler_tree_closed_icon   = "▸"
+  let g:vimfiler_readonly_file_icon = "!" " deafult: 'X'
+" let g:vimfiler_file_icon          = '-' " default: '-' why?
+  let g:vimfiler_marked_file_icon   = '*' " default: '*'
+  " ref. http://blog.scimpr.com/2013/03/06/vimfiler%E3%81%AF%E3%81%98%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/
 
-nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+
 augroup vimfiler
-    autocmd!
-    " unite の bookmark を vimfiler で展開
-    autocmd FileType vimfiler call unite#custom_default_action('directory', 'lcd')
-    " tree での制御は、<Space>
-    autocmd FileType vimfiler map <silent><buffer> <Space> <NOP>
-    autocmd FileType vimfiler nmap <silent><buffer> <Space> <Plug>(vimfiler_expand_tree)
-    autocmd FileType vimfiler nmap <silent><buffer> <S-Space> <Plug>(vimfiler_expand_tree_recursive)
-    " オープンは、<CR>(enter キー)
-    autocmd FileType vimfiler nmap <buffer><expr> <CR> vimfiler#smart_cursor_map(
-                                                            \ "\<Plug>(vimfiler_cd_file)",
-                                                            \ "\<Plug>(vimfiler_edit_file)")
-    " マークは、<C-Space>(control-space)
-    autocmd FileType vimfiler nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
-    autocmd FileType vimfiler vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
+  autocmd!
+  autocmd FileType vimfiler call s:vimfiler_settings()
 augroup END
-"デフォルトのキーマッピングを変更
-augroup vimrc
-  autocmd FileType vimfiler call s:vimfiler_my_settings()
-augroup END
-function! s:vimfiler_my_settings()
-  nmap <buffer> <c-l> <plug>(vimfiler_switch_to_other_window)
+function! s:vimfiler_settings()
+  " tree での制御は、<Space>
+  map <silent><buffer> <Space> <NOP>
+  nmap <silent><buffer> <Space> <Plug>(vimfiler_expand_tree)
+  nmap <silent><buffer> <S-Space> <Plug>(vimfiler_expand_tree_recursive)
+
+  " オープンは、<CR>(enter キー)
+  nmap <buffer><expr> <CR> vimfiler#smart_cursor_map(
+          \ "\<Plug>(vimfiler_cd_file)",
+          \ "\<Plug>(vimfiler_open_file_in_another_vimfiler)")
+
+
+  " マークは、<C-Space>(control-space)
+  nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
+  vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
+
+  nnoremap <buffer><expr> <C-j> vimfiler#do_switch_action('split')
+  nnoremap <buffer><expr> <C-k> vimfiler#do_switch_action('vsplit')
+  " :h vimfiler#do_switch_action()
+  " ref. https://github.com/Shougo/vimfiler.vim/issues/274
+  " ref. https://github.com/Shougo/vimfiler.vim/issues/114
+
+  " 移動、<Tab> だけでなく <C-l> も
+  nmap <buffer> <C-l> <plug>(vimfiler_switch_to_other_window)
+
+  " 閉じる、<Esc> 2 回叩き
   nmap <buffer> <Esc><Esc> <Plug>(vimfiler_exit)
 endfunction
 " ref. http://www.karakaram.com/vimfiler#vimrc
-
 
 
 "
