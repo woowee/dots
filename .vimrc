@@ -544,17 +544,20 @@ nnoremap [Unite]y :<C-u>Unite history/yank<CR>
 
 nnoremap [unite]a :<C-u>UniteBookmarkAdd<CR>
 
-" ウィンドウを分割して開く
-autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
-autocmd FileType unite inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
-" ウィンドウを縦に分割して開く
-autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
-autocmd FileType unite inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
-
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()
-    nmap <buffer> <esc><esc> <Plug>(unite_exit)
-    imap <buffer> jj <Plug>(unite_insert_leave)
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  " ウィンドウを分割して開く
+  nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
+  inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
+  " ウィンドウを縦に分割して開く
+  nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
+  inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
+  " インサート→ノーマルモード
+  imap <buffer> jj <Plug>(unite_insert_leave)
+  " 閉じる
+  imap <buffer> <Esc><Esc> <Plug>(unite_exit)
+  nmap <buffer> <Esc> <Plug>(unite_exit)
+  " ref. http://lambdalisue.hatenablog.com/entry/2013/06/23/071344
 endfunction
 
 " unite : grep > ag(silver searcher)
