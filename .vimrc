@@ -205,7 +205,8 @@ augroup END
 
 
 "--------------------------------------------------------------------------- >key >map >keymap
-nmap <ESC><ESC> ;nohlsearch<CR><ESC>
+" 検索結果ハイライト
+nmap <S-Esc><S-Esc> ;nohlsearch<CR><Esc>
 " ヘルプ
 nnoremap <C-i> :<C-u>help<Space>
 nnoremap <C-i><C-i> :<C-u>help<Space><C-r><C-w><Enter>
