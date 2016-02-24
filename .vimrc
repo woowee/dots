@@ -20,58 +20,149 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " My Bundles here:
     NeoBundle 'Shougo/vimproc', {
     \ 'build' : {
-    \     'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
+    \     'windows': 'echo "Sorry, cannot update vimproc binary file in Windows."',
     \     'cygwin' : 'make -f make_cygwin.mak',
-    \     'mac' : 'make -f make_mac.mak',
-    \     'unix' : 'make -f make_unix.mak',
+    \     'mac'    : 'make -f make_mac.mak',
+    \     'unix'   : 'make -f make_unix.mak',
     \   },
     \ }
-    NeoBundle 'Shougo/unite.vim'
-    NeoBundle 'Shougo/unite-outline'
-    NeoBundle 'Shougo/neomru.vim'
+    NeoBundleLazy 'Shougo/unite.vim', {
+              \   'autoload': {
+              \       'commands' : ["Unite", "UniteWithBufferDir"],
+              \     }
+              \ }
+    NeoBundleLazy 'Shougo/unite-outline', {
+              \   'depends': ["Shougo/unite.vim"],
+              \ }
+    NeoBundleLazy 'Shougo/neomru.vim', {
+              \   'autoload': {
+              \     'on_source': ["unite.vim"],
+              \   }
+              \ }
+" complement
+    NeoBundleLazy 'Shougo/neocomplete.vim', {
+              \   'autoload' : {
+              \     'insert' : 1,
+              \   }
+              \ }
+    NeoBundleLazy 'Shougo/context_filetype.vim', {
+              \   'autoload' : {
+              \     'function_prefix' : "context_filetype",
+              \   }
+              \ }
+    NeoBundleLazy 'Shougo/neosnippet.vim', {
+              \   'autoload': {
+              \     'insert': 1,
+              \     }
+              \ }
+    NeoBundleLazy 'Shougo/neosnippet-snippets', {
+              \   'autoload': {
+              \     'insert': 1,
+              \     }
+              \ }
 
-    NeoBundle 'Shougo/neocomplete.vim'
-    NeoBundle 'Shougo/neosnippet.vim'
-    NeoBundle 'Shougo/neosnippet-snippets'
+" shell
+    NeoBundleLazy 'Shougo/vimshell', {
+              \ 'depends': ['Shougo/vimproc.vim'],
+              \ }
 
-    NeoBundle 'Shougo/vimshell'
-    NeoBundle 'Shougo/vimfiler.vim'
+" filer
+    NeoBundleLazy 'Shougo/vimfiler.vim', {
+              \   'depends': ['Shougo/unite.vim'],
+              \   'autoload' : {
+              \       'commands' : [ "VimFiler", "VimFilerBufferDir" ],
+              \   }
+              \ }
 
-    NeoBundle 'ctrlpvim/ctrlp.vim'
-    NeoBundle 'vim-scripts/ctrlp-funky'
-    NeoBundle 'mattn/ctrlp-filer'
+" ctrp
+    NeoBundleLazy 'ctrlpvim/ctrlp.vim', {
+              \   'commands' : ["CtrlP"],
+              \   'autoload' : {
+              \     'mappings' : ["n","<C-p>"],
+              \   }
+              \ }
+    NeoBundleLazy 'vim-scripts/ctrlp-funky', {
+              \   'depends': ["ctrlpvim/ctrlp.vim"],
+              \ }
+    NeoBundleLazy 'mattn/ctrlp-filer', {
+              \   'depends': ["ctrlpvim/ctrlp.vim"],
+              \ }
 
+" edit
+  " text object
     NeoBundle 'kana/vim-operator-user'
-
-    NeoBundle 'tyru/caw.vim'
-    NeoBundle 'rhysd/vim-operator-surround'
     NeoBundle 'kana/vim-textobj-user'
     NeoBundle 'kana/vim-textobj-jabraces'
     NeoBundle 'osyo-manga/vim-textobj-multiblock'
     NeoBundle 'osyo-manga/vim-textobj-multitextobj'
-    NeoBundle 'vim-easy-align'
-    NeoBundle 'rhysd/clever-f.vim'
-
+  " surround
+    NeoBundleLazy 'rhysd/vim-operator-surround', {
+              \   'depends': ["kana/vim-operator-user"],
+              \   'mappings' : '<Plug>',
+              \ }
+  " comment
+    NeoBundleLazy 'tyru/caw.vim', {
+              \   'autoload' : {
+              \     'mappings': ["<Plug>"],
+              \   }
+              \ }
+  " text align
+    NeoBundleLazy 'vim-easy-align', {
+              \   'autoload' : {
+              \     'mappings': ["<Plug>(EasyAlign)"],
+              \   }
+              \ }
+    NeoBundleLazy 'rhysd/clever-f.vim', {
+              \   'autoload' : {
+              \     'mappings': ["f", "F"],
+              \   }
+              \ }
+" appearance
+  " colorscheme
     NeoBundle 'altercation/vim-colors-solarized'
     NeoBundle 'molokai'
     NeoBundle 'Wutzara/vim-materialtheme'
-
     NeoBundle 'w0ng/vim-hybrid'
     NeoBundle 'twerth/ir_black'
+  " status line
     NeoBundle 'itchyny/lightline.vim'
 
+" utilities (cording and so on)
     NeoBundle 'thinca/vim-quickrun'
-    NeoBundle 'sukima/xmledit'
-    NeoBundle 'mattn/emmet-vim'
-    NeoBundle 'plasticscafe/vim-less-autocompile'
-    NeoBundle 'groenewege/vim-less'
+    NeoBundleLazy 'sukima/xmledit', {
+            \ 'autoload': {
+            \   'filetypes': ["html", "js", "css", "xml"],
+            \   },
+            \ }
+    NeoBundleLazy 'mattn/emmet-vim', {
+            \ 'autoload': {
+            \   'filetypes': ["html", "htm", "js", "javascript", "markdown", "md", "xml"],
+            \   },
+            \ }
+    NeoBundleLazy 'plasticscafe/vim-less-autocompile', {
+            \ 'autoload': {
+            \   'filetypes': ["less", "css"],
+            \   },
+            \ }
+    NeoBundleLazy 'groenewege/vim-less', {
+            \ 'autoload': {
+            \   'filetypes': ['less', 'css'],
+            \   },
+            \ }
     NeoBundle 'toyamarinyon/vim-swift'
 
-    NeoBundle 'glidenote/memolist.vim'
-
+    NeoBundleLazy 'glidenote/memolist.vim', {
+            \ 'autoload' : {
+            \   'commands' : [ "MemoNew", "MemoList", "MemoGrep" ],
+            \   }
+            \ }
     NeoBundle 'mattn/webapi-vim'
-    NeoBundle 'ujihisa/blogger.vim'
-    NeoBundle 'kannokanno/previm'
+    NeoBundleLazy 'kannokanno/previm', {
+            \ 'autoload' : {
+            \   'commands' : [ "PrevimOpen" ],
+            \   }
+            \ }
+
     NeoBundle 'tyru/open-browser.vim'
 
     NeoBundle 'yuratomo/w3m.vim'
@@ -547,11 +638,11 @@ nnoremap [unite]a :<C-u>UniteBookmarkAdd<CR>
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
   " ウィンドウを分割して開く
-  nnoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
-  inoremap <silent> <buffer> <expr> <C-J> unite#do_action('split')
+  nnoremap <silent> <buffer> <expr> <C-h> unite#do_action('split')
+  inoremap <silent> <buffer> <expr> <C-h> unite#do_action('split')
   " ウィンドウを縦に分割して開く
-  nnoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
-  inoremap <silent> <buffer> <expr> <C-K> unite#do_action('vsplit')
+  nnoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
+  inoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
   " インサート→ノーマルモード
   imap <buffer> jj <Plug>(unite_insert_leave)
   " 閉じる
@@ -628,13 +719,12 @@ function! s:vimfiler_settings()
           \ "\<Plug>(vimfiler_cd_file)",
           \ "\<Plug>(vimfiler_open_file_in_another_vimfiler)")
 
-
   " マークは、<C-Space>(control-space)
   nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
   vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
 
-  nnoremap <buffer><expr> <C-j> vimfiler#do_switch_action('split')
-  nnoremap <buffer><expr> <C-k> vimfiler#do_switch_action('vsplit')
+  nnoremap <buffer><expr> <C-h> vimfiler#do_switch_action('split')
+  nnoremap <buffer><expr> <C-v> vimfiler#do_switch_action('vsplit')
   " :h vimfiler#do_switch_action()
   " ref. https://github.com/Shougo/vimfiler.vim/issues/274
   " ref. https://github.com/Shougo/vimfiler.vim/issues/114
@@ -671,6 +761,7 @@ let g:operator#surround#blocks = {
 " >vim-textobj-jabraces
 "
 let g:textobj_multitextobj_textobjects_i = [
+    \ "\<Plug>(textobj-multiblock-i)",
     \ "\<Plug>(textobj-jabraces-parens-i)",
     \ "\<Plug>(textobj-jabraces-braces-i)",
     \ "\<Plug>(textobj-jabraces-brackets-i)",
@@ -684,6 +775,7 @@ let g:textobj_multitextobj_textobjects_i = [
     \ "\<Plug>(textobj-jabraces-sumi-kakko-i)",
 \]
 let g:textobj_multitextobj_textobjects_a = [
+    \ "\<Plug>(textobj-multiblock-a)",
     \ "\<Plug>(textobj-jabraces-parens-a)",
     \ "\<Plug>(textobj-jabraces-braces-a)",
     \ "\<Plug>(textobj-jabraces-brackets-a)",
