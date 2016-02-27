@@ -3,182 +3,102 @@ set encoding=utf-8
 scriptencoding utf-8
 
 
-if has('vim_starting')
-   set nocompatible               " Be iMproved
-
-   " Required:
-   set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
-" Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
-
 " My Bundles here:
-    NeoBundle 'Shougo/vimproc', {
-    \ 'build' : {
-    \     'windows': 'echo "Sorry, cannot update vimproc binary file in Windows."',
-    \     'cygwin' : 'make -f make_cygwin.mak',
-    \     'mac'    : 'make -f make_mac.mak',
-    \     'unix'   : 'make -f make_unix.mak',
-    \   },
-    \ }
-    NeoBundleLazy 'Shougo/unite.vim', {
-              \   'autoload': {
-              \       'commands' : ["Unite", "UniteWithBufferDir"],
-              \     }
-              \ }
-    NeoBundleLazy 'Shougo/unite-outline', {
-              \   'depends': ["Shougo/unite.vim"],
-              \ }
-    NeoBundleLazy 'Shougo/neomru.vim', {
-              \   'autoload': {
-              \     'on_source': ["unite.vim"],
-              \   }
-              \ }
-" complement
-    NeoBundleLazy 'Shougo/neocomplete.vim', {
-              \   'autoload' : {
-              \     'insert' : 1,
-              \   }
-              \ }
-    NeoBundleLazy 'Shougo/context_filetype.vim', {
-              \   'autoload' : {
-              \     'function_prefix' : "context_filetype",
-              \   }
-              \ }
-    NeoBundleLazy 'Shougo/neosnippet.vim', {
-              \   'autoload': {
-              \     'insert': 1,
-              \     }
-              \ }
-    NeoBundleLazy 'Shougo/neosnippet-snippets', {
-              \   'autoload': {
-              \     'insert': 1,
-              \     }
-              \ }
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+
+call dein#begin(expand('~/.cache/dein'))
+
+    call dein#add('Shougo/dein.vim')
+    call dein#add('Shougo/vimproc.vim', {
+        \ 'build': {
+        \     'windows' : 'tools\\update-dll-mingw',
+        \     'cygwin'  : 'make -f make_cygwin.mak',
+        \     'mac'     : 'make -f make_mac.mak',
+        \     'linux'   : 'make',
+        \     'unix'    : 'gmake',
+        \    },
+        \ })
+
+" completion
+    call dein#add('Shougo/neocomplete.vim')
+    call dein#add('Shougo/context_filetype.vim')
+    call dein#add('Shougo/neosnippet')
+    call dein#add('Shougo/neosnippet.vim')
+    call dein#add('Shougo/neosnippet-snippets')
+
+" interface
+  " unite
+    call dein#add('Shougo/unite.vim')
+    call dein#add('Shougo/neomru.vim')
+    call dein#add('Shougo/unite-outline')
+  " filer
+    call dein#add('Shougo/vimfiler.vim')
+  " ctrlp(?
+    call dein#add('ctrlpvim/ctrlp.vim')
+    call dein#add('vim-scripts/ctrlp-funky')
+    call dein#add('mattn/ctrlp-filer')
 
 " shell
-    NeoBundleLazy 'Shougo/vimshell', {
-              \ 'depends': ['Shougo/vimproc.vim'],
-              \ }
+    call dein#add('Shougo/vimshell')
 
-" filer
-    NeoBundleLazy 'Shougo/vimfiler.vim', {
-              \   'depends': ['Shougo/unite.vim'],
-              \   'autoload' : {
-              \       'commands' : [ "VimFiler", "VimFilerBufferDir" ],
-              \   }
-              \ }
-
-" ctrp
-    NeoBundleLazy 'ctrlpvim/ctrlp.vim', {
-              \   'commands' : ["CtrlP"],
-              \   'autoload' : {
-              \     'mappings' : ["n","<C-p>"],
-              \   }
-              \ }
-    NeoBundleLazy 'vim-scripts/ctrlp-funky', {
-              \   'depends': ["ctrlpvim/ctrlp.vim"],
-              \ }
-    NeoBundleLazy 'mattn/ctrlp-filer', {
-              \   'depends': ["ctrlpvim/ctrlp.vim"],
-              \ }
-
-" edit
+" text editing
   " text object
-    NeoBundle 'kana/vim-operator-user'
-    NeoBundle 'kana/vim-textobj-user'
-    NeoBundle 'kana/vim-textobj-jabraces'
-    NeoBundle 'osyo-manga/vim-textobj-multiblock'
-    NeoBundle 'osyo-manga/vim-textobj-multitextobj'
+    call dein#add('kana/vim-operator-user')
+    call dein#add('kana/vim-textobj-user')
+    call dein#add('kana/vim-textobj-jabraces')
+    call dein#add('osyo-manga/vim-textobj-multiblock')
+    call dein#add('osyo-manga/vim-textobj-multitextobj')
   " surround
-    NeoBundleLazy 'rhysd/vim-operator-surround', {
-              \   'depends': ["kana/vim-operator-user"],
-              \   'mappings' : '<Plug>',
-              \ }
+    call dein#add( 'rhysd/vim-operator-surround')
   " comment
-    NeoBundleLazy 'tyru/caw.vim', {
-              \   'autoload' : {
-              \     'mappings': ["<Plug>"],
-              \   }
-              \ }
+    call dein#add( 'tyru/caw.vim')
   " text align
-    NeoBundleLazy 'vim-easy-align', {
-              \   'autoload' : {
-              \     'mappings': ["<Plug>(EasyAlign)"],
-              \   }
-              \ }
-    NeoBundleLazy 'rhysd/clever-f.vim', {
-              \   'autoload' : {
-              \     'mappings': ["f", "F"],
-              \   }
-              \ }
+    call dein#add( 'vim-easy-align')
+    call dein#add( 'rhysd/clever-f.vim')
+
 " appearance
   " colorscheme
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle 'molokai'
-    NeoBundle 'Wutzara/vim-materialtheme'
-    NeoBundle 'w0ng/vim-hybrid'
-    NeoBundle 'twerth/ir_black'
+    call dein#add('altercation/vim-colors-solarized')
+    call dein#add('molokai')
+    call dein#add('Wutzara/vim-materialtheme')
+    call dein#add('w0ng/vim-hybrid')
+    call dein#add('twerth/ir_black')
   " status line
-    NeoBundle 'itchyny/lightline.vim'
+    call dein#add('itchyny/lightline.vim')
 
-" utilities (cording and so on)
-    NeoBundle 'thinca/vim-quickrun'
-    NeoBundleLazy 'sukima/xmledit', {
-            \ 'autoload': {
-            \   'filetypes': ["html", "js", "css", "xml"],
-            \   },
-            \ }
-    NeoBundleLazy 'mattn/emmet-vim', {
-            \ 'autoload': {
-            \   'filetypes': ["html", "htm", "js", "javascript", "markdown", "md", "xml"],
-            \   },
-            \ }
-    NeoBundleLazy 'plasticscafe/vim-less-autocompile', {
-            \ 'autoload': {
-            \   'filetypes': ["less", "css"],
-            \   },
-            \ }
-    NeoBundleLazy 'groenewege/vim-less', {
-            \ 'autoload': {
-            \   'filetypes': ['less', 'css'],
-            \   },
-            \ }
-    NeoBundle 'toyamarinyon/vim-swift'
+" tools
+    call dein#add('thinca/vim-quickrun')
+    call dein#add('sukima/xmledit')
+    call dein#add('mattn/emmet-vim')
+    call dein#add('plasticscafe/vim-less-autocompile')
+    call dein#add('groenewege/vim-less')
 
-    NeoBundleLazy 'glidenote/memolist.vim', {
-            \ 'autoload' : {
-            \   'commands' : [ "MemoNew", "MemoList", "MemoGrep" ],
-            \   }
-            \ }
-    NeoBundle 'mattn/webapi-vim'
-    NeoBundleLazy 'kannokanno/previm', {
-            \ 'autoload' : {
-            \   'commands' : [ "PrevimOpen" ],
-            \   }
-            \ }
+    call dein#add('toyamarinyon/vim-swift')
 
-    NeoBundle 'tyru/open-browser.vim'
+    call dein#add('glidenote/memolist.vim')
 
-    NeoBundle 'yuratomo/w3m.vim'
-    NeoBundle 'mrtazz/simplenote.vim'
+" web
+    call dein#add('mattn/webapi-vim')
 
-    NeoBundle 'itchyny/calendar.vim'
+    call dein#add('kannokanno/previm')
+    call dein#add('joker1007/vim-markdown-quote-syntax')
 
-    NeoBundle 'joker1007/vim-markdown-quote-syntax'
-call neobundle#end()
+    call dein#add('tyru/open-browser.vim')
 
-" Required:
+    call dein#add('yuratomo/w3m.vim')
+    call dein#add('mrtazz/simplenote.vim')
+
+" misc
+    call dein#add('itchyny/calendar.vim')
+
+call dein#end()
+
+let g:dein#types#git#clone_depth = 1
+if dein#check_install()
+  call dein#install()
+endif
+
 filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
 
 
 
