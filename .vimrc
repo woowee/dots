@@ -603,9 +603,21 @@ nnoremap <silent> <Leader>o :<C-u>Unite -vertical -no-quit outline<CR>
 "
 " >vimshell
 "
-let g:vimshell_split_command="vsplit"
-nnoremap <silent> <Leader>vsh :<C-u>VimShellBufferDir -split<CR>
-nnoremap <silent> <Leader>sh :<C-u>VimShell<CR>
+let g:vimshell_prompt = "% "
+let g:vimshell_secondary_prompt="> "
+
+if has('win32') || has('win64')
+  " Display user name on Windows.
+  let g:vimshell_user_prompt = "$USERNAME.' in '.fnamemodify(getcwd(), ':~')"
+else
+  " Display user name on Linux.
+  let g:vimshell_user_prompt = "$USER.' in '.fnamemodify(getcwd(), ':~')"
+endif
+
+let g:vimshell_split_command="split"
+nmap <Leader>vs <Plug>(vimshell_split_switch)
+command! Vs :VimShell -split-command=split
+" ref. https://github.com/namutaka/dotfiles/blob/76e75c7f00a07788012b2985aeec7c2b649bdd39/vimrc
 
 
 
