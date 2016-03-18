@@ -4,20 +4,29 @@ scriptencoding utf-8
 
 
 " My Bundles here:
-set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
-call dein#begin(expand('~/.cache/dein'))
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+endif
 
-    call dein#add('Shougo/dein.vim')
-    call dein#add('Shougo/vimproc.vim', {
-        \ 'build': {
-        \     'windows' : 'tools\\update-dll-mingw',
-        \     'cygwin'  : 'make -f make_cygwin.mak',
-        \     'mac'     : 'make -f make_mac.mak',
-        \     'linux'   : 'make',
-        \     'unix'    : 'gmake',
-        \    },
-        \ })
+call dein#begin(s:dein_dir)
+" ref. http://qiita.com/delphinus35/items/00ff2c0ba972c6e41542
+
+  call dein#add('Shougo/dein.vim')
+  call dein#add('Shougo/vimproc.vim', {
+      \ 'build': {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin'  : 'make -f make_cygwin.mak',
+      \     'mac'     : 'make -f make_mac.mak',
+      \     'linux'   : 'make',
+      \     'unix'    : 'gmake',
+      \    },
+      \ })
 
 " completion
     call dein#add('Shougo/neocomplete.vim')
