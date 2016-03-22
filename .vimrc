@@ -226,7 +226,7 @@ augroup END
 
 "--------------------------------------------------------------------------- >key >map >keymap
 " 検索結果ハイライト
-nmap <S-Esc><S-Esc> ;nohlsearch<CR><Esc>
+nmap q ;nohlsearch<CR><Esc>
 " ヘルプ
 nnoremap <C-i> :<C-u>help<Space>
 nnoremap <C-i><C-i> :<C-u>help<Space><C-r><C-w><Enter>
@@ -574,9 +574,6 @@ function! s:unite_settings()
   inoremap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
   " インサート→ノーマルモード
   imap <buffer> jj <Plug>(unite_insert_leave)
-  " 閉じる
-  imap <buffer> <Esc><Esc> <Plug>(unite_exit)
-  nmap <buffer> <Esc> <Plug>(unite_exit)
   " ref. http://lambdalisue.hatenablog.com/entry/2013/06/23/071344
 endfunction
 
@@ -673,8 +670,6 @@ function! s:vimfiler_settings()
   " 移動、<Tab> だけでなく <C-l> も
   nmap <buffer> <C-l> <plug>(vimfiler_switch_to_other_window)
 
-  " 閉じる、<Esc> 2 回叩き
-  nmap <buffer> <Esc><Esc> <Plug>(vimfiler_exit)
 endfunction
 " ref. http://www.karakaram.com/vimfiler#vimrc
 
