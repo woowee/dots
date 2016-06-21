@@ -265,8 +265,8 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 " バッファ.分割方向
-nnoremap <C-w>j <C-w>K
-nnoremap <C-w>h <C-w>H
+nnoremap <C-w>h <C-w>K    " horizontal
+nnoremap <C-w>v <C-w>H    " vertical
 " 行頭、行末移動
 noremap =0 $
 " カーソルの位置から行頭、行末まで選択
