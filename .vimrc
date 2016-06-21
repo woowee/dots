@@ -292,6 +292,14 @@ nnoremap <space> zA
 vnoremap <c-a> <c-a>gv
 vnoremap <c-x> <c-x>gv
 " ref. http://vim-jp.org/blog/2015/06/30/visual-ctrl-a-ctrl-x.html
+" x，s で削除した内容をレジスタに入れない(消去専用レジスタ black hole register)
+nnoremap x "_x
+nnoremap s "_s
+" ref. http://qiita.com/itmammoth/items/312246b4b7688875d023#10x%E3%82%84s%E3%81%A7%E3%81%AF%E3%83%A4%E3%83%B3%E3%82%AF%E3%81%97%E3%81%AA%E3%81%84
+" ref. http://qiita.com/0829/items/0b3f63798b6910623efc#2-8
+" ref. http://vimdoc.sourceforge.net/htmldoc/change.html#registers
+" ref. :h quote_
+
 
 
 "--------------------------------------------------------------------------- >plugins
