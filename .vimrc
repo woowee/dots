@@ -230,7 +230,7 @@ nnoremap <C-i> :<C-u>help<Space>
 nnoremap <C-i><C-i> :<C-u>help<Space><C-r><C-w><Enter>
 augroup help
   autocmd!
-  autocmd FileType help nnoremap <buffer> <Esc><Esc> <C-w>c
+  autocmd FileType help,git-status,git-log nnoremap <buffer> q <C-w>c
 augroup END
 " ref. http://d.hatena.ne.jp/mickey24/20090429/1240992099
 " カーソル移動
