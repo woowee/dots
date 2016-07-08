@@ -340,6 +340,8 @@ noremap D "_D
 " http://qiita.com/itmammoth/items/312246b4b7688875d023#10x%E3%82%84s%E3%81%A7%E3%81%AF%E3%83%A4%E3%83%B3%E3%82%AF%E3%81%97%E3%81%AA%E3%81%84
 nnoremap dd Vx
 
+xnoremap <expr> p 'pgv"'.v:register.'ygv<esc>'
+" http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register/5093286#5093286
 
 
 "--------------------------------------------------------------------------- >plugins
