@@ -4,9 +4,24 @@ scriptencoding utf-8
 
 
 " My Bundles here:
+"let s:dein_dir = expand('~/.cache/dein')
+"let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+"
+"if &runtimepath !~# '/dein.vim'
+"  if !isdirectory(s:dein_repo_dir)
+"    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+"  endif
+"  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+"endif
+"
+"if dein#load_state(s:dein_dir)
+
+" プラグインが実際にインストールされるディレクトリ
 let s:dein_dir = expand('~/.cache/dein')
+" dein.vim 本体
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
+" dein.vim がなければ github から落としてくる
 if &runtimepath !~# '/dein.vim'
   if !isdirectory(s:dein_repo_dir)
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
@@ -14,19 +29,14 @@ if &runtimepath !~# '/dein.vim'
   execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
 endif
 
-call dein#begin(s:dein_dir)
-" ref. http://qiita.com/delphinus35/items/00ff2c0ba972c6e41542
+" 設定開始
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
 
+" dein
   call dein#add('Shougo/dein.vim')
-  call dein#add('Shougo/vimproc.vim', {
-      \ 'build': {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin'  : 'make -f make_cygwin.mak',
-      \     'mac'     : 'make -f make_mac.mak',
-      \     'linux'   : 'make',
-      \     'unix'    : 'gmake',
-      \    },
-      \ })
+" vimproc
+  call dein#add('Shougo/vimproc.vim', {'build': 'make'})
 
 " completion
     call dein#add('Shougo/neocomplete.vim')
@@ -37,33 +47,34 @@ call dein#begin(s:dein_dir)
 
 " interface
   " unite
-    call dein#add('Shougo/unite.vim')
-    call dein#add('Shougo/neomru.vim')
-    call dein#add('Shougo/unite-outline')
+    call dein#add('Shougo/unite.vim', { 'depends': ['vimproc']})
+    call dein#add('Shougo/neomru.vim',    {'depdens': ['unite.vim']})
+    call dein#add('Shougo/unite-outline', {'depdens': ['unite.vim']})
   " filer
-    call dein#add('Shougo/vimfiler.vim')
+    call dein#add('Shougo/vimfiler.vim',  {'depdens': ['unite.vim']})
   " ctrlp(?
     call dein#add('ctrlpvim/ctrlp.vim')
     call dein#add('vim-scripts/ctrlp-funky')
     call dein#add('mattn/ctrlp-filer')
 
 " shell
-    call dein#add('Shougo/vimshell')
+    call dein#add('Shougo/vimshell', {'depends': ['vimproc']})
 
 " text editing
   " text object
     call dein#add('kana/vim-operator-user')
-    call dein#add('kana/vim-textobj-user')
-    call dein#add('kana/vim-textobj-jabraces')
-    call dein#add('osyo-manga/vim-textobj-multiblock')
-    call dein#add('osyo-manga/vim-textobj-multitextobj')
+    call dein#add('kana/vim-textobj-user',               {'depends': ['vim-operator-user']})
+    call dein#add('kana/vim-textobj-jabraces',           {'depends': ['vim-operator-user']})
+    call dein#add('osyo-manga/vim-textobj-multiblock',   {'depends': ['vim-textobj-user']})
+    call dein#add('osyo-manga/vim-textobj-multitextobj', {'depends': ['vim-textobj-user']})
   " surround
-    call dein#add( 'rhysd/vim-operator-surround')
+    call dein#add('rhysd/vim-operator-surround')
   " comment
-    call dein#add( 'tyru/caw.vim')
+    call dein#add('tyru/caw.vim')
   " text align
-    call dein#add( 'vim-easy-align')
-    call dein#add( 'rhysd/clever-f.vim')
+    call dein#add('vim-easy-align')
+  " cursor
+    call dein#add('rhysd/clever-f.vim')
 
 " appearance
   " colorscheme
@@ -72,6 +83,7 @@ call dein#begin(s:dein_dir)
     call dein#add('Wutzara/vim-materialtheme')
     call dein#add('w0ng/vim-hybrid')
     call dein#add('twerth/ir_black')
+    call dein#add('cocopon/iceberg.vim')
   " status line
     call dein#add('itchyny/lightline.vim')
 
@@ -100,9 +112,14 @@ call dein#begin(s:dein_dir)
 " misc
     call dein#add('itchyny/calendar.vim')
 
-call dein#end()
+  call dein#end()
+  call dein#save_state()
+endif
 
-let g:dein#types#git#clone_depth = 1
+"if dein#check_install(['vimproc'])
+"  call dein#install(['vimproc'])
+"endif
+
 if dein#check_install()
   call dein#install()
 endif
@@ -279,7 +296,7 @@ inoremap ,ddd <C-r>=strftime('%Y%m%d')<Return>
 map + <C-w>+
 map - <C-w>-
 " 。/、セットを．/，にする
-nnoremap <leader>. :%s/。/．/g<CR>:%s/、/，/g<CR>
+nnoremap <leader>. :%s/。/．/ge<CR>:%s/、/，/ge<CR>:nohlsearch<CR>
 " バッファ内すべてのコンテンツをクリップボードへ
 noremap ya :%y<CR>
 " 折りたたみ
@@ -553,6 +570,7 @@ let g:unite_enable_start_insert = 1
 let g:unite_enable_ignore_case = 1
 let g:unite_enable_smart_case = 1
 
+let g:unite_source_find_default_opts = "-L"
 " path
 " let g:neomru#file_mru_path=expand('~/.cache/neomru/file')
 " let g:neomru#directory_mru_path=expand('~/.cache/neomru/directory')
@@ -587,16 +605,9 @@ function! s:unite_settings()
   " ref. http://lambdalisue.hatenablog.com/entry/2013/06/23/071344
 endfunction
 
-" unite : grep > ag(silver searcher)
-nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
-nnoremap <silent> ,gg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
-nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
+let g:neomru#follow_links=1
+" let g:unite_source_rec_async_command=['find', '.', '-L', '-type', 'f'
+" call unite#custom#source('file', 'matchers', "matcher_default")
 
 
 "
@@ -846,84 +857,6 @@ command! -nargs=+ -range Num <line1>, <line2> call <SID>InsertNumbering(<f-args>
 " ref. http://kikaibunsho.web.fc2.com/monologo/memoro/08_11.html
 " ref. http://vimdoc.sourceforge.net/htmldoc/eval.html#printf%28%29
 
-
-
-" "
-" " s:FormMarkdownEOL()
-" "
-" " markdown 形式における各行末のフォーマット調整。(ただし不完全 :P)
-" " とりわけ <br> の行末スペースx2を確認し、必要に応じ追加、書き換える。
-" "
-" " !note の箇所は、導入時、要注意。
-" "   置換先の文字列は、いずれも "半角スペース2つに改行"。
-" "   改行コードは `<C-v><CR>`。
-" "   ```
-" "   :s/\(\/$\)\n\(\/g\)/\1  \^M\2/g
-" "   ```
-" "   上述置換処理の `^M` は `<C-v><CR>` で改行コード。
-" function! s:FormMarkdownEOL()
-"   let l:cur = line('.')
-"   " 行末空白がx3以上の場合
-"   exe 'silent %s/^[^$].*\S\zs\s\{3,}$\n\ze[^$]/  /ge'
-"   " 行末空白がx1の場合
-"   exe 'silent %s/^[^$].*\S\zs\s\{1}$\n\ze[^$]/  /ge'
-"   " 行末空白がx0の場合
-"   exe 'silent %s/^[^$].*\S\zs$\n\ze[^$]/  /ge'
-"
-"   " -- header
-"   exe 'silent g/^\(=\|-\)\{3,}\s*$/s/\s\+$//ge'
-"   exe 'silent g/^\(=\|-\)\{3,}\s*$/-1s/\s\+$//ge'
-"
-"   exe 'silent g/^#\+[^#]/s/\s\+$//ge'
-"   exe 'silent g/^#\+[^#]/-1s/\s\+$//ge'
-"
-"   " -- horizontal rules
-"   exe 'silent g/^\(-\|*\|_\|-\s\|*\s\|_\s\)\{3,}/s/\s\+$//ge'
-"
-"   " -- code
-"   " exe 'silent g/\(^```\s*\a\+\)\_[^`]*\(^```\)/s/\s\+$//gc'
-"
-"   " -- lists
-"   " exe 'silent g/^\(\s\|\t\)*\(\*\|-\|\d*\.\)\s\/s/\s\+$//ge'
-"
-"   " -- table
-"   exe 'silent g/^\(\s\|\t\)*|.*|\s\+$/s/\s\+$//ge'
-"
-"   " --- html tag
-"   exe 'silent g/^\(\s\|\t\|.\)*<.*>\s*$/s/\s\+$//ge'
-"
-"   " -- Reference-style links
-"   exe 'silent %s/^\[\d\+\]:.*\zs\s\{2}$//ge'
-"
-"
-"   let l:iscode = 0  "not erase
-"   for l:line in range(1, line('$'))
-"     let l:lineStr = getline(l:line)
-"   " -- code
-"     if match(l:lineStr, '^\s*```') >= 0
-"       if l:iscode == 0
-"         let l:iscode = 1  "switch mode = 'erase'
-"       else
-"         exe 'silent ' . l:line . 's/\s\+$//ge'
-"         let l:iscode = 0  "switch mode = 'not erase'
-"       endif
-"     endif
-"
-"     if l:iscode == 1
-"       "erase the blanks on EOL
-"       exe 'silent ' . l:line . 's/\s\+$//ge'
-"     else
-"   " -- list
-"       if match(l:lineStr, '^\s*\(-\s\|*\s\|\d\{-}\.\s\)') >= 0 &&
-"        \ match (getline(l:line + 1), '^\s*\($\|-\s\|*\s\|\d\{-}\.\s\)') >= 0
-"         exe 'silent ' . l:line . 's/\s\{-1,}$//ge'
-"       endif
-"     endif
-"   endfor
-"
-"   exe l:cur
-" endfunction
-" command! Mdown call s:FormMarkdownEOL()
 
 "--------------------------------------------------------------------------- .misc
 

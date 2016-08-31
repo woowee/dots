@@ -17,12 +17,7 @@ endif
 
 "-------------------------------------------------- .appearance
 " カラースキーマ
-" colorscheme molokai
-" colorscheme hybrid
-" set background=dark
-" let g:solarized_termcolors=256
-" colorscheme solarized
- colorscheme ir_black
+ colorscheme iceberg
 
 " 透過
 " gui
