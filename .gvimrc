@@ -68,3 +68,7 @@ if has('xim')
 "    inoremap `` ``<Left>
 endif
 
+" 行番号はどの colorscheme 使っても一律目立たせる
+set cursorline
+highlight! CursorLineNr cterm=NONE ctermfg=7 gui=NONE guifg=#f5f5f5
+highlight! LineNr ctermfg=245 guifg=#949494
