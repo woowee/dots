@@ -12,7 +12,7 @@ if has ('win32') || ('win64')
  au GUIEnter * simalt ~x
 elseif has ('mac')
  set fuoptions=maxvert,maxhorz
- au GUIEnter * set fullscreen
+ "au GUIEnter * set fullscreen
 endif
 
 "-------------------------------------------------- .appearance
