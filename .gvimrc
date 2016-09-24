@@ -72,3 +72,11 @@ endif
 set cursorline
 highlight! CursorLineNr cterm=NONE ctermfg=7 gui=NONE guifg=#f5f5f5
 highlight! LineNr ctermfg=245 guifg=#949494
+
+
+
+" コメント中の特定の単語を強調表示する
+augroup HilightsForce
+  autocmd WinEnter,BufRead,BufNew,Syntax * :silent! call matchadd('Todo', '\(TODO\|CHANGED\|NOTE\|INFO\|IDEA\):')
+  autocmd WinEnter,WinLeave,BufRead,BufNew,Syntax * highlight Todo guibg=#f3777a guifg=#ffffff
+augroup END
