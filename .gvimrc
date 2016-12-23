@@ -12,18 +12,19 @@ if has ('win32') || ('win64')
  au GUIEnter * simalt ~x
 elseif has ('mac')
  set fuoptions=maxvert,maxhorz
- "au GUIEnter * set fullscreen
+ au GUIEnter * set fullscreen
 endif
 
 "-------------------------------------------------- .appearance
 " カラースキーマ
  colorscheme iceberg
+" colorscheme shiny-white
 
 " 透過
 " gui
 if has('mac')
-  " set transparency=10
-  set transparency=18   "colorscheme ir_black
+  set transparency=10
+  " set transparency=18   "colorscheme ir_black
 elseif has('win32') || has('win64')
   set transparency=200
 endif
@@ -39,9 +40,9 @@ if has('win32')
     set ambiwidth=auto
   endif
 elseif has('gui_macvim')
-  set guifont=Ricty_Diminished:h16
+  set guifont=Ricty_Diminished:h12
 elseif has('mac')
-  set guifont=Ricty_Diminished:h16
+  set guifont=Ricty_Diminished:h12
 elseif has('xfontset')
   " UNIX用 (xfontsetを使用)
   set guifontset=a14,r14,k14
@@ -73,10 +74,3 @@ set cursorline
 highlight! CursorLineNr cterm=NONE ctermfg=7 gui=NONE guifg=#f5f5f5
 highlight! LineNr ctermfg=245 guifg=#949494
 
-
-
-" コメント中の特定の単語を強調表示する
-augroup HilightsForce
-  autocmd WinEnter,BufRead,BufNew,Syntax * :silent! call matchadd('Todo', '\(TODO\|CHANGED\|NOTE\|INFO\|IDEA\):')
-  autocmd WinEnter,WinLeave,BufRead,BufNew,Syntax * highlight Todo guibg=#f3777a guifg=#ffffff
-augroup END

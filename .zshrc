@@ -290,3 +290,8 @@ alias su="su -l"
 ## load user .zshrc configuration file
 #
 [ -f ${HOME}/.zshrc.mine ] && source ${HOME}/.zshrc.mine
+
+#
+# for Neovim
+#
+export XDG_CONFIG_HOME=$HOME/.config
