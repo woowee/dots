@@ -6,144 +6,63 @@ endif
 scriptencoding utf-8
 
 
-" Dein
-let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
+"--------------------------------------------------------------------------- >manage plugins
+"
+" Dein.vim
+"
+" ref. http://qiita.com/kawaz/items/ee725f6214f91337b42b#%E8%A8%AD%E5%AE%9A%E4%BE%8B
+" ref. http://qiita.com/delphinus/items/00ff2c0ba972c6e41542
+" ref. http://qiita.com/Ress/items/7e71e007cf8d41a07a1a#settings-1
+
+"TODO: vim8 用に XDG Base Directory Specification 処置として (一応．後で外すかと．)
+let s:config_home = empty($XDG_CONFIG_HOME) ? expand('$HOME/.config') : $XDG_CONFIG_HOME
+
 " プラグインが実際にインストールされるディレクトリ
+let s:cache_home = empty($XDG_CACHE_HOME) ? expand('$HOME/.cache') : $XDG_CACHE_HOME
 let s:dein_dir = s:cache_home . '/dein'
+"
 " dein.vim 本体
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
 " dein.vim がなければ github から落としてくる
-if &runtimepath !~# '/dein.vim'
-  if !isdirectory(s:dein_repo_dir)
-    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-  endif
-  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+if !isdirectory(s:dein_repo_dir)
+  call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
 endif
-
-" 設定開始
+let &runtimepath = s:dein_repo_dir .",". &runtimepath
+"execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+" プラグイン読み込み＆キャッシュ作成
+if has('nvim')
+  let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
+else
+  let s:toml_file = '$HOME/.vim/dein.toml'
+  "TODO: 本来なら XDG 対応をきちんと行っておくべきだと思っている．．．
+endif
 if dein#load_state(s:dein_dir)
-  call dein#begin(s:dein_dir)
-
-" dein
-  call dein#add('Shougo/dein.vim')
-" vimproc
-  call dein#add('Shougo/vimproc.vim', {'build': 'make'})
-
-" completion
-    if has('nvim')
-      call dein#add('Shougo/deoplete.nvim')
-    else
-      call dein#add('Shougo/neocomplete.vim')
-    endif
-    call dein#add('Shougo/context_filetype.vim')
-    call dein#add('Shougo/neosnippet')
-    call dein#add('Shougo/neosnippet.vim')
-    call dein#add('Shougo/neosnippet-snippets')
-
-" interface
-    if has('nvim')
-    " denite
-      call dein#add('Shougo/denite.nvim')
-    else
-    " unite
-      call dein#add('Shougo/unite.vim', { 'depends': ['vimproc']})
-      call dein#add('Shougo/unite-outline', {'depdens': ['unite.vim']})
-    endif
-
-  " mru
-    call dein#add('Shougo/neomru.vim')
-   " filer
-    call dein#add('Shougo/vimfiler.vim')
-
-" shell
-    call dein#add('Shougo/vimshell', {'depends': ['vimproc']})
-
-" text editing
-  " text object
-    call dein#add('kana/vim-operator-user')
-    call dein#add('kana/vim-textobj-user',               {'depends': ['vim-operator-user']})
-    call dein#add('kana/vim-textobj-jabraces',           {'depends': ['vim-operator-user']})
-    call dein#add('osyo-manga/vim-textobj-multiblock',   {'depends': ['vim-textobj-user']})
-    call dein#add('osyo-manga/vim-textobj-multitextobj', {'depends': ['vim-textobj-user']})
-  " surround
-    call dein#add('rhysd/vim-operator-surround')
-  " comment
-    call dein#add('tyru/caw.vim')
-  " text align
-    call dein#add('vim-easy-align')
-  " cursor
-    call dein#add('rhysd/clever-f.vim')
-
-" appearance
-  " colorscheme
-    call dein#add('altercation/vim-colors-solarized')
-    call dein#add('molokai')
-    call dein#add('Wutzara/vim-materialtheme')
-    call dein#add('w0ng/vim-hybrid')
-    call dein#add('twerth/ir_black')
-    call dein#add('cocopon/iceberg.vim')
-    call dein#add('acoustichero/goldenrod.vim')
-    call dein#add('rhysd/vim-color-shiny-white')
-    call dein#add('shawncplus/skittles_berry')
-    call dein#add('bitterjug/vim-colors-bitterjug')
-  " status line
-    call dein#add('itchyny/lightline.vim')
-
-" tools
-    call dein#add('rking/ag.vim')
-    " TODO:
-    " call dein#add('nixprime/cpsm')
-    call dein#add('thinca/vim-quickrun')
-    call dein#add('sukima/xmledit')
-    call dein#add('mattn/emmet-vim')
-    call dein#add('plasticscafe/vim-less-autocompile')
-    call dein#add('groenewege/vim-less')
-
-    call dein#add('toyamarinyon/vim-swift')
-
-    call dein#add('glidenote/memolist.vim')
-
-" web
-    call dein#add('mattn/webapi-vim')
-
-    call dein#add('kannokanno/previm')
-    call dein#add('joker1007/vim-markdown-quote-syntax')
-
-    call dein#add('tyru/open-browser.vim')
-
-    call dein#add('yuratomo/w3m.vim')
-    call dein#add('mrtazz/simplenote.vim')
-
-" misc
-    call dein#add('itchyny/calendar.vim')
+  call dein#begin(s:dein_dir, [$MYVIMRC, s:toml_file])
+  call dein#load_toml(s:toml_file)
   call dein#end()
   call dein#save_state()
 endif
 
-
-if dein#check_install()
+" もし，未インストールものものがあったらインストール
+if has('vim_starting') && dein#check_install()
   call dein#install()
 endif
 
-filetype plugin indent on
 
-"TODO:  python3
-" if has('gui_macvim')
-"     let $PYTHON3_DLL="/usr/local/Cellar/python3/3.4.1_1/Frameworks/Python.framework/Versions/3.4/Python"
-" endif
-"ref. http://74th.hateblo.jp/entry/2014/09/07/183953
+
+"--------------------------------------------------------------------------- >common
+
+filetype plugin indent on
+syntax on
+
 if has('nvim')
   let g:python3_host_prog = expand('/usr/local/bin/python3')
 else
   set pythonthreedll=/usr/local/Cellar/python3/3.5.2_1/Frameworks/Python.framework/Versions/3.5/Python
 endif
 
-colorscheme iceberg
 
-
-
-"--------------------------------------------------------------------------- >common
 " バックアップファイル - off
 set nobackup
 " スワップファイル - off
@@ -211,7 +130,7 @@ augroup END
 "ref. :h last-position-jump
 "ref. http://blog.papix.net/entry/2012/12/14/042937
 
-"バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
+"バイナリ編集(xxd)モード（vim -b での起動，もしくは *.bin ファイルを開くと発動します）
 augroup BinaryXXD
   autocmd!
   autocmd BufReadPre *.bin let &binary =1
@@ -222,7 +141,7 @@ augroup BinaryXXD
   autocmd BufWritePost * set nomod | endif
 augroup END
 
-" インサートモード時、カーソルの形状を `|`
+" インサートモード時，カーソルの形状を `|`
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 
@@ -307,9 +226,9 @@ nnoremap <C-l> <C-w>l
 " バッファ.分割方向
 nnoremap <C-w>h <C-w>K    " horizontal
 nnoremap <C-w>v <C-w>H    " vertical
-" 行頭、行末移動
+" 行頭，行末移動
 noremap =0 $
-" カーソルの位置から行頭、行末まで選択
+" カーソルの位置から行頭，行末まで選択
 vnoremap v $h
 " 対応する括弧移動
 noremap [ %
@@ -320,8 +239,8 @@ inoremap ,ddd <C-r>=strftime('%Y%m%d')<Return>
 "ウィンドウサイズ
 map + <C-w>+
 map - <C-w>-
-" 。/、セットを．/，にする
-nnoremap <leader>. :%s/。/．/ge<CR>:%s/、/，/ge<CR>:nohlsearch<CR>
+" ．/，セットを．/，にする
+nnoremap <leader>. :%s/．/．/ge<CR>:%s/，/，/ge<CR>:nohlsearch<CR>
 " バッファ内すべてのコンテンツをクリップボードへ
 noremap ya :%y<CR>
 " 折りたたみ
@@ -372,37 +291,37 @@ nnoremap <Leader>cd :CtrlPFiler<Cr>
 
 
 
-"
-" >caw.vim
-"
-nmap <Leader>x <Plug>(caw:i:toggle)
-vmap <Leader>x <Plug>(caw:i:toggle)
-nmap <Leader>x0 <Plug>(caw:I:toggle)
-vmap <Leader>x0 <Plug>(caw:I:toggle)
-nmap <Leader>xa <Plug>(caw:a:toggle)
-vmap <Leader>xa <Plug>(caw:a:toggle)
+" "
+" " >caw.vim
+" "
+" nmap <Leader>x <Plug>(caw:hatpos:toggle)
+" vmap <Leader>x <Plug>(caw:hatpos:toggle)
+" nmap <Leader>x0 <Plug>(caw:I:toggle)
+" vmap <Leader>x0 <Plug>(caw:I:toggle)
+" nmap <Leader>xa <Plug>(caw:a:toggle)
+" vmap <Leader>xa <Plug>(caw:a:toggle)
 
 
+""
+"" >vim-easy-align
+""
+"vmap <Enter> <Plug>(EasyAlign)
+"nmap ga <Plug>(EasyAlign)
 "
-" >vim-easy-align
-"
-vmap <Enter> <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-
-let g:easy_align_ignore_groups = []
-let g:easy_align_delimiters = {
-\ '.': { 'pattern': '\.\{2}\|\.\{3}' },
-\ '"': { 'pattern': '"', 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
-\ "'": { 'pattern': "'", 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
-\ '#': { 'pattern': ' #' },
-\ }
-"
-" ref. https://github.com/junegunn/vim-easy-align/blob/master/EXAMPLES.md#aligning-in-line-comments
-" ref. https://github.com/ervandew/supertab/issues/74#issuecomment-65552406
-" :h easy-align-ignoring-delimiters-in-comments-or-strings
-" :h easy-align-6-8-1
-"
-command! -nargs=* -range Align <line1>, <line2>call easy_align#align('<bang>' == '!', 0, '', <q-args>)
+"let g:easy_align_ignore_groups = []
+"let g:easy_align_delimiters = {
+"\ '.': { 'pattern': '\.\{2}\|\.\{3}' },
+"\ '"': { 'pattern': '"', 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
+"\ "'": { 'pattern': "'", 'filter': 'v/^\s*"/', 'ignore_groups': ['String']},
+"\ '#': { 'pattern': ' #' },
+"\ }
+""
+"" ref. https://github.com/junegunn/vim-easy-align/blob/master/EXAMPLES.md#aligning-in-line-comments
+"" ref. https://github.com/ervandew/supertab/issues/74#issuecomment-65552406
+"" :h easy-align-ignoring-delimiters-in-comments-or-strings
+"" :h easy-align-6-8-1
+""
+"command! -nargs=* -range Align <line1>, <line2>call easy_align#align('<bang>' == '!', 0, '', <q-args>)
 
 
 "
@@ -412,18 +331,18 @@ map <Leader>cal ;Calendar -view=year -split=vertical -width=24<CR>
 map <Leader>yr ;Calendar -view=year<CR>
 
 
+" "
+" " >w3m
+" "
+" let g:w3m#command = '/usr/local/bin/w3m'
 "
-" >w3m
-"
-let g:w3m#command = '/usr/local/bin/w3m'
-
-" デフォルトの検索エンジンを google にする
-let g:w3m#search_engine = 'http://www.google.com/search?hl=ja&ie=' . &encoding . '&q=%s'
-nnoremap <leader>w :W3mTab google<space>
-" どうしても、な時のための外部ブラウザは chrome
-let g:w3m#external_browser = 'goole-chrome'
-nnoremap <leader>w :W3mTab google
-" ref. https://sites.google.com/site/hymd3a/vim/w3m-vim#TOC--3
+" " デフォルトの検索エンジンを google にする
+" let g:w3m#search_engine = 'http://www.google.com/search?hl=ja&ie=' . &encoding . '&q=%s'
+" nnoremap <leader>w :W3mTab google<space>
+" " どうしても，な時のための外部ブラウザは chrome
+" let g:w3m#external_browser = 'goole-chrome'
+" nnoremap <leader>w :W3mTab google
+" " ref. https://sites.google.com/site/hymd3a/vim/w3m-vim#TOC--3
 
 
 "
@@ -442,10 +361,10 @@ let g:less_compress=0
 autocmd BufNewFile,BufRead *.less set filetype=css
 
 
-"
-" >previm
-"
-map <Leader>pv ;PrevimOpen<cr>
+""
+"" >previm
+""
+"map <Leader>pv ;PrevimOpen<cr>
 
 
 
@@ -493,210 +412,204 @@ let g:memolist_filename_prefix_none = 1
 let g:memolist_ex_cmd = 'CtrlP'
 
 
-if has('nvim')
-  " >deoplete.vim
-  let g:deoplete#enable_at_startup = 1
-else
-  "
-  " >neocomplete.vim
-  "
-  " AutoComplPop オフ
-  let g:acp_enableAtStartup = 0
-  " 起動時 neocomplete を有効化
-  let g:neocomplete#enable_at_startup = 1
-  " 大文字を入力するまで、大/小文字を無視して補完
-  let g:neocomplete#enable_smart_case = 1
-  " 3 文字以上の単語を補完候補としてキャッシュ
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
-  " neocompleteを自動的にロックするバッファ名のパターン
-  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-  " 日本語入力時、無効化
-  let g:neocomplete#lock_iminsert = 1
-  " 補完開始文字数
-  let g:neocomplete#auto_completion_start_length=3
-
-  " 辞書
-  let g:neocomplete#sources#dictionary#dictionaries = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'vim' : $HOME.'/.vim/dict/vim.dict'
-          \ }
-
-  " キーワードと見なす正規表現を設定
-  if !exists('g:neocomplete#keyword_patterns')
-      let g:neocomplete#keyword_patterns = {}
-  endif
-  " \h: [A-Za-z_] \w: [0-9A-Za-z_] refs help regexp
-  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-  " Plugin key-mappings.
-  inoremap <expr><C-g> neocomplete#undo_completion()
-  " inoremap <expr><C-l> neocomplete#complete_common_string()     # `inoremap <C-l><Right>` を使いたいので
-
-  " 入力モード ひらがな (im "on" の状態) で改行すると、英字 (im "off") モードになってしまうのでコメント
-  "" Recommended key-mappings.
-  "" <CR>: close popup and save indent.
-  "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  "function! s:my_cr_function()
-  "  return neocomplete#close_popup() . "\<CR>"
-  "endfunction
-
-  " TAB で補完できるようにする
-  inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-  " <C-h>, <BS>: ポップアップを閉じ、文字列を削除
-  " inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>" # `inoremap <C-h><Left>`を使いたいので
-  " inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"  # `inoremap <C-h><Left>`を使いたいので
-
-  " FileType毎のOmni補完を設定
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-  " Enable heavy omni completion.
-  if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-  endif
-endif
-
-
-
-
+"if has('nvim')
+"  " >deoplete.vim
+"  let g:deoplete#enable_at_startup = 1
+"else
+"  "
+"  " >neocomplete.vim
+"  "
+"  " AutoComplPop オフ
+"  let g:acp_enableAtStartup = 0
+"  " 起動時 neocomplete を有効化
+"  let g:neocomplete#enable_at_startup = 1
+"  " 大文字を入力するまで，大/小文字を無視して補完
+"  let g:neocomplete#enable_smart_case = 1
+"  " 3 文字以上の単語を補完候補としてキャッシュ
+"  let g:neocomplete#sources#syntax#min_keyword_length = 3
+"  " neocompleteを自動的にロックするバッファ名のパターン
+"  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+"  " 日本語入力時，無効化
+"  let g:neocomplete#lock_iminsert = 1
+"  " 補完開始文字数
+"  let g:neocomplete#auto_completion_start_length=3
 "
-" >neosnippet
+"  " 辞書
+"  let g:neocomplete#sources#dictionary#dictionaries = {
+"      \ 'default' : '',
+"      \ 'vimshell' : $HOME.'/.vimshell_hist',
+"      \ 'vim' : $HOME.'/.vim/dict/vim.dict'
+"          \ }
 "
-" my defined snippet files.
-let g:neosnippet#snippets_directory='~/.vim/snippets'
-" Plugin key-mappings.
-imap <C-Space>     <Plug>(neosnippet_expand_or_jump)
-smap <C-Space>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-Space>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" For snippet_complete marker.
-if has('conceal')
-set conceallevel=2 concealcursor=niv
-endif
-
-
-
+"  " キーワードと見なす正規表現を設定
+"  if !exists('g:neocomplete#keyword_patterns')
+"      let g:neocomplete#keyword_patterns = {}
+"  endif
+"  " \h: [A-Za-z_] \w: [0-9A-Za-z_] refs help regexp
+"  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 "
-" >align.vim
+"  " Plugin key-mappings.
+"  inoremap <expr><C-g> neocomplete#undo_completion()
+"  " inoremap <expr><C-l> neocomplete#complete_common_string()     # `inoremap <C-l><Right>` を使いたいので
 "
-" 日本語など幅広文字に対応するためのおまじない。(ref. http://vim-users.jp/2009/09/hack77/)
-let g:Align_xstrlen=3
+"  " 入力モード ひらがな (im "on" の状態) で改行すると，英字 (im "off") モードになってしまうのでコメント
+"  "" Recommended key-mappings.
+"  "" <CR>: close popup and save indent.
+"  "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"  "function! s:my_cr_function()
+"  "  return neocomplete#close_popup() . "\<CR>"
+"  "endfunction
+"
+"  " TAB で補完できるようにする
+"  inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+"  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+"  " <C-h>, <BS>: ポップアップを閉じ，文字列を削除
+"  " inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>" # `inoremap <C-h><Left>`を使いたいので
+"  " inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"  # `inoremap <C-h><Left>`を使いたいので
+"
+"  " FileType毎のOmni補完を設定
+"  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"
+"  " Enable heavy omni completion.
+"  if !exists('g:neocomplete#sources#omni#input_patterns')
+"    let g:neocomplete#sources#omni#input_patterns = {}
+"  endif
+"endif
 
 
 
-" if has("nvim")
-  "
-  " >denite
-  "
 
-  " denite keymapping
-  " denite keymapping.the prefix key
-  noremap [Denite] <Nop>
-  nmap <Leader>f  [Denite]
+""
+"" >neosnippet
+""
+"" my defined snippet files.
+"let g:neosnippet#snippets_directory='~/.vim/snippets'
+"" Plugin key-mappings.
+"imap <C-Space>     <Plug>(neosnippet_expand_or_jump)
+"smap <C-Space>     <Plug>(neosnippet_expand_or_jump)
+"xmap <C-Space>     <Plug>(neosnippet_expand_target)
+"
+"" SuperTab like snippets behavior.
+"imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+"smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"" For snippet_complete marker.
+"if has('conceal')
+"  set conceallevel=2 concealcursor=niv
+"endif
 
-  nnoremap [Denite]r :<C-u>Denite file_mru<CR>
-  nnoremap [Denite]b :<C-u>Denite buffer<CR>
-  nnoremap [Denite]f :<C-u>DeniteBufferDir file_rec<CR>
-  nnoremap [Denite]g :<C-u>DeniteBufferDir grep<CR>
-  nnoremap [Denite]h :<C-u>Denite help<CR>
-  nnoremap [Denite]i :<C-u>Denite line<CR>
-  "ref. https://github.com/tamy0612/dotfiles/blob/ecb0ea2dc22bbbf5b28422daa0a743e5a393918d/vim/config/plugins/mapping/denite.nvim
 
-  if executable('rg')
-    call denite#custom#var('file_rec', 'command',
-          \ ['rg', '--files', '--glob', '!.git'])
-    call denite#custom#var('grep', 'command', ['rg'])
-    call denite#custom#var('grep', 'recursive_opts', [])
-    call denite#custom#var('grep', 'final_opts', [])
-    call denite#custom#var('grep', 'separator', ['--'])
-    call denite#custom#var('grep', 'default_opts',
-          \ ['--vimgrep', '--no-heading'])
-  else
-    call denite#custom#var('file_rec', 'command',
-          \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-  endif
 
-  " インサート→ノーマルモード
-  call denite#custom#map('insert', "jj", '<denite:enter_mode:normal>')
-  " ウィンドウを分割して開く
-  call denite#custom#map('_', "<C-h>", '<denite:do_action:split>')
-  call denite#custom#map('insert', "<C-h>", '<denite:do_action:split>')
-  " ウィンドウを縦に分割して開く
-  call denite#custom#map('_', "<C-v>", '<denite:do_action:vsplit>')
-  call denite#custom#map('insert', "<C-v>", '<denite:do_action:vsplit>')
-
-else
-  "
-  " >unite
-  "
-  " 変数
-  let g:unite_source_history_yank_enable = 1
-  let g:unite_enable_start_insert = 1
-  let g:unite_enable_ignore_case = 1
-  let g:unite_enable_smart_case = 1
-  let g:neomru#follow_links = 1
-
-  let g:unite_source_find_default_opts = "-L"
-
-  " path
-  let g:neomru#file_mru_path=expand('~/.cache/neomru/file')
-  let g:neomru#directory_mru_path=expand('~/.cache/neomru/directory')
-  let g:unite_source_bookmark_directory=$HOME . '/.vim/unite/bookmarks'
-
-  " キーマッピング
-  " キーマッピング．プリフィクス¬
-  noremap [Unite] <Nop>
-  nmap <Leader>f [Unite]
-  " キーマッピング．mru¬
-  noremap  [Unite]r :<C-u>Unite file_mru<CR>
-  " キーマッピング．buffer
-  noremap  [Unite]b :<C-u>Unite buffer<CR>
-  " キーマッピング．file
-  noremap  [Unite]f :<C-u>UniteWithBufferDir
-                     \ -buffer-name=files file<CR>
-  " キーマッピング．bookmark
-  noremap  [Unite]m :<C-u>Unite bookmark<CR>
-  " キーマッピング．register
-  noremap  [Unite]g :<C-u>Unite
-                     \ -buffer-name=register register<CR>
-  " キーマッピング．keymappings
-  nnoremap [Unite]p :<C-u>Unite mapping<CR>
-  " キーマッピング．message
-  nnoremap [Unite]i :<C-u>Unite output:message<CR>
-  " キーマッピング．yank
-  nnoremap [Unite]y :<C-u>Unite history/yank<CR>
-  " キーマッピング．bookmarkadd
-  nnoremap [unite]a :<C-u>UniteBookmarkAdd<CR>
-
-  " キーマッピング．開いている間¬
-  " ref. http://www.karakaram.com/unite
-  autocmd FileType unite call s:unite_settings()
-  function! s:unite_settings()
-  " ウィンドウを分割して開く
-    nnoremap <silent> <buffer> <expr>
-          \ <C-h> unite#do_action('split')
-    inoremap <silent> <buffer> <expr>
-          \ <C-h> unite#do_action('split')
-  " ウィンドウを縦に分割して開く
-    nnoremap <silent> <buffer> <expr>
-          \ <C-v> unite#do_action('vsplit')
-    inoremap <silent> <buffer> <expr>
-          \ <C-v> unite#do_action('vsplit')
-  " インサート→ノーマルモード
-    imap <buffer> jj <Plug>(unite_insert_leave)
-  endfunction
-
-endif
-
-let g:neomru#follow_links=1
+"if has("nvim")
+"  "
+"  " >unite
+"  "
+"  " 変数
+"  let g:unite_source_history_yank_enable = 1
+"  let g:unite_enable_start_insert = 1
+"  let g:unite_enable_ignore_case = 1
+"  let g:unite_enable_smart_case = 1
+"  let g:neomru#follow_links = 1
+"
+"  let g:unite_source_find_default_opts = "-L"
+"
+"  " path
+"  let g:neomru#file_mru_path=expand('~/.cache/neomru/file')
+"  let g:neomru#directory_mru_path=expand('~/.cache/neomru/directory')
+"  let g:unite_source_bookmark_directory=$HOME . '/.vim/unite/bookmarks'
+"
+"  " キーマッピング
+"  " キーマッピング．プリフィクス¬
+"  noremap [Unite] <Nop>
+"  nmap <Leader>f [Unite]
+"  " キーマッピング．mru¬
+"  noremap  [Unite]r :<C-u>Unite file_mru<CR>
+"  " キーマッピング．buffer
+"  noremap  [Unite]b :<C-u>Unite buffer<CR>
+"  " キーマッピング．file
+"  noremap  [Unite]f :<C-u>UniteWithBufferDir
+"                     \ -buffer-name=files file<CR>
+"  " キーマッピング．bookmark
+"  noremap  [Unite]m :<C-u>Unite bookmark<CR>
+"  " キーマッピング．register
+"  noremap  [Unite]g :<C-u>Unite
+"                     \ -buffer-name=register register<CR>
+"  " キーマッピング．keymappings
+"  nnoremap [Unite]p :<C-u>Unite mapping<CR>
+"  " キーマッピング．message
+"  nnoremap [Unite]i :<C-u>Unite output:message<CR>
+"  " キーマッピング．yank
+"  nnoremap [Unite]y :<C-u>Unite history/yank<CR>
+"  " キーマッピング．bookmarkadd
+"  nnoremap [unite]a :<C-u>UniteBookmarkAdd<CR>
+"
+"  " キーマッピング．開いている間¬
+"  " ref. http://www.karakaram.com/unite
+"  autocmd FileType unite call s:unite_settings()
+"  function! s:unite_settings()
+"  " ウィンドウを分割して開く
+"    nnoremap <silent> <buffer> <expr>
+"          \ <C-h> unite#do_action('split')
+"    inoremap <silent> <buffer> <expr>
+"          \ <C-h> unite#do_action('split')
+"  " ウィンドウを縦に分割して開く
+"    nnoremap <silent> <buffer> <expr>
+"          \ <C-v> unite#do_action('vsplit')
+"    inoremap <silent> <buffer> <expr>
+"          \ <C-v> unite#do_action('vsplit')
+"  " インサート→ノーマルモード
+"    imap <buffer> jj <Plug>(unite_insert_leave)
+"  endfunction
+"
+"else
+"  "
+"  " >denite
+"  "
+"
+"  " denite keymapping
+"  " denite keymapping.the prefix key
+"  noremap [Denite] <Nop>
+"  nmap <Leader>f  [Denite]
+"
+"  nnoremap [Denite]r :<C-u>Denite file_mru<CR>
+"  nnoremap [Denite]b :<C-u>Denite buffer<CR>
+"  nnoremap [Denite]f :<C-u>DeniteBufferDir file_rec<CR>
+"  nnoremap [Denite]g :<C-u>DeniteBufferDir grep<CR>
+"  nnoremap [Denite]h :<C-u>Denite help<CR>
+"  nnoremap [Denite]i :<C-u>Denite line<CR>
+"  "ref. https://github.com/tamy0612/dotfiles/blob/ecb0ea2dc22bbbf5b28422daa0a743e5a393918d/vim/config/plugins/mapping/denite.nvim
+"
+"  if executable('rg')
+"    call denite#custom#var('file_rec', 'command',
+"          \ ['rg', '--files', '--glob', '!.git'])
+"    call denite#custom#var('grep', 'command', ['rg'])
+"    call denite#custom#var('grep', 'recursive_opts', [])
+"    call denite#custom#var('grep', 'final_opts', [])
+"    call denite#custom#var('grep', 'separator', ['--'])
+"    call denite#custom#var('grep', 'default_opts',
+"          \ ['--vimgrep', '--no-heading'])
+"  else
+"    call denite#custom#var('file_rec', 'command',
+"          \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+"  endif
+"
+"
+"  endfunction
+"   " インサート→ノーマルモード
+"  call denite#custom#map('insert', "jj", '<denite:enter_mode:normal>')
+"  " ウィンドウを分割して開く
+"  call denite#custom#map('_', "<C-h>", '<denite:do_action:split>')
+"  call denite#custom#map('insert', "<C-h>", '<denite:do_action:split>')
+"  " ウィンドウを縦に分割して開く
+"  call denite#custom#map('_', "<C-v>", '<denite:do_action:vsplit>')
+"  call denite#custom#map('insert', "<C-v>", '<denite:do_action:vsplit>')
+"
+"endif
+"
+"let g:neomru#follow_links=1
 
 "
 " >unite-outline
@@ -727,78 +640,78 @@ command! Vs :VimShell -split-command=split
 
 
 
+""
+"" >vimfiler
+""
+"" デフォルトはvimfiler (netrw ではない)
+"let g:vimfiler_as_default_explorer = 1
+"" セーフモードをオフ (ref. http://blog.livedoor.jp/okashi1/archives/51808590.html)
+"let g:vimfiler_safe_mode_by_default = 0
 "
-" >vimfiler
+"" 開く (開いているファイルがあるディレクトリ)
+"nnoremap <silent> <Leader>fc :<C-u>VimFilerBufferDir -quit<CR>
+"" ide 風 (開いているファイルがあるディレクトリ)
+"nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -toggle -no-quit<CR>
 "
-" デフォルトはvimfiler (netrw ではない)
-let g:vimfiler_as_default_explorer = 1
-" セーフモードをオフ (ref. http://blog.livedoor.jp/okashi1/archives/51808590.html)
-let g:vimfiler_safe_mode_by_default = 0
-
-" 開く (開いているファイルがあるディレクトリ)
-nnoremap <silent> <Leader>fc :<C-u>VimFilerBufferDir -quit<CR>
-" ide 風 (開いているファイルがあるディレクトリ)
-nnoremap <silent> <Leader>fl :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -toggle -no-quit<CR>
-
-  let g:vimfiler_tree_leaf_icon     = " " " default: '|'
-  let g:vimfiler_tree_opened_icon   = "-" " default: '-'
-  let g:vimfiler_tree_opened_icon   = "▾"
-  let g:vimfiler_tree_closed_icon   = "+" " default: '+'
-  let g:vimfiler_tree_closed_icon   = "▸"
-  let g:vimfiler_readonly_file_icon = "!" " deafult: 'X'
-" let g:vimfiler_file_icon          = '-' " default: '-' why?
-  let g:vimfiler_marked_file_icon   = '*' " default: '*'
-  " ref. http://blog.scimpr.com/2013/03/06/vimfiler%E3%81%AF%E3%81%98%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/
-
-
-augroup vimfiler
-  autocmd!
-  autocmd FileType vimfiler call s:vimfiler_settings()
-augroup END
-function! s:vimfiler_settings()
-  " tree での制御は、<Space>
-  map <silent><buffer> <Space> <NOP>
-  nmap <silent><buffer> <Space> <Plug>(vimfiler_expand_tree)
-  nmap <silent><buffer> <S-Space> <Plug>(vimfiler_expand_tree_recursive)
-
-  " オープンは、<CR>(enter キー)
-  nmap <buffer><expr> <CR> vimfiler#smart_cursor_map(
-          \ "\<Plug>(vimfiler_cd_file)",
-          \ "\<Plug>(vimfiler_open_file_in_another_vimfiler)")
-
-  " マークは、<C-Space>(control-space)
-  nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
-  vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
-
-  nnoremap <buffer><expr> <C-h> vimfiler#do_switch_action('split')
-  nnoremap <buffer><expr> <C-v> vimfiler#do_switch_action('vsplit')
-  " :h vimfiler#do_switch_action()
-  " ref. https://github.com/Shougo/vimfiler.vim/issues/274
-  " ref. https://github.com/Shougo/vimfiler.vim/issues/114
-
-  " 移動、<Tab> だけでなく <C-l> も
-  nmap <buffer> <C-l> <plug>(vimfiler_switch_to_other_window)
-
-endfunction
-" ref. http://www.karakaram.com/vimfiler#vimrc
-
-
+"  let g:vimfiler_tree_leaf_icon     = " " " default: '|'
+"  let g:vimfiler_tree_opened_icon   = "-" " default: '-'
+"  let g:vimfiler_tree_opened_icon   = "▾"
+"  let g:vimfiler_tree_closed_icon   = "+" " default: '+'
+"  let g:vimfiler_tree_closed_icon   = "▸"
+"  let g:vimfiler_readonly_file_icon = "!" " deafult: 'X'
+"" let g:vimfiler_file_icon          = '-' " default: '-' why?
+"  let g:vimfiler_marked_file_icon   = '*' " default: '*'
+"  " ref. http://blog.scimpr.com/2013/03/06/vimfiler%E3%81%AF%E3%81%98%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/
 "
-" >vim-operator-surround
 "
-map sa <Plug>(operator-surround-append)
-map ds <Plug>(operator-surround-delete)
-map cs <Plug>(operator-surround-replace)
+"augroup vimfiler
+"  autocmd!
+"  autocmd FileType vimfiler call s:vimfiler_settings()
+"augroup END
+"function! s:vimfiler_settings()
+"  " tree での制御は，<Space>
+"  map <silent><buffer> <Space> <NOP>
+"  nmap <silent><buffer> <Space> <Plug>(vimfiler_expand_tree)
+"  nmap <silent><buffer> <S-Space> <Plug>(vimfiler_expand_tree_recursive)
+"
+"  " オープンは，<CR>(enter キー)
+"  nmap <buffer><expr> <CR> vimfiler#smart_cursor_map(
+"          \ "\<Plug>(vimfiler_cd_file)",
+"          \ "\<Plug>(vimfiler_open_file_in_another_vimfiler)")
+"
+"  " マークは，<C-Space>(control-space)
+"  nmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_current_line)
+"  vmap <silent><buffer> <C-Space> <Plug>(vimfiler_toggle_mark_selected_lines)
+"
+"  nnoremap <buffer><expr> <C-h> vimfiler#do_switch_action('split')
+"  nnoremap <buffer><expr> <C-v> vimfiler#do_switch_action('vsplit')
+"  " :h vimfiler#do_switch_action()
+"  " ref. https://github.com/Shougo/vimfiler.vim/issues/274
+"  " ref. https://github.com/Shougo/vimfiler.vim/issues/114
+"
+"  " 移動，<Tab> だけでなく <C-l> も
+"  nmap <buffer> <C-l> <plug>(vimfiler_switch_to_other_window)
+"
+"endfunction
+"" ref. http://www.karakaram.com/vimfiler#vimrc
 
-" markdown code block ```...``` !!
-let g:operator#surround#blocks = {
-\ '-' : [
-\       { 'block' : ['[ ', ' ]'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' ]', ' ['] },
-\ ],
-\ 'markdown' : [
-\       { 'block' : ["**", "**"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['**'] },
-\       { 'block' : ["```\n", "\n```"], 'motionwise' : ['line'], 'keys' : ['`'] },
-\ ] }
+
+""
+"" >vim-operator-surround
+""
+"map sa <Plug>(operator-surround-append)
+"map ds <Plug>(operator-surround-delete)
+"map cs <Plug>(operator-surround-replace)
+"
+"" markdown code block ```...``` !!
+"let g:operator#surround#blocks = {
+"\ '-' : [
+"\       { 'block' : ['[ ', ' ]'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' ]', ' ['] },
+"\ ],
+"\ 'markdown' : [
+"\       { 'block' : ["**", "**"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['**'] },
+"\       { 'block' : ["```\n", "\n```"], 'motionwise' : ['line'], 'keys' : ['`'] },
+"\ ] }
 
 
 
@@ -854,18 +767,18 @@ vmap ib <Plug>(textobj-multitextobj-i)
 "
 " ><line>,<line>Form
 "
-" => 日本語コンテンツ内で使う半角英数字の前後に半角スペースを入れたいと思って。
+" => 日本語コンテンツ内で使う半角英数字の前後に半角スペースを入れたいと思って．
 
 function! s:FormSpace() range
     let l:current=line('.')
-    " シングルバイト英字、前後にスペース
-    exe 'silent ' . a:firstline . ',' . a:lastline . 's/[^\x01-\x7E、。「]\zs\(\w\)/ \1/ge'
-    exe 'silent ' . a:firstline . ',' . a:lastline . 's/\(\w\)\ze[^\x01-\x7E、。」]/\1 /ge'
+    " シングルバイト英字，前後にスペース
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/[^\x01-\x7E，．「]\zs\(\w\)/ \1/ge'
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/\(\w\)\ze[^\x01-\x7E，．」]/\1 /ge'
     " シングルバイト括弧/数値 前後にスペース
     " 括弧の前 forward
-    exe 'silent ' . a:firstline . ',' . a:lastline . 's/[^\x01-\x7E 、。「]\zs\(`[^` ]\{-}`\|''[^'' ]\{-}''\|"[^" ]\{-}"\|<.\{-}>\|(.\{-})\|\[.\{-}\]\|{.\{-}}\)/ \1/ge'
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/[^\x01-\x7E ，．「]\zs\(`[^` ]\{-}`\|''[^'' ]\{-}''\|"[^" ]\{-}"\|<.\{-}>\|(.\{-})\|\[.\{-}\]\|{.\{-}}\)/ \1/ge'
     " 括弧の後 behind
-    exe 'silent ' . a:firstline . ',' . a:lastline . 's/\(`[^` ]\{-}`\|''[^'' ]\{-}''\|"[^" ]\{-}"\|<.\{-}>\|(.\{-})\|\[.\{-}\]\|{.\{-}}\)\ze[^\x01-\x7E 、。」]/\1 /ge'
+    exe 'silent ' . a:firstline . ',' . a:lastline . 's/\(`[^` ]\{-}`\|''[^'' ]\{-}''\|"[^" ]\{-}"\|<.\{-}>\|(.\{-})\|\[.\{-}\]\|{.\{-}}\)\ze[^\x01-\x7E ，．」]/\1 /ge'
     exe l:current
 endfunction
 command! -nargs=0 -range Form <line1>, <line2> call s:FormSpace()
@@ -897,7 +810,7 @@ command! -nargs=0 -range Rcpp <line1>, <line2> call s:RecipeProcess()
 "
 " :<line>,<line>Single
 "
-" 全角の英数字を半角にする。(自分の win 環境では hz_ja.vim が上手く動いてくれないみたいなので orz)
+" 全角の英数字を半角にする．(自分の win 環境では hz_ja.vim が上手く動いてくれないみたいなので orz)
 function! s:ChangeToSingleByte() range
     " テーブル生成
     let l:dic = {}
@@ -912,7 +825,7 @@ function! s:ChangeToSingleByte() range
     for l:key in keys(l:dic)
         exe 'silent! ' . a:firstline . ',' . a:lastline . 's/' . l:key . '/' .l:dic[l:key] . '/ge'
     endfor
-    " 置換処理. 数値の小数点(それ以外は、句点とする)
+    " 置換処理. 数値の小数点(それ以外は，句点とする)
     exe 'silent! ' . a:firstline . ',' . a:lastline . 's/\d\zs．\ze\d/./ge'
 endfunction
 command! -nargs=0 -range Single <line1>, <line2> call s:ChangeToSingleByte()
@@ -922,8 +835,8 @@ command! -nargs=0 -range Single <line1>, <line2> call s:ChangeToSingleByte()
 "
 " :<line>,<line>Num {startNum}[format]
 "
-" 連番を先頭に挿し込む。
-" 引数は1つのみ、必須。開始値を指定する。(無い場合は1から)
+" 連番を先頭に挿し込む．
+" 引数は1つのみ，必須．開始値を指定する．(無い場合は1から)
 
 function! s:InsertNumbering(cnt) range
     " echo "'" . a:cnt . "'"
@@ -960,6 +873,7 @@ augroup END
 noremap ; :
 noremap : ;
 
-set termguicolors
+" set termguicolors
+
 
 " vim:set foldmethod=marker:

@@ -16,9 +16,11 @@ elseif has ('mac')
 endif
 
 "-------------------------------------------------- .appearance
-" カラースキーマ
+
+"TODO:
+if !has('nvim')
  colorscheme iceberg
-" colorscheme shiny-white
+endif
 
 " 透過
 " gui
@@ -55,18 +57,10 @@ set iminsert=0 imsearch=0
 set noimcmdline
 " set noimdisableactivate
 
-" im 状態でカーソル色変更(ひらがな入力モード時、赤)
+im 状態でカーソル色変更(ひらがな入力モード時、赤)
 if has('xim')
-    " highlight Cursor guifg=NONE guibg=White
-    highlight CursorIM guifg=NONE guibg=Red
-
-"    inoremap {} {}<Left>
-"    inoremap [] []<Left>
-"    inoremap () ()<Left>
-"    inoremap <> <><Left>
-"    inoremap "" ""<Left>
-"    inoremap '' ''<Left>
-"    inoremap `` ``<Left>
+   " highlight Cursor guifg=NONE guibg=White
+   highlight CursorIM guifg=NONE guibg=Red
 endif
 
 " 行番号はどの colorscheme 使っても一律目立たせる
