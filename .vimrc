@@ -59,7 +59,9 @@ syntax on
 if has('nvim')
   let g:python3_host_prog = expand('/usr/local/bin/python3')
 else
-  set pythonthreedll=/usr/local/Cellar/python3/3.5.2_1/Frameworks/Python.framework/Versions/3.5/Python
+  " set pythonthreedll=/usr/local/Cellar/python3/3.5.2_1/Frameworks/Python.framework/Versions/3.5/Python
+  set pythonthreedll=/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/Python
+  " set pythonthreedll=/usr/local/bin/python3
 endif
 
 

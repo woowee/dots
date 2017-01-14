@@ -2,6 +2,8 @@
 typeset -U PATH
 PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
+# XDG
+export XDG_CONFIG_HOME=~/.config
 # npm
 export PATH="$PATH:/usr/local/share/npm/bin"
 

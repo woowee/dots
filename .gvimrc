@@ -42,9 +42,9 @@ if has('win32')
     set ambiwidth=auto
   endif
 elseif has('gui_macvim')
-  set guifont=Ricty_Diminished:h12
+  set guifont=Ricty_Discord:h14
 elseif has('mac')
-  set guifont=Ricty_Diminished:h12
+  set guifont=Ricty:h14
 elseif has('xfontset')
   " UNIX用 (xfontsetを使用)
   set guifontset=a14,r14,k14
