@@ -1,3 +1,1 @@
-" タブ
-setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-
+/Users/koo/dots/vimset/after/ftplugin/vim.vim
