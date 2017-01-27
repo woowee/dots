@@ -1,1 +1,2 @@
-/Users/koo/dots/vimset/after/ftplugin/sh.vim
+" タブ
+setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
