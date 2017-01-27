@@ -452,7 +452,8 @@ repo = 'itchyny/calendar.vim'
 # repo = 'twerth/ir_black'
 # repo = 'acoustichero/goldenrod.vim'
 # repo = 'w0ng/vim-hybrid'
-repo = 'cocopon/iceberg.vim'
+# repo = 'cocopon/iceberg.vim'
+repo = 'morhetz/gruvbox'
 hook_add = '''
   if has("nvim")
     set background=dark

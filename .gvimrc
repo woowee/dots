@@ -19,7 +19,10 @@ endif
 
 "TODO:
 if !has('nvim')
- colorscheme iceberg
+  " colorscheme iceberg
+  colorscheme gruvbox
+  set background=dark
+  g:gruvbox_contrast=hard
 endif
 
 " 透過

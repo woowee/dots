@@ -243,8 +243,6 @@ inoremap ,ddd <C-r>=strftime('%Y%m%d')<Return>
 "ウィンドウサイズ
 map + <C-w>+
 map - <C-w>-
-" ．/，セットを．/，にする
-nnoremap <leader>. :%s/．/．/ge<CR>:%s/，/，/ge<CR>:nohlsearch<CR>
 " バッファ内すべてのコンテンツをクリップボードへ
 noremap ya :%y<CR>
 " 折りたたみ
@@ -861,6 +859,24 @@ endfunction
 command! -nargs=+ -range Num <line1>, <line2> call <SID>InsertNumbering(<f-args>)
 " ref. http://kikaibunsho.web.fc2.com/monologo/memoro/08_11.html
 " ref. http://vimdoc.sourceforge.net/htmldoc/eval.html#printf%28%29
+
+" ．/，セットを．/，にする
+function! s:Punctuation() range
+  for l:line in range(a:firstline, a:lastline)
+    " quote line?
+    if match(getline(l:line), '^\s*>') >= 0
+      " nothin'
+    else
+      call setline(l:line, substitute(getline(l:line), "。", "．", "ge"))
+      call setline(l:line, substitute(getline(l:line), '、', '，', 'ge'))
+    endif
+  endfor
+endfunction
+command! -nargs=0 -range=% Pct <line1>, <line2> call <SID>Punctuation()
+" :h command-range
+nnoremap <leader>. :<C-u>Pct<cr>
+vnoremap <leader>. :Pct<cr>
+
 
 " 強調
 augroup HilightsForce
