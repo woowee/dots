@@ -411,6 +411,25 @@ repo = 'toyamarinyon/vim-swift'
 
 [[plugins]]
 repo = 'glidenote/memolist.vim'
+hook_add = '''
+  nnoremap <Leader>mn  :MemoNew<CR>
+  nnoremap <Leader>ml  :MemoList<CR>
+  nnoremap <Leader>mg  :MemoGrep<CR>
+
+  let g:memolist_path = expand('$HOME/Dropbox/memo')
+
+  let g:memolist_prompt_tags = 1
+  let g:memolist_prompt_categories = 1
+
+  let g:memolist_filename_prefix_none = 1
+
+  " use denite
+  let g:memolist_denite = 1
+  " " use arbitrary denite source (default is 'file_rec')
+  " let g:memolist_denite_source = "anything"
+  " " use arbitrary denite option (default is empty)
+  " let g:memolist_denite_option = "anything"
+'''
 
 [[plugins]]
 repo = 'mattn/webapi-vim'
