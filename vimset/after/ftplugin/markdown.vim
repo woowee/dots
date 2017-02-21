@@ -20,7 +20,17 @@ setlocal formatoptions-=o
 " :FormMarkdownEOL
 "
 function! s:FormMarkdownEOL() range
-  let l:cur = line('.')
+  let p = getpos(".")
+
+  let l:lfirst = 1
+  let l:llast = line("$")
+
+  call <SID>FormMarkdownEOL_Process(l:lfirst, l:llast)
+
+  call setpos(".", l:p)
+endfunction
+
+function! s:FormMarkdownEOL_Process(lfirst, llast)
 
   exe 'silent %s/\s\+$//e'
   exe 'silent %s/^[^$].\+$/&  /e'
@@ -53,13 +63,8 @@ function! s:FormMarkdownEOL() range
   exe 'silent %s/^\s*\[\(\a\|\d\)\{-}]:\s\+<*https*:.\+>*\s\+''.*''\zs\s\+$//e'
   exe 'silent %s/^\s*\[\(\a\|\d\)\{-}]:\s\+<*https*:.\+>*\s\+(.*)\zs\s\+$//e'
 
-
   let l:iscodeblock = 0         " is NOT code block
-  " for l:linenum in range(1, line('$'))
-  echo 'first : ' . a:firstline
-  echo 'last  : ' . a:lastline
-
-  for l:linenum in range(a:firstline, a:lastline)
+  for l:linenum in range(a:lfirst, a:llast)
     let l:linestr = getline(l:linenum)
   " -- code blocks
     if match(l:linestr, '^\s*```') >= 0
@@ -75,24 +80,6 @@ function! s:FormMarkdownEOL() range
       exe 'silent ' . l:linenum . 's/\s\+$//e'
     else
   " -- lists
-      " if match(l:linestr, '^\s*\(\*\|+\|-\|\d\+\.\)\s\+[^-*].') >= 0
-      "   let l:linenum_prev = l:linenum - 1
-      "   let l:linenum_next = l:linenum + 1
-      "
-      "   if len(getline(l:linenum_prev)) >= 0
-      "       if match(getline(l:linenum_prev),  '^\s*\(\*\|+\|-\|\d\+\.\)\s\+[^-*].') < 0
-      "         exe 'silent ' . l:linenum_prev . 's/\s\+$//e'
-      "       endif
-      "   endif
-      "
-      "   if len(getline(l:linenum_next)) >= 0
-      "       if match(getline(l:linenum_next),  '^\s*\(\*\|+\|-\|\d\+\.\)\s\+[^-*].') >= 0
-      "         exe 'silent ' . l:linenum . 's/\s\+$//e'
-      "       endif
-      "   else
-      "       exe 'silent ' . l:linenum . 's/\s\+$//e'
-      "   endif
-      " endif
       let l:linenum_next = l:linenum + 1
       if len(getline(l:linenum_next)) >= 0
           if match(getline(l:linenum_next),  '^\s*\(\*\|+\|-\|\d\+\.\)\s\+[^-*].') >= 0
@@ -104,6 +91,6 @@ function! s:FormMarkdownEOL() range
     endif
   endfor
 
-  exe l:cur
 endfunction
-command! -nargs=0 -range=% Mdown <line1>, <line2> call s:FormMarkdownEOL()
+command! -nargs=0 -range Mdown <line1>, <line2> call s:FormMarkdownEOL()
+
