@@ -60,8 +60,11 @@ hook_post_source = '''
   " インサート→ノーマルモード
   call denite#custom#map('insert', "jj", '<denite:enter_mode:normal>')
 
+  " use The Platinum Searcher (pt) command
+  " file_rec
   call denite#custom#var('file_rec', 'command',
-    \ ['pt', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
+  \ ['pt', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
+  " gerp
   call denite#custom#var('grep', 'command',
     \ ['pt', '--nogroup', '--nocolor', '--smart-case', '--hidden'])
   call denite#custom#var('grep', 'default_opts', [])
@@ -441,7 +444,7 @@ repo = 'rking/ag.vim'
 # NOTE:
 [[plugins]]
 repo = 'nixprime/cpsm'
-build = 'env PY3=ON ./install.sh'
+build = './install.sh'
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
