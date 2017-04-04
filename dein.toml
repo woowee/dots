@@ -551,12 +551,16 @@ hook_add = '''
 [[plugins]]
 repo = 'mrtazz/simplenote.vim'
 
+
 [[plugins]]
 repo = 'itchyny/calendar.vim'
 hook_add = '''
   map <Leader>cal ;Calendar -view=year -split=vertical -width=24<CR>
   map <Leader>yr ;Calendar -view=year<CR>
 '''
+
+[[plugins]]
+repo = 'tyru/capture.vim'
 
 
 [[plugins]] # カラースキーマ
@@ -577,4 +581,5 @@ hook_add = '''
   endif
   " ref.http://qiita.com/kawaz/items/ee725f6214f91337b42b#colorscheme-%E3%81%AF-vimenter-%E3%81%AB-nested-%E6%8C%87%E5%AE%9A%E3%81%A7%E9%81%85%E5%BB%B6%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B
 '''
+
 

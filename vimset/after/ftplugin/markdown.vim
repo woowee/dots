@@ -14,7 +14,8 @@ setlocal formatoptions-=c
 setlocal formatoptions-=r
 setlocal formatoptions-=o
 
-
+" 強調 empasis のマークは見えるように．
+set conceallevel=0
 
 "
 " :FormMarkdownEOL
