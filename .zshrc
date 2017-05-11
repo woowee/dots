@@ -6,6 +6,9 @@ PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export XDG_CONFIG_HOME=~/.config
 # npm
 export PATH="$PATH:/usr/local/share/npm/bin"
+# nodebrew
+export NODEBREW_ROOT=/usr/local/var/nodebrew
+export PATH="$PATH:${NODEBREW_ROOT}/current/bin"
 
 
 # General Settings

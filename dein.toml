@@ -408,7 +408,7 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'vim-easy-align'
+repo = 'vim-scripts/vim-easy-align'
 hook_add = '''
   vmap <Enter> <Plug>(EasyAlign)
   nmap ga <Plug>(EasyAlign)
