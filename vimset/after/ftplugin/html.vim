@@ -14,3 +14,4 @@ setlocal formatoptions-=o
 " 強調 empasis のマークは見えるように．
 set conceallevel=0
 
+
