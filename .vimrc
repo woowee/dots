@@ -265,9 +265,33 @@ nnoremap dd Vx
 xnoremap <expr> p 'pgv"'.v:register.'ygv<esc>'
 " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register/5093286#5093286
 
+"
+" For :terminal
+"
+if exists(":tmap")
+    tnoremap <Esc> <C-\><C-n>
+    tnoremap ; :
+    tnoremap : ;
+endif
+
+function! s:bufnew()
+    if &buftype == "terminal" && &filetype == ""
+        set filetype=terminal
+    endif
+endfunction
+function! s:filetype()
+   " :terminal のバッファ固有の設定を記述．
+   " nnpremap <Esc> <C-\><C-n>
+endfunction
+augroup my-terminal
+    autocmd!
+    autocmd BufNew * call timer_start(0, { -> s:bufnew() })
+    autocmd FileType terminal call s:filetype()
+augroup END
+" c.f.: http://secret-garden.hatenablog.com/entry/2017/11/14/113127
 
 "--------------------------------------------------------------------------- >plugins
-" to dein.toml
+" refer to dein.toml
 
 
 

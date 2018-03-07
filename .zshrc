@@ -300,3 +300,28 @@ alias su="su -l"
 # for Neovim
 #
 export XDG_CONFIG_HOME="$HOME/.config"
+
+#
+# My Aliases
+#
+
+cd(){
+  builtin cd "$@" && ls
+}
+# c.f. https://qiita.com/b4b4r07/items/8cf5d1c8b3fbfcf01a5d
+
+
+mp3()
+{
+  yourname=$(basename "$@" '.mp4')
+  # echo $youname
+  # ext=${youname##*.}
+  # if [ "${ext}" == "mp4" ];then
+  #   echo "ERROR: This is not MP4."
+  #   exit
+  # fi
+  ffmpeg -i "$@" -ab 128 "$yourname.mp3"
+}
+alias mp3=mp3
+# c.f. http://d.hatena.ne.jp/noise78/touch/20081122/1227365272
+# c.f. https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=command:ffmpeg:start
