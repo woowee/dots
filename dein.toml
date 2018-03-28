@@ -214,74 +214,14 @@ on_source = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-if = 'has("nvim")'
+# if = 'has("nvim")'
 hook_add = 'let g:deoplete#enable_at_startup = 1'
 
 [[plugins]]
-repo = 'Shougo/neocomplete.vim'
-if = 'has("lua")'
-on_i = 1
-hook_add = '''
-  " AutoComplPop オフ
-  let g:acp_enableAtStartup = 0
-  " 起動時 neocomplete を有効化
-  let g:neocomplete#enable_at_startup = 1
-  " 大文字を入力するまで、大/小文字を無視して補完
-  let g:neocomplete#enable_smart_case = 1
-  " 3 文字以上の単語を補完候補としてキャッシュ
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
-  " neocompleteを自動的にロックするバッファ名のパターン
-  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-  " 日本語入力時、無効化
-  let g:neocomplete#lock_iminsert = 1
-  " 補完開始文字数
-  let g:neocomplete#auto_completion_start_length=3
+repo = 'roxma/nvim-yarp'
 
-  " 辞書
-  let g:neocomplete#sources#dictionary#dictionaries = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'vim' : $HOME.'/.vim/dict/vim.dict'
-          \ }
-
-  " キーワードと見なす正規表現を設定
-  if !exists('g:neocomplete#keyword_patterns')
-      let g:neocomplete#keyword_patterns = {}
-  endif
-  " \h: [A-Za-z_] \w: [0-9A-Za-z_] refs help regexp
-  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-  " Plugin key-mappings.
-  inoremap <expr><C-g> neocomplete#undo_completion()
-  " inoremap <expr><C-l> neocomplete#complete_common_string()     # `inoremap <C-l><Right>` を使いたいので
-
-  " 入力モード ひらがな (im "on" の状態) で改行すると、英字 (im "off") モードになってしまうのでコメント
-  "" Recommended key-mappings.
-  "" <CR>: close popup and save indent.
-  "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  "function! s:my_cr_function()
-  "  return neocomplete#close_popup() . "\<CR>"
-  "endfunction
-
-  " TAB で補完できるようにする
-  inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-  " <C-h>, <BS>: ポップアップを閉じ、文字列を削除
-  " inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>" # `inoremap <C-h><Left>`を使いたいので
-  " inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"  # `inoremap <C-h><Left>`を使いたいので
-
-  " FileType毎のOmni補完を設定
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-  " Enable heavy omni completion.
-  if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-  endif
-'''
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
@@ -581,5 +521,4 @@ hook_add = '''
   endif
   " ref.http://qiita.com/kawaz/items/ee725f6214f91337b42b#colorscheme-%E3%81%AF-vimenter-%E3%81%AB-nested-%E6%8C%87%E5%AE%9A%E3%81%A7%E9%81%85%E5%BB%B6%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B
 '''
-
 

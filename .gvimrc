@@ -60,7 +60,7 @@ set iminsert=0 imsearch=0
 set noimcmdline
 " set noimdisableactivate
 
-im 状態でカーソル色変更(ひらがな入力モード時、赤)
+" im 状態でカーソル色変更(ひらがな入力モード時、赤)
 if has('xim')
    " highlight Cursor guifg=NONE guibg=White
    highlight CursorIM guifg=NONE guibg=Red

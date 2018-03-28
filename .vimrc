@@ -61,8 +61,9 @@ syntax on
 if has('nvim')
   let g:python3_host_prog = expand('/usr/local/bin/python3')
 else
-  let &pythonthreedll = findfile("Python","/usr/local/Cellar/python3/**/Frameworks/**")
+  let &pythonthreedll = findfile("Python","/usr/local/Cellar/python/**/Frameworks/**")
   " ref. https://github.com/splhack/macvim-kaoriya/wiki/Readme#perl--python--python3--ruby--lua
+  echom &pythonthreedll
 endif
 
 
