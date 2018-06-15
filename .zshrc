@@ -310,31 +310,4 @@ cd(){
 }
 # c.f. https://qiita.com/b4b4r07/items/8cf5d1c8b3fbfcf01a5d
 
-DIRNAME_STOREDMP="!done"
-convM4b()
-{
-  [ -e ${DIRNAME_STOREDMP} ] || mkdir ${DIRNAME_STOREDMP}
-
-  orgIFS=$IFS
-  IFS=$'\n'
-  for file in $(find ./ -maxdepth 1 -type f -name '*.mp*')
-  do
-    filename=$(basename "${file}")
-    ext=${file##*.}
-
-    echo ""
-    echo -e "\U1F3B5  Convert ${filename}"
-    echo -e "----------------------------------------------------------------------"
-
-    filename=$(basename "${file}" "$ext")
-    ffmpeg -i "${file}" -c:a libfdk_aac -b:a 128k -f mp4 "${filename}m4b"
-    wait
-
-    mv "${file}" "${DIRNAME_STOREDMP}"
-  done
-  IFS=$orgIFS
-}
-alias mkbook=convM4b
-# c.f. http://d.hatena.ne.jp/noise78/touch/20081122/1227365272
-# c.f. https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=command:ffmpeg:start
 
