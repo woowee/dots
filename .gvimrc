@@ -58,7 +58,7 @@ endif
 set noimdisable
 set iminsert=0 imsearch=0
 set noimcmdline
-inoremap <ESC> <ESC>:set iminsert=0<CR>
+inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
 
 " im 状態でカーソル色変更(ひらがな入力モード時、赤)

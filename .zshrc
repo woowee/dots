@@ -309,5 +309,3 @@ cd(){
   builtin cd "$@" && ls
 }
 # c.f. https://qiita.com/b4b4r07/items/8cf5d1c8b3fbfcf01a5d
-
-
