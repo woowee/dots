@@ -10,15 +10,12 @@ scriptencoding utf-8
 "
 " Dein.vim
 "
-" ref. http://qiita.com/kawaz/items/ee725f6214f91337b42b#%E8%A8%AD%E5%AE%9A%E4%BE%8B
-" ref. http://qiita.com/delphinus/items/00ff2c0ba972c6e41542
-" ref. http://qiita.com/Ress/items/7e71e007cf8d41a07a1a#settings-1
-
-"TODO: vim8 用に XDG Base Directory Specification 処置として (一応．後で外すかと．)
-let s:config_home = empty($XDG_CONFIG_HOME) ? expand('$HOME/.config') : $XDG_CONFIG_HOME
+" c.f. http://qiita.com/kawaz/items/ee725f6214f91337b42b#%E8%A8%AD%E5%AE%9A%E4%BE%8B
+" c.f. http://qiita.com/delphinus/items/00ff2c0ba972c6e41542
+" c.f. http://qiita.com/Ress/items/7e71e007cf8d41a07a1a#settings-1
 
 " プラグインが実際にインストールされるディレクトリ
-let s:cache_home = empty($XDG_CACHE_HOME) ? expand('$HOME/.cache') : $XDG_CACHE_HOME
+let s:cache_home = expand('$HOME/.cache')
 let s:dein_dir = s:cache_home . '/dein'
 
 " dein.vim 本体

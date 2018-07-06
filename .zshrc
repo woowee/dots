@@ -309,3 +309,52 @@ cd(){
   builtin cd "$@" && ls
 }
 # c.f. https://qiita.com/b4b4r07/items/8cf5d1c8b3fbfcf01a5d
+
+zp(){
+  if [ $# -eq 0 ]; then
+    echo -e "»  Usage: $0 file [file...]"
+    echo -e "»  Process will be canceled."
+    return
+  fi
+
+  items=""
+  itemsForDisplaing=""
+
+  zipFileName="$(date '+%Y%m%d-%H%M%S').zip"
+  zipFileName="$(date '+%Y%m%d').zip"
+
+  for item in "$@"
+  do
+    items="$items \"$item\""
+    itemsForDisplaing="$itemsForDisplaing    - $item\n"
+  done
+
+  echo -e "\n»Do you want to compress?[y/n]\n"
+  echo -e "» Target Files:\n$itemsForDisplaing"
+  echo -e "» Zp File:\n    - $zipFileName\n"
+
+  while true; do
+    read res
+    case ${res} in
+      [yY]) break;;
+      [nN]) exit 1;;
+    esac
+  done
+
+password=$(pwgen 16 1)
+
+echo "Password: ${password}"
+echo ${password} | pbcopy
+
+expect -c "
+  spawn zip -e ${zipFileName} ${items}
+  expect \"Enter password:\"
+  send \"${password}\n\"
+  expect \"Verify password:\"
+  send \"${password}\n\"
+  interact
+  "
+
+echo -e "» Now it's done."
+}
+
