@@ -358,3 +358,4 @@ expect -c "
 echo -e "» Now it's done."
 }
 
+alias jfix='kill $(ps x | grep JapaneseIM.appex | grep System | awk '\''{ print $1 }'\'')'
