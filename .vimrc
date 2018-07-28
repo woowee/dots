@@ -291,6 +291,13 @@ augroup my-terminal
 augroup END
 " c.f.: http://secret-garden.hatenablog.com/entry/2017/11/14/113127
 
+augroup qfGrep
+    autocmd!
+    autocmd QuickFixCmdPost *grep* cwindow
+augroup END
+" c.f.: https://qiita.com/yuku_t/items/0c1aff03949cb1b8fe6b
+
+
 "--------------------------------------------------------------------------- >plugins
 " refer to dein.toml
 
