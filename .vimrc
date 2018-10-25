@@ -266,6 +266,12 @@ nnoremap dd Vx
 xnoremap <expr> p 'pgv"'.v:register.'ygv<esc>'
 " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register/5093286#5093286
 
+" " 行追加は、追加後、カーソルを移動してほしくない
+nnoremap <silent> o  :<C-u>for i in range(1, v:count1) \| call append(line('.'), '') \| endfor \| call cursor(line('.')+1, 0) \| execute 'startinsert'<CR>
+nnoremap <silent> O  :<C-u>for i in range(1, v:count1) \| call append(line('.')-1, '') \| endfor \| call cursor(line('.')-1, 0) \| execute 'startinsert'<CR>
+" " c.f. http://deris.hatenablog.jp/entry/20130404/1365086716
+" " c.f. https://stackoverflow.com/questions/11587124/vim-why-doesnt-normal-i-enter-insert-mode
+
 "
 " For :terminal
 "
