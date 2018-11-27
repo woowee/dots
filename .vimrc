@@ -120,6 +120,10 @@ set whichwrap=b,s,h,l,<,>,[,]
 "" バックスペース
 "set backspace=indent,eol,start
 
+" 挿入モードから抜けると同時に保存
+inoremap <silent> jj <ESC>:w<CR>
+" c.f.  https://qiita.com/Sa2Knight/items/b8e4f1af5222e54cd006#%E6%8C%BF%E5%85%A5%E3%83%A2%E3%83%BC%E3%83%89%E3%81%8B%E3%82%89%E6%8A%9C%E3%81%91%E3%82%8B%E3%81%A8%E5%90%8C%E6%99%82%E3%81%AB%E4%BF%9D%E5%AD%98
+
 " 保存時の空白削除
 augroup bufferWritePrevious
   autocmd!
@@ -266,11 +270,14 @@ nnoremap dd Vx
 xnoremap <expr> p 'pgv"'.v:register.'ygv<esc>'
 " http://stackoverflow.com/questions/290465/vim-how-to-paste-over-without-overwriting-register/5093286#5093286
 
-" " 行追加は、追加後、カーソルを移動してほしくない
+" 行追加は、追加後、カーソルを移動してほしくない
 nnoremap <silent> o  :<C-u>for i in range(1, v:count1) \| call append(line('.'), '') \| endfor \| call cursor(line('.')+1, 0)<CR>
 nnoremap <silent> O  :<C-u>for i in range(1, v:count1) \| call append(line('.')-1, '') \| endfor \| call cursor(line('.')-1, 0)<CR>
-" " c.f. http://deris.hatenablog.jp/entry/20130404/1365086716
-" " c.f. https://stackoverflow.com/questions/11587124/vim-why-doesnt-normal-i-enter-insert-mode
+" c.f. http://deris.hatenablog.jp/entry/20130404/1365086716
+" c.f. https://stackoverflow.com/questions/11587124/vim-why-doesnt-normal-i-enter-insert-mode
+
+nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
+" c.f.  https://qiita.com/itmammoth/items/312246b4b7688875d023#1%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E4%B8%8B%E3%81%AE%E5%8D%98%E8%AA%9E%E3%82%92%E3%83%8F%E3%82%A4%E3%83%A9%E3%82%A4%E3%83%88%E3%81%99%E3%82%8B
 
 "
 " For :terminal
