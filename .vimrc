@@ -14,42 +14,42 @@ scriptencoding utf-8
 " ref. http://qiita.com/delphinus/items/00ff2c0ba972c6e41542
 " ref. http://qiita.com/Ress/items/7e71e007cf8d41a07a1a#settings-1
 
-"TODO: vim8 用に XDG Base Directory Specification 処置として (一応．後で外すかと．)
-let s:config_home = empty($XDG_CONFIG_HOME) ? expand('$HOME/.config') : $XDG_CONFIG_HOME
-
-" プラグインが実際にインストールされるディレクトリ
-let s:cache_home = empty($XDG_CACHE_HOME) ? expand('$HOME/.cache') : $XDG_CACHE_HOME
-let s:dein_dir = s:cache_home . '/dein'
-
-" dein.vim 本体
-let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
-
-" dein.vim がなければ github から落としてくる
-if !isdirectory(s:dein_repo_dir)
-  call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
-  "execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-endif
-let &runtimepath = s:dein_repo_dir .",". &runtimepath
-
-" プラグイン読み込み＆キャッシュ作成
-if has('nvim')
-  let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
-else
-  let s:toml_file = expand('$HOME/dein.toml')
-  "TODO: 本来なら XDG 対応をきちんと行っておくべきだと思っている．．．
-endif
-echom "s:toml_file=" . s:toml_file
-if dein#load_state(s:dein_dir)
-  call dein#begin(s:dein_dir, [$MYVIMRC, s:toml_file])
-  call dein#load_toml(s:toml_file)
-  call dein#end()
-  call dein#save_state()
-endif
-
-" もし，未インストールものものがあったらインストール
-if has('vim_starting') && dein#check_install()
-  call dein#install()
-endif
+" "TODO: vim8 用に XDG Base Directory Specification 処置として (一応．後で外すかと．)
+" let s:config_home = empty($XDG_CONFIG_HOME) ? expand('$HOME/.config') : $XDG_CONFIG_HOME
+"
+" " プラグインが実際にインストールされるディレクトリ
+" let s:cache_home = empty($XDG_CACHE_HOME) ? expand('$HOME/.cache') : $XDG_CACHE_HOME
+" let s:dein_dir = s:cache_home . '/dein'
+"
+" " dein.vim 本体
+" let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+"
+" " dein.vim がなければ github から落としてくる
+" if !isdirectory(s:dein_repo_dir)
+"   call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
+"   "execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+" endif
+" let &runtimepath = s:dein_repo_dir .",". &runtimepath
+"
+" " プラグイン読み込み＆キャッシュ作成
+" if has('nvim')
+"   let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
+" else
+"   let s:toml_file = expand('$HOME/dein.toml')
+"   "TODO: 本来なら XDG 対応をきちんと行っておくべきだと思っている．．．
+" endif
+" echom "s:toml_file=" . s:toml_file
+" if dein#load_state(s:dein_dir)
+"   call dein#begin(s:dein_dir, [$MYVIMRC, s:toml_file])
+"   call dein#load_toml(s:toml_file)
+"   call dein#end()
+"   call dein#save_state()
+" endif
+"
+" " もし，未インストールものものがあったらインストール
+" if has('vim_starting') && dein#check_install()
+"   call dein#install()
+" endif
 
 
 
