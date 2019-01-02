@@ -1,12 +1,3 @@
-" Encoding
-if !exists ('g:encoding_set') || !has('nvim')
-    set encoding=utf-8
-    let g:encoding_set=1
-endif
-scriptencoding utf-8
-
-
-"--------------------------------------------------------------------------- >manage plugins
 "
 " Dein.vim
 "
@@ -14,42 +5,30 @@ scriptencoding utf-8
 " ref. http://qiita.com/delphinus/items/00ff2c0ba972c6e41542
 " ref. http://qiita.com/Ress/items/7e71e007cf8d41a07a1a#settings-1
 
-" "TODO: vim8 用に XDG Base Directory Specification 処置として (一応．後で外すかと．)
-" let s:config_home = empty($XDG_CONFIG_HOME) ? expand('$HOME/.config') : $XDG_CONFIG_HOME
-"
-" " プラグインが実際にインストールされるディレクトリ
-" let s:cache_home = empty($XDG_CACHE_HOME) ? expand('$HOME/.cache') : $XDG_CACHE_HOME
-" let s:dein_dir = s:cache_home . '/dein'
-"
-" " dein.vim 本体
-" let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
-"
-" " dein.vim がなければ github から落としてくる
-" if !isdirectory(s:dein_repo_dir)
-"   call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
-"   "execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-" endif
-" let &runtimepath = s:dein_repo_dir .",". &runtimepath
-"
-" " プラグイン読み込み＆キャッシュ作成
-" if has('nvim')
-"   let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
-" else
-"   let s:toml_file = expand('$HOME/dein.toml')
-"   "TODO: 本来なら XDG 対応をきちんと行っておくべきだと思っている．．．
-" endif
-" echom "s:toml_file=" . s:toml_file
-" if dein#load_state(s:dein_dir)
-"   call dein#begin(s:dein_dir, [$MYVIMRC, s:toml_file])
-"   call dein#load_toml(s:toml_file)
-"   call dein#end()
-"   call dein#save_state()
-" endif
-"
-" " もし，未インストールものものがあったらインストール
-" if has('vim_starting') && dein#check_install()
-"   call dein#install()
-" endif
+if &compatible
+  set nocompatible
+endif
+
+" dein自体の自動インストール
+let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
+let s:dein_dir = s:cache_home . '/dein'
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+if !isdirectory(s:dein_repo_dir)
+  call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
+endif
+let &runtimepath = s:dein_repo_dir .",". &runtimepath
+" プラグイン読み込み＆キャッシュ作成
+let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
+  call dein#load_toml(s:toml_file)
+  call dein#end()
+  call dein#save_state()
+endif
+" 不足プラグインの自動インストール
+if has('vim_starting') && dein#check_install()
+  call dein#install()
+endif
 
 
 
@@ -57,26 +36,20 @@ scriptencoding utf-8
 
 filetype plugin indent on
 syntax on
+scriptencoding utf-8
 
 if has('nvim')
   let g:python3_host_prog = expand('/usr/local/bin/python3')
 else
   let &pythonthreedll = findfile("Python","/usr/local/Cellar/python/**/Frameworks/**")
   " ref. https://github.com/splhack/macvim-kaoriya/wiki/Readme#perl--python--python3--ruby--lua
-  echom &pythonthreedll
 endif
 
 
-" バックアップファイル - off
-set nobackup
-" スワップファイル - off
-set noswapfile
 " ビープ
-set vb t_vb=
+set visualbell t_vb=
 " 保存していない状態でも他のファイルを開く
 set hidden
-" 検索置換
-set smartcase
 " クリップボード.os の クリップボードを
 set clipboard+=unnamed
 " クリップボード.vim の ヤンクを
@@ -85,7 +58,7 @@ set clipboard=unnamed
 
 
 "--------------------------------------------------------------------------- >seach
-" 検索の挙動に関する設定:
+" 検索置換の挙動に関する設定:
 "
 " 検索時に大文字小文字を無視 (noignorecase:無視しない)
 set ignorecase
@@ -93,7 +66,6 @@ set ignorecase
 set smartcase
 " 検索時にファイルの最後まで行ったら最初に戻る (nowrapscan:戻らない)
 set wrapscan
-
 " 検索ハイライト on
 set hlsearch
 
@@ -104,21 +76,17 @@ set hlsearch
 "
 " タブの画面上での幅
 set tabstop=2
-" タブをスペースに展開しない (expandtab:展開する)
-set noexpandtab
+" タブをスペースに展開する (noexpandtab:展開しない)
+set expandtab
 " 自動的にインデントする (noautoindent:インデントしない)
 set autoindent
 " バックスペースでインデントや改行を削除できるようにする
 set backspace=indent,eol,start
 " 括弧入力時に対応する括弧を表示 (noshowmatch:表示しない)
 set showmatch
-"" コマンドライン補完するときに強化されたものを使う(参照 :help wildmenu)
-"set wildmenu
 
 " 折り返し移動 - <backspace> <enter> h, l,<-, ->
 set whichwrap=b,s,h,l,<,>,[,]
-"" バックスペース
-"set backspace=indent,eol,start
 
 " 挿入モードから抜けると同時に保存
 inoremap <silent> jj <ESC>:w<CR>
@@ -149,8 +117,6 @@ augroup BinaryXXD
   autocmd BufWritePost * set nomod | endif
 augroup END
 
-" インサートモード時，カーソルの形状を `|`
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 
 "--------------------------------------------------------------------------- >complete
@@ -160,7 +126,7 @@ set wildmenu
 set wildchar=<tab>
 set wildmode=list:full
 set history=1000
-set complete+=k
+set complete+=k   " 保管に辞書ファイル追加
 
 
 
@@ -214,16 +180,6 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
-" カーソル移動.括弧
-"if has('xim')
-"  inoremap {} {}<Left>
-"  inoremap [] []<Left>
-"  inoremap () ()<Left>
-"  inoremap <> <><Left>
-"  inoremap "" ""<Left>
-"  inoremap '' ''<Left>
-"  inoremap `` ``<Left>
-"endif
 " ペースト.インサートモード
 imap <C-p> <ESC>"*pa
 " バッファ.移動
@@ -243,15 +199,14 @@ noremap [ %
 noremap ] %
 " タイムスタンプ
 inoremap ,dd <C-r>=strftime('%Y.%m.%d')<Return>
-inoremap ,ddd <C-r>=strftime('%Y%m%d')<Return>
 "ウィンドウサイズ
 map + <C-w>+
 map - <C-w>-
 " バッファ内すべてのコンテンツをクリップボードへ
 noremap ya :%y<CR>
 " 折りたたみ
-nnoremap zoo zR
-nnoremap zcc zM
+nnoremap zo zR
+nnoremap zc zM
 nnoremap <space> zA
 " ref. http://dougblack.io/words/a-good-vimrc.html#fold
 vnoremap <c-a> <c-a>gv
@@ -304,11 +259,6 @@ augroup my-terminal
 augroup END
 " c.f.: http://secret-garden.hatenablog.com/entry/2017/11/14/113127
 
-augroup qfGrep
-    autocmd!
-    autocmd QuickFixCmdPost *grep* cwindow
-augroup END
-" c.f.: https://qiita.com/yuku_t/items/0c1aff03949cb1b8fe6b
 
 
 "--------------------------------------------------------------------------- >plugins
@@ -460,6 +410,16 @@ augroup HilightsForce
   autocmd WinEnter,BufRead,BufNew,Syntax * highlight CursorLineNr cterm=NONE ctermfg=15 gui=NONE guifg=#f5f5f5
   autocmd WinEnter,BufRead,BufNew,Syntax * highlight LineNr ctermfg=7 guifg=#949494
 augroup END
+
+
+" vimgrep
+augroup qfGrep
+    autocmd!
+    autocmd QuickFixCmdPost *grep* cwindow
+augroup END
+" c.f.: https://qiita.com/yuku_t/items/0c1aff03949cb1b8fe6b
+
+
 
 "--------------------------------------------------------------------------- .misc
 
