@@ -45,7 +45,6 @@ else
   " ref. https://github.com/splhack/macvim-kaoriya/wiki/Readme#perl--python--python3--ruby--lua
 endif
 
-
 " ビープ
 set visualbell t_vb=
 " 保存していない状態でも他のファイルを開く
