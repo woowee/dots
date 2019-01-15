@@ -10,23 +10,6 @@ hook_post_update = '''
   let g:dein#plugin.build = 'make'
   "ref. http://qiita.com/delphinus/items/cd221a450fd23506e81a#hook_post_update
 '''
-hook_add = '''
-  let g:vimshell_prompt = "% "
-  let g:vimshell_secondary_prompt="> "
-
-  if has('win32') || has('win64')
-    " Display user name on Windows.
-    let g:vimshell_user_prompt = "$USERNAME.' in '.fnamemodify(getcwd(), ':~')"
-  else
-    " Display user name on Linux.
-    let g:vimshell_user_prompt = "$USER.' in '.fnamemodify(getcwd(), ':~')"
-  endif
-
-  let g:vimshell_split_command="split"
-  nmap <Leader>vs <Plug>(vimshell_split_switch)
-  command! Vs :VimShell -split-command=split
-  " ref. https://github.com/namutaka/dotfiles/blob/76e75c7f00a07788012b2985aeec7c2b649bdd39/vimrc
-'''
 
 #
 # interface : denite.vim
@@ -147,10 +130,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'Shougo/unite-outline'
-if = '!has("nvim")'
-
-[[plugins]]
 repo = 'Shougo/vimfiler.vim'
 depends = 'unite.vim'
 hook_add = '''
@@ -214,7 +193,6 @@ on_source = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-# if = 'has("nvim")'
 hook_add = 'let g:deoplete#enable_at_startup = 1'
 
 [[plugins]]
@@ -264,10 +242,6 @@ repo = 'Shougo/context_filetype.vim'
 repo = 'cespare/vim-toml'
 on_ft = 'toml'
 
-## マデ
-
-[[plugins]]
-repo = 'Shougo/vimshell'
 
 
 #
@@ -279,49 +253,50 @@ repo = 'kana/vim-operator-user'
 [[plugins]]
 repo = 'kana/vim-textobj-user'
 
-[[plugins]]
-repo = 'kana/vim-textobj-jabraces'
-hook_add = '''
-  let g:textobj_multitextobj_textobjects_i = [
-      \ "\<Plug>(textobj-multiblock-i)",
-      \ "\<Plug>(textobj-jabraces-parens-i)",
-      \ "\<Plug>(textobj-jabraces-braces-i)",
-      \ "\<Plug>(textobj-jabraces-brackets-i)",
-      \ "\<Plug>(textobj-jabraces-angles-i)",
-      \ "\<Plug>(textobj-jabraces-double-angles-i)",
-      \ "\<Plug>(textobj-jabraces-kakko-i)",
-      \ "\<Plug>(textobj-jabraces-double-kakko-i)",
-      \ "\<Plug>(textobj-jabraces-yama-kakko-i)",
-      \ "\<Plug>(textobj-jabraces-double-yama-kakko-i)",
-      \ "\<Plug>(textobj-jabraces-kikkou-kakko-i)",
-      \ "\<Plug>(textobj-jabraces-sumi-kakko-i)",
-  \]
-  let g:textobj_multitextobj_textobjects_a = [
-      \ "\<Plug>(textobj-multiblock-a)",
-      \ "\<Plug>(textobj-jabraces-parens-a)",
-      \ "\<Plug>(textobj-jabraces-braces-a)",
-      \ "\<Plug>(textobj-jabraces-brackets-a)",
-      \ "\<Plug>(textobj-jabraces-angles-a)",
-      \ "\<Plug>(textobj-jabraces-double-angles-a)",
-      \ "\<Plug>(textobj-jabraces-kakko-a)",
-      \ "\<Plug>(textobj-jabraces-double-kakko-a)",
-      \ "\<Plug>(textobj-jabraces-yama-kakko-a)",
-      \ "\<Plug>(textobj-jabraces-double-yama-kakko-a)",
-      \ "\<Plug>(textobj-jabraces-kikkou-kakko-a)",
-      \ "\<Plug>(textobj-jabraces-sumi-kakko-a)",
-  \]
-  omap ab <Plug>(textobj-multitextobj-a)
-  omap ib <Plug>(textobj-multitextobj-i)
-  vmap ab <Plug>(textobj-multitextobj-a)
-  vmap ib <Plug>(textobj-multitextobj-i)
-  " ref. http://kainokikaede.hatenablog.com/entry/2014/11/09/124636
-'''
+# [[plugins]]
+# repo = 'kana/vim-textobj-jabraces'
+# hook_add = '''
+#   let g:textobj_multitextobj_textobjects_i = [
+#       \ "\<Plug>(textobj-multiblock-i)",
+#       \ "\<Plug>(textobj-jabraces-parens-i)",
+#       \ "\<Plug>(textobj-jabraces-braces-i)",
+#       \ "\<Plug>(textobj-jabraces-brackets-i)",
+#       \ "\<Plug>(textobj-jabraces-angles-i)",
+#       \ "\<Plug>(textobj-jabraces-double-angles-i)",
+#       \ "\<Plug>(textobj-jabraces-kakko-i)",
+#       \ "\<Plug>(textobj-jabraces-double-kakko-i)",
+#       \ "\<Plug>(textobj-jabraces-yama-kakko-i)",
+#       \ "\<Plug>(textobj-jabraces-double-yama-kakko-i)",
+#       \ "\<Plug>(textobj-jabraces-kikkou-kakko-i)",
+#       \ "\<Plug>(textobj-jabraces-sumi-kakko-i)",
+#   \]
+#   let g:textobj_multitextobj_textobjects_a = [
+#       \ "\<Plug>(textobj-multiblock-a)",
+#       \ "\<Plug>(textobj-jabraces-parens-a)",
+#       \ "\<Plug>(textobj-jabraces-braces-a)",
+#       \ "\<Plug>(textobj-jabraces-brackets-a)",
+#       \ "\<Plug>(textobj-jabraces-angles-a)",
+#       \ "\<Plug>(textobj-jabraces-double-angles-a)",
+#       \ "\<Plug>(textobj-jabraces-kakko-a)",
+#       \ "\<Plug>(textobj-jabraces-double-kakko-a)",
+#       \ "\<Plug>(textobj-jabraces-yama-kakko-a)",
+#       \ "\<Plug>(textobj-jabraces-double-yama-kakko-a)",
+#       \ "\<Plug>(textobj-jabraces-kikkou-kakko-a)",
+#       \ "\<Plug>(textobj-jabraces-sumi-kakko-a)",
+#   \]
+#   omap ab <Plug>(textobj-multitextobj-a)
+#   omap ib <Plug>(textobj-multitextobj-i)
+#   vmap ab <Plug>(textobj-multitextobj-a)
+#   vmap ib <Plug>(textobj-multitextobj-i)
+#   " ref. http://kainokikaede.hatenablog.com/entry/2014/11/09/124636
+# '''
+#
+# [[plugins]]
+# repo = 'osyo-manga/vim-textobj-multiblock'
+#
+# [[plugins]]
+# repo = 'osyo-manga/vim-textobj-multitextobj'
 
-[[plugins]]
-repo = 'osyo-manga/vim-textobj-multiblock'
-
-[[plugins]]
-repo = 'osyo-manga/vim-textobj-multitextobj'
 
 [[plugins]]
 repo = 'rhysd/vim-operator-surround'
@@ -421,28 +396,6 @@ repo = 'sukima/xmledit'
 repo = 'mattn/emmet-vim'
 
 [[plugins]]
-repo = 'plasticscafe/vim-less-autocompile'
-hook_add = '''
-  augroup less_autocompile
-    autocmd!
-    autocmd BufRead,BufNewFile *.less set filetype=less
-  augroup END
-  "自動で変換
-  let g:less_autocompile=1
-  "圧縮しない
-  let g:less_compress=0
-'''
-
-[[plugins]]
-repo = 'groenewege/vim-less'
-hook_add = '''
-  augroup less
-    autocmd!
-    autocmd BufNewFile,BufRead *.less set filetype=css
-  augroup END
-'''
-
-[[plugins]]
 repo = 'toyamarinyon/vim-swift'
 
 [[plugins]]
@@ -494,10 +447,8 @@ hook_add = '''
   " ref. https://sites.google.com/site/hymd3a/vim/w3m-vim#TOC--3
 '''
 
-
-[[plugins]]
-repo = 'mrtazz/simplenote.vim'
-
+# [[plugins]]
+# repo = 'mrtazz/simplenote.vim'
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
