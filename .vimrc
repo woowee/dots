@@ -30,6 +30,16 @@ if has('vim_starting') && dein#check_install()
  call dein#install()
 endif
 
+" 生成される各ファイルの退避場所
+set directory = s:cache_home/_swap
+set backupdir = s:cache_home/_bkups
+set undodir   = s:cache_home/_undo
+for s:dir in [ &directory, &backupdir, &undodir ]
+  if !isdirectory(s:dir)
+    call mkdir(s:dir, 'p')
+  endif
+endfor
+
 
 
 "--------------------------------------------------------------------------- >common
