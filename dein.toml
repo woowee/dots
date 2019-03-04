@@ -193,7 +193,23 @@ on_source = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
+on_event = 'InsertCharPre'
 hook_add = 'let g:deoplete#enable_at_startup = 1'
+hook_source = '''
+  call deoplete#custom#option({
+   \ 'auto_complete_delay': 0,
+   \ 'min_pattern_length': 3,
+   \ 'camel_case': v:false,
+   \ 'ignore_case': v:false,
+   \ 'refresh_always': v:false,
+   \ 'smart_case': v:true,
+   \ })
+  inoremap <expr><tab> pumvisible() ? "\<C-n>" :
+       \ neosnippet#expandable_or_jumpable() ?
+       \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+'''
+on_i = 1
+
 
 [[plugins]]
 repo = 'roxma/nvim-yarp'
@@ -203,7 +219,7 @@ repo = 'roxma/vim-hug-neovim-rpc'
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
-depends = ['neosnippet-snippets']
+depends = ['neosnippet-snippets', 'context_filetype.vim']
 on_event = 'InsertCharPre'
 on_i = 1
 on_ft = 'snippet'
